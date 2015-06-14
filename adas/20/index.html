@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
+  <link href="/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="/bootstrap-solarized-light.css" rel="stylesheet" type="text/css" />
+  <link href="./gridder.css" rel="stylesheet" type="text/css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-cookies.min.js"></script>
+  <script src="http://hryanjones.com/js/ngStorage.min.js"></script>
+  <script src="./gridder.js"></script>
+  <meta charset="utf-8">
+  <title>Ænigma #20</title>
+</head>
+
+<body ng-app="app" ng-controller="gridder" class="well">
+  <div class="body">
+  <h1>
+    <a href="http://www.pavelspuzzles.com/adas/20/" target="_blank">
+      Adalogical Ænigma #20
+    </a>
+    <small>
+      (<a href="http://www.pavelspuzzles.com/adas/20/puzzle.pdf">PDF version</a>)
+    </small>
+    <small class="btn btn-warning"
+           ng-click="clear();">
+      Clear
+    </small>
+  </h1>
+
+  <div>
+
+    <input ng-hide="true" ng-model="currentRegion" type="number" min="0" max="300"/>
+    <div id="puzzle-container">
+
+      <div ng-repeat="row in grid" class="row" ng-init="rowIndex = $index;">
+        <div ng-repeat="cell in row track by $index"
+             class="grid-container"
+             ng-click="markRegion(cell, regions);"
+             ng-style="{
+               top: (rowIndex * spacing + vOffset) + 'px',
+               left: ($index * spacing + hOffset) + 'px',
+             }"
+             ng-class="cell.state"
+             >
+        </div>
+      </div>
+
+      <img id="puzzle-background" src="http://hryanjones.com/adalogical-aenigmas/20.png">
+    </div>
+
+    <div class="legend row well">
+      <div class="col-xs-2 col-md-2 h4 no-margin">Legend:</div>
+      <div class="label label-default col-xs-2 col-md-2" title="Squares that *should Not* be filled are well marked with this marker">
+        unfilled <div class="redDot legend-square"></div>
+      </div>
+      <div class="label label-default col-xs-2 col-md-2" title="Mark squares which should be filled with this">
+        filled <div class="filled legend-square"></div>
+      </div>
+      <div class="label label-default col-xs-3 col-md-3" title="Indicator that 6 squares to the right must be filled">
+        6 filled to right <div class="legend-square number right"></div>
+      </div>
+      <div class="label label-default col-xs-3 col-md-3" title="10 squares below this indicator must be filled">
+        10 filled below <div class="legend-square number below"></div>
+      </div>
+    </div>
+
+    <div>
+      The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
+      <h3>Puzzle description (taken from PDF)</h3>
+      <p>
+        Gentle patron,
+      </p>
+      <p>
+        A picture, we are frequently told, is worth ten thousand words. Or is it <em>one</em> thousand? I believe I have heard this ancient adage both ways, and that illustrates nicely why I have long found this oft-quoted morsel of wisdom terribly <em>frustrating</em>: it is so vague, so inconsistent, so <em>unscientific</em>! How would one even <em>measure</em> this result to begin with?
+      </p>
+      <p>
+        Nonetheless, I of course understand the <em>intent</em> behind the adage and agree wholeheartedly that imagery can often convey clearly what words may make obscure, and that is what inspires the present ænigma.
+      </p>
+      <p>
+        In the grid [above], each heavily-outlined <em>region</em> should either be completely darkened or else left <em>entirely</em> white. Each <em>numeric</em> clue indicates the total count of darkened squares in the associated row or column. Numbers <em>above</em> a diagonal line count squares in the row to the right, while those <em>below</em> the line count squares in the column below. Squares containing numeric clues may not be darkened.
+      </p>
+      <p>
+        Note that there are occasionally <em>multiple</em> numeric clues in the same row or column; each clue gives information <em>only</em> about the squares up to the next clue (or to the edge of the grid).
+      </p>
+      <p>
+        Once you’ve completed the grid, you can move on to finding the final answer to my ænigma. The image formed from all of your darkened squares will reveal a clue to your final answer, which this time is the name of a <em>pictorial entertainment</em>.
+      </p>
+      <p>
+        Good luck!
+      </p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
