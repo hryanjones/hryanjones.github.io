@@ -2,52 +2,37 @@ div {
   box-sizing: border-box;
 }
 #puzzle-container {
+  width: 100%;
+  background: white;
+}
+
+.node-container {
   position: relative;
+  display: inline-block;
 }
 
-#puzzle-background {
-  width: 585px;
+.node {
+  border: .2em solid black;
+  height: 1.5em;
+  width: 1.5em;
+  margin: .5em;
+  border-radius: 0.75em;
 }
 
-.blank:hover:after,
-.redDot:after {
-  font-size: 20px;
-  font-weight: bold;
+.connections {
+  width: 100%;
+  height: 100%;
   position: absolute;
-  top: -1px;
-  left: 4px;
-  content: "*";
-}
-
-.blank:hover:after {
-  color: hsla(0, 56%, 46%, .3);
-}
-
-.redDot:after {
-  color: hsla(0, 56%, 46%, 1);
-}
-
-.redDot:hover,
-.filled:hover {
-  background: hsla(263, 29%, 46%, 0.4);
+  left: 50%;
+  top: 50%;
+  border-top: .1em dotted gray;
+  border-left: .1em dotted gray;
 }
 
 .filled,
 .filled.legend-square
 {
   background: hsla(248, 49%, 46%, 0.75);
-}
-
-.grid-container {
-  z-index: 1;
-  position: absolute;
-  cursor: pointer;
-  width: 17px;
-  height: 17px;
-}
-
-.grid-container:hover {
-  border: 1px solid yellow;
 }
 
 .legend .label {
@@ -72,12 +57,6 @@ div {
 }
 .legend-square.number.below {
   background-image: url("http://hryanjones.com/adalogical-aenigmas/20-10-below.png");
-}
-
-.body {
-  max-width: 627px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .no-margin {
