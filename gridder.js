@@ -26,6 +26,7 @@ angular
    */
   function setUpBoard() {
     if ($localStorage.grid) {
+      fixMyMistake($localStorage);
       $scope.grid = $localStorage.grid;
     }
     else {
@@ -77,6 +78,18 @@ function generateRegionLookup(states) {
     });
   });
   return regions;
+}
+
+/**
+ * I made a mistake in combining two small regions, this fixes it even for people that were already solving
+ */
+function fixMyMistake($localStorage) {
+    if ($localStorage.grid[6][4].region === 176) {
+      $localStorage.grid[6][4].region = 200;
+    }
+    if ($localStorage.grid[6][5].region === 176) {
+      $localStorage.grid[6][5].region = 200;
+    }
 }
 
 // generateStates is not necessary for this puzzle any more as I generated region data
@@ -900,11 +913,11 @@ function getStates() {
       },
       {
         "state": "blank",
-        "region": 176
+        "region": 200
       },
       {
         "state": "blank",
-        "region": 176
+        "region": 200
       },
       {
         "state": "blank",
