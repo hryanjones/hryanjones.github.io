@@ -1,7 +1,7 @@
-div {
+/*div {
   box-sizing: border-box;
 }
-#puzzle-container {
+*/#puzzle-container {
   width: 100%;
   background: white;
 }
@@ -17,16 +17,68 @@ div {
   width: 1.5em;
   margin: .5em;
   border-radius: 0.75em;
+  background: white;
+  z-index: 2;
+  position: relative;
+
 }
 
 .connections {
   width: 100%;
   height: 100%;
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 47%;
+  top: 47%;
   border-top: .1em dotted gray;
   border-left: .1em dotted gray;
+  z-index: 1;
+}
+
+/* different connection states */
+.right-none {
+  border-top: none;
+}
+.right-active {
+  border-top: .3em solid green;
+}
+.below-none {
+  border-left: none;
+}
+.below-active {
+  border-left: .3em solid green;
+}
+
+/* connectionators, elements for creating connections */
+.connectionator {
+  position: absolute;
+  z-index: 0;
+}
+.connectionator:hover {
+  background-color: hsla(60, 100%, 50%, .4);
+}
+.unpossible { /* unpossible X's are hidden unless the appropriate class is on connector */
+  color: red;
+  /*display: none;*/
+}
+.right.connectionator {
+  height: 12px;
+  width: 24px;
+  left: 9px;
+  top: -5px;
+  /*background-color: red;*/
+}
+.right-unpossible .right-connectionator .unpossible {
+  display: block;
+}
+.below.connectionator {
+  height: 24px;
+  width: 12px;
+  left: -5px;
+  top: 9px;
+  /*background-color: blue;*/
+}
+.bottom-unpossible .right-connectionator .unpossible {
+  display: block;
 }
 
 .filled,

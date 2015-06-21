@@ -6,8 +6,8 @@ angular
   // $scope.hOffset = 19;
   // $scope.spacing = 17.7;
 
-  var numColumns = 3;
-  var numRows = 3;
+  var numColumns = 20;
+  var numRows = 10;
 
   // $scope.clear = clear;
   // $scope.markRegion = markRegion;
@@ -112,12 +112,22 @@ function generateEmptyGrid(numRows, numColumns) {
     return node;
   }
 
+/**
+ * Create a new connection with a state and whether or not it's a guess.
+ *   Possible states are:
+ *     * null -- standing for empty grid line
+ *     * active -- standing for a filled in line
+ *     * unpossible -- standing for a line that user has marked which shouldn't be filled
+ *   guess could be:
+ *     * null -- this should always be guess when state is null
+ *     * false -- the user is pretty sure the state is correct
+ *     * true -- the user wants this marked as a guess
+*/
   function newConnection() {
-    return {state: null}; /* possible states are:
-                             * null -- standing for empty grid line
-                             * active -- standing for a filled in line
-                             * guess -- standing for a line that has a guess in it
-                           */
+    return {
+      state: null,
+      guess: null
+    };
   }
 }
 
