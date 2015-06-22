@@ -61,8 +61,12 @@
             'below-active': node.connections.below.state === 'active',
             'right-unpossible': node.connections.right.state === 'unpossible',
             'below-unpossible': node.connections.below.state === 'unpossible',
-            'right-invalid': node.connections.right.nodes[0].invalid || node.connections.right.nodes[1].invalid,
-            'below-invalid': node.connections.below.nodes[0].invalid || node.connections.below.nodes[1].invalid,
+            'right-invalid': node.connections.right.nodes[0].invalid ||
+              node.connections.right.nodes[1].invalid ||
+              node.connections.right.invalid,
+            'below-invalid': node.connections.below.nodes[0].invalid ||
+              node.connections.below.nodes[1].invalid ||
+              node.connections.below.invalid,
           }"
           >
 
@@ -72,8 +76,9 @@
             ng-if="node.connections.right"
             ng-click="
               node.connections.right.state = nextState(node.connections.right.state);
-              validateNode(node.connections.right.nodes[0], alerts);
-              validateNode(node.connections.right.nodes[1], alerts);
+              validate.node(node.connections.right.nodes[0], alerts);
+              validate.node(node.connections.right.nodes[1], alerts);
+              validate.sameNodesNotConnected(node.connections.right, alerts);
             "
             >
             <i class="unpossible glyphicon glyphicon-remove"></i>
@@ -83,8 +88,9 @@
             ng-if="node.connections.below"
             ng-click="
               node.connections.below.state = nextState(node.connections.below.state);
-              validateNode(node.connections.below.nodes[0], alerts);
-              validateNode(node.connections.below.nodes[1], alerts);
+              validate.node(node.connections.below.nodes[0], alerts);
+              validate.node(node.connections.below.nodes[1], alerts);
+              validate.sameNodesNotConnected(node.connections.below, alerts);
             "
             >
             <i class="unpossible glyphicon glyphicon-remove"></i>
@@ -107,6 +113,11 @@
     Paths may not branch, touch or cross each other.
     ({{alerts.branchInEmptyNode}} place<span ng-show="alerts.branchInEmptyNode > 1">s</span> above)
   </div>
+  <div ng-show="alerts.sameNodesNotConnected" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    Two circles containing the same number may not be connected by a path.
+    ({{alerts.sameNodesNotConnected}} place<span ng-show="alerts.sameNodesNotConnected > 1">s</span> above)
+  </div>
 
   <h3>TODO <small>in rough priority order</small></h3>
   <ol>
@@ -116,7 +127,9 @@
         <li><strike>(easy) when a node has more than it's proper number of connections</strike></li>
         <li><strike>(easy) when a connection branches at an empty node</strike></li>
         <li>(harder) when a long connection branches has more than one 90 degree angle</li>
-        <li>(harder) when two connected nodes are the same number</li>
+        <li><strike>(harder) when two connected nodes are the same number.</strike>
+			<ul><li><strong>Bug:</strong> Mix of branching and connecting. I think this may be quite hard to solve...</li></ul>
+        </li>
       </ul>
     </li>
     <li>Legend</li>

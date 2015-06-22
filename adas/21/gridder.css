@@ -98,6 +98,10 @@
   position: absolute;
   display: none;
 }
+.right-invalid .unpossible, /* This shouldn't happen, but I need to see when it does */
+.below-invalid .unpossible {
+  color: purple;
+}
 .right.connectionator {
   height: 15px;
   width: 35px;
