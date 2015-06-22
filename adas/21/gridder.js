@@ -12,6 +12,7 @@ angular
 
   $scope.clear = clear;
   $scope.nextState = nextState;
+  $scope.validateNode = validateNode;
   setUpBoard();
 
   return;
@@ -82,6 +83,9 @@ function generateEmptyGrid(numRows, numColumns, nodeNumbers) {
       grid.nodes[i][j] = newNode(connectionAbove, connectionRight, connectionBelow, connectionLeft, number);
     }
   }
+
+  setPointersToNodesOnConnections(grid);
+
   return grid;
 
   function newEmptyGrid() {
@@ -97,22 +101,30 @@ function generateEmptyGrid(numRows, numColumns, nodeNumbers) {
                     // the puzzler that they've screwed up
       number: Number(number) === number ? number : null, // If the node has a number (fixed and defined by the puzzle)
                                                          // it goes here
-      connections: {} // pointers to connections in different directions
+      connections: { // pointers to connections in different directions
+        all: []
+      },
+      invalid: false,
     };
 
     // TODO there's probably a cleaner way to do the below
     if (above) {
       node.connections.above = above;
+      node.connections.all.push(above);
     }
     if (right) {
       node.connections.right = right;
+      node.connections.all.push(right);
     }
     if (below) {
       node.connections.below = below;
+      node.connections.all.push(below);
     }
     if (left) {
       node.connections.left = left;
+      node.connections.all.push(left);
     }
+
     return node;
   }
 
@@ -126,12 +138,29 @@ function generateEmptyGrid(numRows, numColumns, nodeNumbers) {
  *     * null -- this should always be guess when state is null
  *     * false -- the user is pretty sure the state is correct
  *     * true -- the user wants this marked as a guess
+ *   invalid is either false or true
 */
   function newConnection() {
     return {
       state: null,
-      guess: null
+      guess: null,
+      invalid: false,
+      nodes: [], // this is where pointers to the two nodes this connection connects will be placed
     };
+  }
+
+  /**
+   * Cycle through all the nodes, for each connection on each node, add a pointer to the node
+   */
+  function setPointersToNodesOnConnections(grid) {
+    grid.nodes.forEach(function(row) {
+      row.forEach(function(node) {
+        node.connections.all.forEach(function(connection) {
+          connection.nodes.push(node); // DANGER this is creating a circular reference, which may cause problems in the future!
+        })
+      })
+    })
+
   }
 }
 
@@ -155,6 +184,26 @@ function nextState(state) {
 function addNodeNumber(nodeNumbers, row, column, value) {
   nodeNumbers[row] = nodeNumbers[row] || {};
   nodeNumbers[row][column] = value;
+}
+
+/**
+ * set .valid attr to false if the number of active connections to this node are greater than it's node.number
+ * also, for empty nodes the number is 2 because branching is not allowed on an empty node
+ */
+function validateNode(node) {
+  var maxConns = isEmptyNode(node) ? 2 : node.number;
+  var numConns = 0;
+  node.connections.all.forEach(function(conn) {
+    if (conn.state === 'active') {
+      numConns += 1;
+    }
+  });
+
+  node.invalid = numConns > maxConns;
+}
+
+function isEmptyNode(node) {
+  return Number(node.number) !== node.number;
 }
 
 /**

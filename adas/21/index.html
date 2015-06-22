@@ -40,7 +40,10 @@
         ng-init="colIndex = $index;"
         >
         <div class="node"
-          ng-class="{empty: !node.number}"
+          ng-class="{
+			empty: !node.number,
+			invalid: node.invalid
+        }"
         >
           <div class="node-label">
             {{node.number}}
@@ -59,6 +62,8 @@
             'below-active': node.connections.below.state === 'active',
             'right-unpossible': node.connections.right.state === 'unpossible',
             'below-unpossible': node.connections.below.state === 'unpossible',
+            'right-invalid': node.connections.right.nodes[0].invalid || node.connections.right.nodes[1].invalid,
+            'below-invalid': node.connections.below.nodes[0].invalid || node.connections.below.nodes[1].invalid,
           }"
           >
 
@@ -66,14 +71,22 @@
 
           <div class="right connectionator"
             ng-if="node.connections.right"
-            ng-click="node.connections.right.state = nextState(node.connections.right.state);"
+            ng-click="
+              node.connections.right.state = nextState(node.connections.right.state);
+              validateNode(node.connections.right.nodes[0]);
+              validateNode(node.connections.right.nodes[1]);
+            "
             >
             <i class="unpossible glyphicon glyphicon-remove"></i>
           </div>
 
           <div class="below connectionator"
             ng-if="node.connections.below"
-            ng-click="node.connections.below.state = nextState(node.connections.below.state);"
+            ng-click="
+              node.connections.below.state = nextState(node.connections.below.state);
+              validateNode(node.connections.below.nodes[0]);
+              validateNode(node.connections.below.nodes[1]);
+            "
             >
             <i class="unpossible glyphicon glyphicon-remove"></i>
           </div>
@@ -89,10 +102,10 @@
     <li>Add in basic validation
       <ul>
         <li>Each validation type should not only cause bad things to become extra visible, make sure works for color blind folks), it should also have a nice human readable warning.</li>
-        <li>(easy) when a node has more than it's proper number of connections</li>
-        <li>(easy) when a long connection branches at an empty node</li>
+        <li><strike>(easy) when a node has more than it's proper number of connections</strike></li>
+        <li><strike>(easy) when a connection branches at an empty node</strike></li>
         <li>(harder) when a long connection branches has more than one 90 degree angle</li>
-        <li>(harder) when two nodes are </li>
+        <li>(harder) when two connected nodes are the same number</li>
       </ul>
     </li>
     <li>Legend</li>
@@ -109,7 +122,7 @@
   </ol>
 
   <!-- <h3>nodeNumbers</h3><pre>{{nodeNumbers|json}}</pre> -->
-  <h3>grid</h3><pre>{{grid|json}}</pre>
+  <!-- <h3>grid</h3><pre>{{grid|json}}</pre> -->
 
 <!--   <div class="legend row well">
     <div class="col-xs-2 col-md-2 h4 no-margin">Legend:</div>
