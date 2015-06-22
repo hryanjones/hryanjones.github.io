@@ -2,7 +2,6 @@ angular
 .module('app', ['ngStorage'])
 .controller('gridder', ['$scope', '$localStorage', function($scope, $localStorage) {
 
-
   var numColumns = 8; // TODO load this along with nodeNumbers so that you can have different puzzles loaded with the same puzzle engine
   var numRows = 8;
 
@@ -13,6 +12,10 @@ angular
   $scope.clear = clear;
   $scope.nextState = nextState;
   $scope.validateNode = validateNode;
+  $scope.alerts = { // a count of how many errors we've found for a given type
+    overloadedNode: 0,
+    branchInEmptyNode: 0,
+  }
   setUpBoard();
 
   return;
@@ -190,16 +193,46 @@ function addNodeNumber(nodeNumbers, row, column, value) {
  * set .valid attr to false if the number of active connections to this node are greater than it's node.number
  * also, for empty nodes the number is 2 because branching is not allowed on an empty node
  */
-function validateNode(node) {
+function validateNode(node, alerts) {
+  var initialState = node.invalid;
+
   var maxConns = isEmptyNode(node) ? 2 : node.number;
+  var numConns = numberActiveConnections(node);
+
+  node.invalid = numConns > maxConns;
+
+  if (initialState === node.invalid) { return; }
+
+  // Add-to or subtract-from alert count for types of node alerts
+
+  var alertType = isEmptyNode(node) ? 'branchInEmptyNode' : 'overloadedNode';
+
+  if (node.invalid) {
+    alerts[alertType] += 1;
+    return;
+  }
+
+  if (alerts[alertType] === 0) {return;}
+
+  alerts[alertType] -= 1;
+}
+
+function numberActiveConnections(node) {
   var numConns = 0;
+
   node.connections.all.forEach(function(conn) {
     if (conn.state === 'active') {
       numConns += 1;
     }
   });
+  return numConns;
+}
 
-  node.invalid = numConns > maxConns;
+/**
+ * traverse along a longer connection. If it terminates in two non-empty nodes, make sure they're not the same number
+ * @TODO the hard part of this one is going to be the "undoing"
+ */
+function validateSameNodesNotConnected(connection) {
 }
 
 function isEmptyNode(node) {

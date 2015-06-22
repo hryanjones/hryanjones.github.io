@@ -62,20 +62,24 @@
 }
 .right-active {
   width: 110%; /* 110% so that lines overlap enough to form unbroken path */
-  border-top: .3em solid green;
+  border-top: .3em solid hsla(120, 100%, 50%, 1);
 }
 .right-active.right-invalid {
   border-top-color: red;
+  border-top-style: groove;
 }
 .below-none {
   border-left: none;
 }
 .below-active {
   height: 110%;
-  border-left: .3em solid green;
+  border-left-width: .3em;
+  border-left-style: solid;
+  border-left-color: hsla(120, 100%, 50%, 1);
 }
 .below-active.below-invalid {
   border-left-color: red;
+  border-left-style: groove;
 }
 
 /* connectionators, elements for creating connections */
@@ -151,6 +155,12 @@
 }
 .legend-square.number.below {
   background-image: url("http://hryanjones.com/adalogical-aenigmas/20-10-below.png");
+}
+
+.alert {
+  border: 1px solid red;
+  border-radius: 8px;
+  display: inline-block;
 }
 
 .no-margin {
