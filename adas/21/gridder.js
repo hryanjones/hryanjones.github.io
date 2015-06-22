@@ -1,16 +1,17 @@
 angular
 .module('app', ['ngStorage'])
 .controller('gridder', ['$scope', '$localStorage', function($scope, $localStorage) {
-  // for grid sizing and spacing (in pixels)
-  // $scope.vOffset = 19;
-  // $scope.hOffset = 19;
-  // $scope.spacing = 17.7;
 
-  var numColumns = 20;
-  var numRows = 10;
 
-  // $scope.clear = clear;
-  // $scope.markRegion = markRegion;
+  var numColumns = 8; // TODO load this along with nodeNumbers so that you can have different puzzles loaded with the same puzzle engine
+  var numRows = 8;
+
+  $scope.nodeNumbers = getNodeNumbers() || {};
+  $scope.buildMode = !(getNodeNumbers()) || /build/.test(window.location.search);
+  $scope.addNodeNumber = addNodeNumber;
+
+  $scope.clear = clear;
+  $scope.nextState = nextState;
   setUpBoard();
 
   return;
@@ -18,7 +19,7 @@ angular
   // Controller-dependent local functions
 
   function clear() {
-    delete $localStorage.grid;
+    // delete $localStorage.grid;
     setUpBoard();
   }
 
@@ -36,7 +37,7 @@ angular
     //   $localStorage.grid = $scope.grid;
     // }
     // $scope.regions = generateRegionLookup($scope.grid);
-    $scope.grid = generateEmptyGrid(numRows, numColumns)
+    $scope.grid = generateEmptyGrid(numRows, numColumns, $scope.nodeNumbers);
   }
 }]);
 
@@ -47,7 +48,7 @@ angular
  * @arg {int} numRows -- Number of rows of the grid
  * @arg {int} numColumns
  */
-function generateEmptyGrid(numRows, numColumns) {
+function generateEmptyGrid(numRows, numColumns, nodeNumbers) {
   var grid = newEmptyGrid();
 
   for (var i = 0; i < numRows; i++) {
@@ -76,7 +77,9 @@ function generateEmptyGrid(numRows, numColumns) {
       if (connectionBelow) {
         grid.connections.vertical[i][j] = connectionBelow;
       }
-      grid.nodes[i][j] = newNode(connectionAbove, connectionRight, connectionBelow, connectionLeft);
+
+      var number = nodeNumbers && nodeNumbers[i] && nodeNumbers[i][j];
+      grid.nodes[i][j] = newNode(connectionAbove, connectionRight, connectionBelow, connectionLeft, number);
     }
   }
   return grid;
@@ -88,11 +91,12 @@ function generateEmptyGrid(numRows, numColumns) {
     };
   }
 
-  function newNode(above, right, below, left) {
+  function newNode(above, right, below, left, number) {
     var node = {
       state: null,  // a node, if it has a number, may possibly have a state of "invalid" for purposes of notifying
                     // the puzzler that they've screwed up
-      number: null, // If the node has a number (fixed and defined by the puzzle) it goes here
+      number: Number(number) === number ? number : null, // If the node has a number (fixed and defined by the puzzle)
+                                                         // it goes here
       connections: {} // pointers to connections in different directions
     };
 
@@ -131,3 +135,61 @@ function generateEmptyGrid(numRows, numColumns) {
   }
 }
 
+/**
+ * cycle to the nextState given state
+ * null -> 'unpossible' -> 'active' -> null (etc.)
+ */
+function nextState(state) {
+  return {
+    'null': 'active',
+    'active': 'unpossible',
+    // 'unpossible': 'active'
+  }[state] || null;
+}
+
+/**
+ * In order to make it simple to create a new puzzle the nodeNumbers need to be generated, which is most easily done
+ * by explicitly setting these in a separate data structure. This function sets the node in a "sparse array", a.k.a.
+ * an object (double-nested of course)
+ */
+function addNodeNumber(nodeNumbers, row, column, value) {
+  nodeNumbers[row] = nodeNumbers[row] || {};
+  nodeNumbers[row][column] = value;
+}
+
+/**
+ * function to hold the hard-coded puzzle nodeNumbers
+ */
+function getNodeNumbers() {
+  return {
+    "0": {
+      "2": 1,
+      "4": 2
+    },
+    "1": {
+      "1": 2,
+      "3": 1,
+      "6": 4
+    },
+    "2": {
+      "0": 2,
+      "2": 2
+    },
+    "4": {
+      "1": 3,
+      "5": 3,
+      "7": 3
+    },
+    "5": {
+      "4": 2,
+      "6": 2
+    },
+    "6": {
+      "3": 2
+    },
+    "7": {
+      "1": 3
+    }
+  };
+  // return false;
+}

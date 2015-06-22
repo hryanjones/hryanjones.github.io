@@ -1,9 +1,14 @@
 /*div {
   box-sizing: border-box;
-}
-*/#puzzle-container {
-  width: 100%;
+}*/
+/* border-box doesn't seem to help anything ... */
+#puzzle-container {
   background: white;
+  display: inline-block;
+}
+
+.node-row { /* It's not clear to me why I need to force the height to be correct */
+  height: 35px;
 }
 
 .node-container {
@@ -20,7 +25,16 @@
   background: white;
   z-index: 2;
   position: relative;
-
+}
+.node.empty {
+  z-index: -1;
+}
+.node-label {
+  position: absolute;
+  font-weight: bold;
+  left: 4.5px;
+  top: -1px;
+  color: black;
 }
 
 .connections {
@@ -39,12 +53,14 @@
   border-top: none;
 }
 .right-active {
+  width: 110%; /* 110% so that lines overlap enough to form unbroken path */
   border-top: .3em solid green;
 }
 .below-none {
   border-left: none;
 }
 .below-active {
+  height: 110%;
   border-left: .3em solid green;
 }
 
@@ -52,32 +68,44 @@
 .connectionator {
   position: absolute;
   z-index: 0;
+  cursor: pointer;
+  /* background-color: hsla(60, 100%, 50%, .4); */
 }
 .connectionator:hover {
   background-color: hsla(60, 100%, 50%, .4);
 }
 .unpossible { /* unpossible X's are hidden unless the appropriate class is on connector */
   color: red;
-  /*display: none;*/
+  font-size: 72%;
+  position: absolute;
+  display: none;
 }
 .right.connectionator {
-  height: 12px;
-  width: 24px;
-  left: 9px;
-  top: -5px;
-  /*background-color: red;*/
+  height: 15px;
+  width: 35px;
+  left: 0px;
+  top: -8px;
+  /* background-color: yellow; */
 }
-.right-unpossible .right-connectionator .unpossible {
+.right.connectionator .unpossible {
+  left: 35%;
+  top: 3px;
+}
+.right-unpossible .right .unpossible {
   display: block;
 }
 .below.connectionator {
-  height: 24px;
-  width: 12px;
-  left: -5px;
-  top: 9px;
-  /*background-color: blue;*/
+  height: 35px;
+  width: 15px;
+  left: -8px;
+  top: 0px;
+  /* background-color: blue; */
 }
-.bottom-unpossible .right-connectionator .unpossible {
+.below.connectionator .unpossible {
+  top: 35%;
+  left: 2px;
+}
+.below-unpossible .below .unpossible {
   display: block;
 }
 
@@ -113,4 +141,8 @@
 
 .no-margin {
   margin: 0;
+}
+
+.build-input {
+  width: 26px;
 }

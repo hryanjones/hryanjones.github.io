@@ -22,42 +22,59 @@
     </a>
     <!-- <small>
       (<a href="http://www.pavelspuzzles.com/adas/21/puzzle.pdf">PDF version</a>)
-    </small>
-    <small class="btn btn-warning"
-           ng-click="clear();">
-      Clear
     </small> -->
+    <small class="btn btn-warning" ng-click="clear();" ng-if="clear">
+      Clear
+    </small>
   </h1>
-  <i class="glyphicon glyphicon-remove"></i>
 
+  <div>
+    1st click - sets connection, 2nd click - sets it to not possible, 3rd resets to unknown
+  </div>
 
   <div id="puzzle-container">
 
-    <div ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;">
+    <div ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row">
       <div ng-repeat="node in row track by $index"
         class="node-container"
-        ng-init="
-          colIndex = $index;
-          hasRightConnection = grid.connections.horizontal[rowIndex][colIndex];
-          hasBelowConnection = grid.connections.vertical[rowIndex][colIndex];
-        "
+        ng-init="colIndex = $index;"
         >
-        <div class="node"></div>
+        <div class="node"
+          ng-class="{empty: !node.number}"
+        >
+          <div class="node-label">
+            {{node.number}}
+          </div>
+          <input type="number" ng-if="buildMode" min="0" max="4" class="build-input"
+            ng-model="node.number"
+            ng-change="addNodeNumber(nodeNumbers, rowIndex, colIndex, node.number)"
+          />
+        </div>
 
         <div class="connections"
           ng-class="{
-            'right-none': !hasRightConnection,
-            'below-none': !hasBelowConnection,
+            'right-none': !node.connections.right,
+            'below-none': !node.connections.below,
+            'right-active': node.connections.right.state === 'active',
+            'below-active': node.connections.below.state === 'active',
+            'right-unpossible': node.connections.right.state === 'unpossible',
+            'below-unpossible': node.connections.below.state === 'unpossible',
           }"
           >
 
           <!-- Connectionators are the elements that when clicked or dragged through they activate a given connection -->
 
-          <div class="right connectionator" ng-if="hasRightConnection">
+          <div class="right connectionator"
+            ng-if="node.connections.right"
+            ng-click="node.connections.right.state = nextState(node.connections.right.state);"
+            >
             <i class="unpossible glyphicon glyphicon-remove"></i>
           </div>
 
-          <div class="below connectionator" ng-if="hasBelowConnection">
+          <div class="below connectionator"
+            ng-if="node.connections.below"
+            ng-click="node.connections.below.state = nextState(node.connections.below.state);"
+            >
             <i class="unpossible glyphicon glyphicon-remove"></i>
           </div>
         </div>
@@ -67,9 +84,34 @@
 
   </div>
 
-  <pre>{{grid|json}}</pre>
+  <h3>TODO <small>in rough priority order</small></h3>
+  <ol>
+    <li>Add in basic validation
+      <ul>
+        <li>Each validation type should not only cause bad things to become extra visible, make sure works for color blind folks), it should also have a nice human readable warning.</li>
+        <li>(easy) when a node has more than it's proper number of connections</li>
+        <li>(easy) when a long connection branches at an empty node</li>
+        <li>(harder) when a long connection branches has more than one 90 degree angle</li>
+        <li>(harder) when two nodes are </li>
+      </ul>
+    </li>
+    <li>Legend</li>
+    <li>more detailed instructions</li>
+    <li>
+      history
+      <ul>
+        <li>backward</li>
+        <li>forward</li>
+        <li>BONUS: history slider so you can scrub back and forth quickly</li>
+      </ul>
+    </li>
+    <li>Guessing mode -- this one will take some thought to get user experience right. I think they should be able to enter guessing mode, then when they exit it they should have the choice to clear their guesses (default), make their guesses truth, or cancel and stay in guessing mode</li>
+  </ol>
 
-  <div class="legend row well">
+  <!-- <h3>nodeNumbers</h3><pre>{{nodeNumbers|json}}</pre> -->
+  <h3>grid</h3><pre>{{grid|json}}</pre>
+
+<!--   <div class="legend row well">
     <div class="col-xs-2 col-md-2 h4 no-margin">Legend:</div>
     <div class="label label-default col-xs-2 col-md-2" title="Squares that *should Not* be filled are well marked with this marker">
       unfilled <div class="redDot legend-square"></div>
@@ -84,11 +126,11 @@
       10 filled below <div class="legend-square number below"></div>
     </div>
   </div>
-
-  <div>
+ -->
+<!--   <div>
     The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
     <h3>Puzzle description (taken from PDF)</h3>
   </div>
-
+ -->
 </body>
 </html>
