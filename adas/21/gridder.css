@@ -62,7 +62,7 @@
 }
 .right-active {
   width: 110%; /* 110% so that lines overlap enough to form unbroken path */
-  border-top: .3em solid hsla(120, 100%, 50%, 1);
+ border-top: .3em solid hsla(178, 100%, 50%, 1);
 }
 .right-active.right-invalid {
   border-top-color: red;
@@ -73,9 +73,7 @@
 }
 .below-active {
   height: 110%;
-  border-left-width: .3em;
-  border-left-style: solid;
-  border-left-color: hsla(120, 100%, 50%, 1);
+  border-left: .3em solid hsla(178, 100%, 50%, 1);
 }
 .below-active.below-invalid {
   border-left-color: red;
@@ -98,10 +96,10 @@
   position: absolute;
   display: none;
 }
-.right-invalid .unpossible, /* This shouldn't happen, but I need to see when it does */
-.below-invalid .unpossible {
+/*.right-invalid .right .unpossible,  This shouldn't happen, but I need to see when it does
+.below-invalid .below .unpossible {
   color: purple;
-}
+}*/
 .right.connectionator {
   height: 15px;
   width: 35px;

@@ -119,6 +119,15 @@
     ({{alerts.sameNodesNotConnected}} place<span ng-show="alerts.sameNodesNotConnected > 1">s</span> above)
   </div>
 
+  <h3>Rules</h3>
+  <ol>
+    <li>Draw paths along grid lines, each path connecting two circles to form a single connected network.</li>
+    <li>The number in each circle indicates how many paths connect to that circle.</li>
+    <li>Each path may bend 90&deg; at most once. (no validation yet)</li>
+    <li>Paths may not touch or cross each other.</li>
+    <li>The two circles connected by each path must contain different numbers.</li>
+  </ol>
+
   <h3>TODO <small>in rough priority order</small></h3>
   <ol>
     <li>Add in basic validation
@@ -126,9 +135,9 @@
         <li>Each validation type should not only cause bad things to become extra visible, make sure works for color blind folks), it should also have a nice human readable warning.</li>
         <li><strike>(easy) when a node has more than it's proper number of connections</strike></li>
         <li><strike>(easy) when a connection branches at an empty node</strike></li>
-        <li>(harder) when a long connection branches has more than one 90 degree angle</li>
+        <li>(harder) when a long connection has more than one 90 degree angle</li>
         <li><strike>(harder) when two connected nodes are the same number.</strike>
-			<ul><li><strong>Bug:</strong> Mix of branching and connecting. I think this may be quite hard to solve...</li></ul>
+			    <ul><li><strike><strong>Bug:</strong> Mix of branching and connecting.</strike></li></ul>
         </li>
       </ul>
     </li>
@@ -143,6 +152,7 @@
       </ul>
     </li>
     <li>Guessing mode -- this one will take some thought to get user experience right. I think they should be able to enter guessing mode, then when they exit it they should have the choice to clear their guesses (default), make their guesses truth, or cancel and stay in guessing mode</li>
+    <li>drag to select a path</li>
   </ol>
 
   <!-- <h3>nodeNumbers</h3><pre>{{nodeNumbers|json}}</pre> -->

@@ -269,6 +269,9 @@ function validate() {
      */
     function validateSameNodesNotConnected(connection, alerts) {
         var newStateIsConnected = connection.state === 'active';
+        if (connection.state === 'unpossible') {
+            validateOtherConnections(connection, alerts);
+        }
         var connectionWasInvalid = connection.invalid;
 
         var nodeA = findEndNode(connection, connection.nodes[0]);
@@ -284,6 +287,8 @@ function validate() {
         );
         var invalidState = newStateIsConnected && connectedNumberNodesAreTheSame;
 
+        if (!newStateIsConnected) { connection.invalid = false; }
+
         if (connectionWasInvalid === invalidState) { return; }
 
         // if our state has changed from invalid to valid, need to traverse along and change invalid states
@@ -291,6 +296,24 @@ function validate() {
         setLongConnectionInvalidState(connection, connection.nodes[1], invalidState);
 
         incrementAlerts(alerts, 'sameNodesNotConnected', invalidState);
+    }
+
+    /**
+     * when a node has become unpossible we need to verify any other active connections that connect to this
+     * connections end node. This is especially for the case where there's a branching error, but an existing
+     * double nodes connected error (because of the branching, the double nodes connected won't be registered
+     * so this is to especially check for them).
+     * @TODO rewrite this long-winded and probably incomprehensible doc into something succinct and understandable
+     */
+    function validateOtherConnections(connection, alerts) {
+        connection.nodes.forEach(function(node) {
+            node.connections.all.forEach(function(conn) {
+                if (conn.state !== 'active' || conn === connection) { return; }
+                console.log('testing conn', conn)
+
+                validateSameNodesNotConnected(conn, alerts);
+            });
+        });
     }
 
     function setLongConnectionInvalidState(connection, node, state) {
