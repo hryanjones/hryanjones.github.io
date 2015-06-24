@@ -4,7 +4,6 @@ angular
 
     $scope.clear = clear;
     $scope.nextState = nextState;
-    $scope.validate = validate();
     $scope.alerts = validate().newAlerts();
 
     $scope.jsonUrl = './example.json';
@@ -18,7 +17,7 @@ angular
 
     function clear() {
         // delete $localStorage.grid;
-        setUpBoard();
+        loadPuzzle($scope.jsonUrl);
     }
 
     /**
@@ -36,7 +35,7 @@ angular
         // }
         // $scope.regions = generateRegionLookup($scope.grid);
         $scope.grid = generate().newEmptyGrid(data.numRows, data.numColumns, data.nodeNumbers);
-
+        $scope.validate = validate(data.numRows, data.numColumns);
     }
 
     /**
@@ -180,7 +179,10 @@ function generate() {
             return {
                 state: null,
                 guess: null,
-                invalid: false,
+                invalidReasons: {
+                    connectsSameNodes: false,
+                    moreThanOneBend: false,
+                },
                 type: type,
                 nodes: [], // this is where pointers to the two nodes this connection connects will be placed
             };
@@ -225,11 +227,12 @@ function nextState(state) {
     }[state] || null;
 }
 
-function validate() {
+function validate(numColumns, numRows) {
+    var LIMIT = numColumns * numRows; //max number of connections to follow, prevents infinite while loop
     return {
         newAlerts: newAlerts,
         node: validateNode,
-        sameNodesNotConnected: validateSameNodesNotConnected,
+        connection: validateConnection,
     }
 
     /**
@@ -239,7 +242,8 @@ function validate() {
         return { // a count of how many errors we've found for a given type
             overloadedNode: 0,
             branchInEmptyNode: 0,
-            sameNodesNotConnected: 0,
+            connectsSameNodes: 0,
+            moreThanOneBend: 0,
         }
     }
 
@@ -262,6 +266,12 @@ function validate() {
         var alertType = isEmptyNode(node) ? 'branchInEmptyNode' : 'overloadedNode';
 
         incrementAlerts(alerts, alertType, node.invalid);
+
+        if (!node.invalid) { // don't create extra alerts
+            node.connections.all.forEach(function(conn) {
+                validateConnection(conn, alerts);
+            });
+        }
     }
 
     function numberActiveConnections(node) {
@@ -292,39 +302,57 @@ function validate() {
 
     }
 
+    function validateConnection(connection, alerts) {
+        if (!connection.state) { return; }
+        if (connection.state === 'active') {
+            if (connectedToInvalidNodes(connection)) { // let's not overwhelm users
+                return;
+            }
+            if (connectedToInvalidConnections(connection)) {
+                connection.invalidReasons.moreThanOneBend = true;
+                // the other type can't be extended
+                return;
+            }
+        }
+
+        validateconnectsSameNodes(connection, alerts);
+        validateNoMoreThanOneBend(connection, alerts);
+
+        function connectedToInvalidNodes(connection) {
+            return connection.nodes[0].invalid || connection.nodes[1].invalid;
+        }
+        function connectedToInvalidConnections(connection) {
+            var otherConn = findNextConnection(connection, connection.nodes[0]);
+            if (otherConn && otherConn.invalidReasons.moreThanOneBend) { return true ;}
+            otherConn = findNextConnection(connection, connection.nodes[1]);
+            return (otherConn && otherConn.invalidReasons.moreThanOneBend);
+        }
+    }
+
     /**
      * traverse along a longer connection. If it terminates in two non-empty nodes, make sure they're not the same number
-     * @TODO the hard part of this one is going to be the "undoing"
+     * @FIXME -- this is very similar to validateNoMoreThanOneBend, combine in an intelligible way
      */
-    function validateSameNodesNotConnected(connection, alerts) {
-        var newStateIsConnected = connection.state === 'active';
-        if (connection.state === 'unpossible') {
-            validateOtherConnections(connection, alerts);
+    function validateconnectsSameNodes(connection, alerts) {
+        var nodeA = traverseLongConnection('findEndNode', connection, connection.nodes[0]);
+        var nodeB = traverseLongConnection('findEndNode', connection, connection.nodes[1]);
+
+        // it's only invalid when the long connection is joined by the changed connection and it is active
+        var invalidState = connection.state === 'active' && nodesAreSameNumber(nodeA, nodeB);
+
+        if (invalidState === connection.invalidReasons.connectsSameNodes) { return; }
+
+        // if our invalid state has changed, we need to traverse along and change invalid states
+        setLongConnectionInvalidState(connection, connection.nodes, 'connectsSameNodes', invalidState);
+
+        incrementAlerts(alerts, 'connectsSameNodes', invalidState);
+
+        /**
+         * Two nodes are only considered to be the same number when they both have existing numbers and they're the same
+         */
+        function nodesAreSameNumber(nodeA, nodeB) {
+            return !isEmptyNode(nodeA) && !isEmptyNode(nodeB) && nodeA.number === nodeB.number;
         }
-        var connectionWasInvalid = connection.invalid;
-
-        var nodeA = findEndNode(connection, connection.nodes[0]);
-        var nodeB = findEndNode(connection, connection.nodes[1]);
-
-        // it's only invalid when the long connection is joined by the changed connection and it is active, otherwise we
-        // need to clean up previous validation and unmark the connections as invalid
-
-        var connectedNumberNodesAreTheSame = (
-            !isEmptyNode(nodeA) &&
-            !isEmptyNode(nodeB) &&
-            nodeA.number === nodeB.number
-        );
-        var invalidState = newStateIsConnected && connectedNumberNodesAreTheSame;
-
-        if (!newStateIsConnected) { connection.invalid = false; }
-
-        if (connectionWasInvalid === invalidState) { return; }
-
-        // if our state has changed from invalid to valid, need to traverse along and change invalid states
-        setLongConnectionInvalidState(connection, connection.nodes[0], invalidState);
-        setLongConnectionInvalidState(connection, connection.nodes[1], invalidState);
-
-        incrementAlerts(alerts, 'sameNodesNotConnected', invalidState);
     }
 
     /**
@@ -333,39 +361,94 @@ function validate() {
      * double nodes connected error (because of the branching, the double nodes connected won't be registered
      * so this is to especially check for them).
      * @TODO rewrite this long-winded and probably incomprehensible doc into something succinct and understandable
+     * @FIXME it seems we don't need this...
      */
-    function validateOtherConnections(connection, alerts) {
+    function validateOtherConnections(connection, alerts, validateFunction) {
         connection.nodes.forEach(function(node) {
             node.connections.all.forEach(function(conn) {
                 if (conn.state !== 'active' || conn === connection) { return; }
-                console.log('testing conn', conn)
 
-                validateSameNodesNotConnected(conn, alerts);
+                validateFunction(conn, alerts);
             });
         });
     }
 
-    function setLongConnectionInvalidState(connection, node, state) {
-        var callback = getConnectionCallback(state);
-        findEndNode(connection, node, callback);
+    function validateNoMoreThanOneBend(connection, alerts) {
+        var looseEnds = getLooseEnds(connection);
+        if (looseEnds.length === 2) { // this removed connection was in the middle of a bad path
+            // first decrement our alert counter
+            incrementAlerts(alerts, 'moreThanOneBend', true);
+        }
+        if (looseEnds.length) {
+            looseEnds.forEach(function(conn) { // redo the check on the connections that are still active
+                validateNoMoreThanOneBend(conn, alerts)
+            });
+            connection.invalidReasons.moreThanOneBend = false; // reset the removed connections invalid status
+            return;
+        }
+
+        // yuck, if a segment is removed in the middle we need to decrement our alerts counter and revalidate both sides
+
+        var numberOfBends = traverseLongConnection('getNumberOfBends', connection, connection.nodes[0]) +
+            traverseLongConnection('getNumberOfBends', connection, connection.nodes[1]);
+
+        var invalidState = numberOfBends > 1;
+
+        if (invalidState === connection.invalidReasons.moreThanOneBend) { return; }
+
+        setLongConnectionInvalidState(connection, connection.nodes, 'moreThanOneBend', invalidState);
+
+        incrementAlerts(alerts, 'moreThanOneBend', invalidState);
 
         /**
-         * get a connection callback to feed into findEndNode. Each connection along a long connection will have this callback
+         * If this connection was removed from a bad path return the "loose ends" or the active connection(s) that
+         * continue the rest of the path. Otherwise return empty array.
+         */
+        function getLooseEnds(connection) {
+            if (!invalidConnectionWasRemoved(connection)) { return []; }
+
+            return connection.nodes.map(function(node) {
+                return findNextConnection(connection, node);
+            })
+            .filter(function(n) { return n; }); // remove empty neighbors
+        }
+
+        function invalidConnectionWasRemoved(connection) {
+            return (connection.state === 'unpossible' && connection.invalidReasons.moreThanOneBend);
+        }
+    }
+
+    function setLongConnectionInvalidState(connection, nodes, reason, state) {
+        var callback = getConnectionCallback(reason, state);
+        nodes.forEach(function(node) {
+            traverseLongConnection('findEndNode', connection, node, callback);
+        });
+
+        /**
+         * get a connection callback to feed into traverseLongConnection('findEndNode',  Each connection along a long connection will have this callback
          * applied. For this specific case we're creating a function to set the .invalid state of the connection to true or false
          * @FIXME document betterly
          */
-        function getConnectionCallback(state) {
+        function getConnectionCallback(reason, state) {
             return function(connection) {
                 if (connection.state === 'active') {
-                    connection.invalid = state;
+                    connection.invalidReasons[reason] = state;
                     return;
                 }
-                connection.invalid = false; // only active connections can be considered invalid
+                connection.invalidReasons[reason] = false; // only active connections can be considered invalid
             }
         }
     }
 
-    function findEndNode(connection, node, connectionCallback) {
+    /**
+     * This function starts at a connection and traveling in the direction of the given node will travel down the
+     * connection and return what you want depending on action, either 'findEndNode' or 'getNumberOfBends'
+     * If connectionCallback is given we'll also call this action on every connection we encounter
+     */
+    function traverseLongConnection(action, connection, node, connectionCallback) {
+        // action can be either 'findEnd Node' or 'getNumberOfBends'
+        var limit = LIMIT;
+
         // Need a sane limit in here because it's possible for someone to make a closed loop
         // Half the total number of connections seems good, which is just M times N
         // FIXME make it so that this number gets updated automatically and is stored somewhere on the top level of validation
@@ -373,14 +456,31 @@ function validate() {
             connectionCallback(connection);
         }
 
-        var limit = 8 * 8;
+        var numberOfBends = 0;
+        var prevConnType;
+
         while (limit) {
             limit--;
+            prevConnType = connection.type;
+
+            //leap frog from connection to node to connection
             connection = findNextConnection(connection, node);
+
             if (!connection) {
-                return node;
+                if (action === 'findEndNode') {
+                    return node;
+                }
+                if (action === 'getNumberOfBends') {
+                    return numberOfBends;
+                }
+                throw new Error ('Should not get here, something is messed up in traverseLongConnection');
+            }
+
+            if (connection.type !== prevConnType) {
+                numberOfBends += 1;
             }
             node = findNextNode(node, connection);
+
             if (!connectionCallback) { continue; }
             connectionCallback(connection);
         }
@@ -419,10 +519,10 @@ function validate() {
         // it's an end if there are more than three active connections as this means a user has broken a node-style rule
         if (activeConns > 2) { return true; }
 
-        // if the entering node is active and there are two connections, it must clearly continue on
+        // if the entering connection is active and there are two connections, it must clearly continue on
         if (activeConns === 2 && enteringConnection.state === 'active') { return false; }
 
-        // if the entering node is not active and there is one active connection it continues along that thread
+        // if the entering connection is not active and there is one active connection it continues along that thread
         if (activeConns === 1 && enteringConnection.state !== 'active') { return false; }
 
         // all other possibilities are a node end

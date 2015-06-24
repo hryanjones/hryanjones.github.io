@@ -91,12 +91,16 @@
             'below-active': node.connections.below.state === 'active',
             'right-unpossible': node.connections.right.state === 'unpossible',
             'below-unpossible': node.connections.below.state === 'unpossible',
-            'right-invalid': node.connections.right.nodes[0].invalid ||
+            'right-invalid':
+              node.connections.right.nodes[0].invalid ||
               node.connections.right.nodes[1].invalid ||
-              node.connections.right.invalid,
-            'below-invalid': node.connections.below.nodes[0].invalid ||
+              node.connections.right.invalidReasons.connectsSameNodes ||
+              node.connections.right.invalidReasons.moreThanOneBend,
+            'below-invalid':
+              node.connections.below.nodes[0].invalid ||
               node.connections.below.nodes[1].invalid ||
-              node.connections.below.invalid,
+              node.connections.below.invalidReasons.connectsSameNodes ||
+              node.connections.below.invalidReasons.moreThanOneBend,
           }"
           >
 
@@ -108,7 +112,7 @@
               node.connections.right.state = nextState(node.connections.right.state);
               validate.node(node.connections.right.nodes[0], alerts);
               validate.node(node.connections.right.nodes[1], alerts);
-              validate.sameNodesNotConnected(node.connections.right, alerts);
+              validate.connection(node.connections.right, alerts);
             "
             >
             <i class="unpossible glyphicon glyphicon-remove"></i>
@@ -120,7 +124,7 @@
               node.connections.below.state = nextState(node.connections.below.state);
               validate.node(node.connections.below.nodes[0], alerts);
               validate.node(node.connections.below.nodes[1], alerts);
-              validate.sameNodesNotConnected(node.connections.below, alerts);
+              validate.connection(node.connections.below, alerts);
             "
             >
             <i class="unpossible glyphicon glyphicon-remove"></i>
@@ -148,10 +152,15 @@
     Paths may not branch, touch or cross each other.
     ({{alerts.branchInEmptyNode}} place<span ng-show="alerts.branchInEmptyNode > 1">s</span> above)
   </div>
-  <div ng-show="alerts.sameNodesNotConnected" class="alert bg-danger h4">
+  <div ng-show="alerts.connectsSameNodes" class="alert bg-danger h4">
     <i class="glyphicon glyphicon-warning-sign text-danger"></i>
     Two circles containing the same number may not be connected by a path.
-    ({{alerts.sameNodesNotConnected}} place<span ng-show="alerts.sameNodesNotConnected > 1">s</span> above)
+    ({{alerts.connectsSameNodes}} place<span ng-show="alerts.connectsSameNodes > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.moreThanOneBend" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    Any path between circles may only bend at most once.
+    ({{alerts.moreThanOneBend}} place<span ng-show="alerts.moreThanOneBend > 1">s</span> above)
   </div>
 
   <h3>Rules</h3>
@@ -183,7 +192,7 @@
         <li>Each validation type should not only cause bad things to become extra visible, make sure works for color blind folks), it should also have a nice human readable warning.</li>
         <li><strike>(easy) when a node has more than it's proper number of connections</strike></li>
         <li><strike>(easy) when a connection branches at an empty node</strike></li>
-        <li>(harder) when a long connection has more than one 90 degree angle</li>
+        <li><strike>(harder) when a long connection has more than one 90 degree angle</strike></li>
         <li><strike>(harder) when two connected nodes are the same number.</strike>
           <ul><li><strike><strong>Bug:</strong> Mix of branching and connecting.</strike></li></ul>
         </li>

@@ -91,7 +91,7 @@
   background-color: hsla(60, 100%, 50%, .4);
 }
 .unpossible { /* unpossible X's are hidden unless the appropriate class is on connector */
-  color: red;
+  color: purple;
   font-size: 72%;
   position: absolute;
   display: none;
