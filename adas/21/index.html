@@ -61,7 +61,7 @@
     </label>
   </form>
 
-  <div id="puzzle-container">
+  <div id="puzzle-container" ng-click="conjectureModeShow = true;">
 
     <div ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row">
       <div ng-repeat="node in row track by $index"
@@ -101,6 +101,8 @@
               node.connections.below.nodes[1].invalid ||
               node.connections.below.invalidReasons.connectsSameNodes ||
               node.connections.below.invalidReasons.moreThanOneBend,
+            'right-conjecture': node.connections.right.conjecture,
+            'below-conjecture': node.connections.below.conjecture,
           }"
           >
 
@@ -109,25 +111,33 @@
           <div class="right connectionator"
             ng-if="node.connections.right"
             ng-click="
-              node.connections.right.state = nextState(node.connections.right.state);
-              validate.node(node.connections.right.nodes[0], alerts);
-              validate.node(node.connections.right.nodes[1], alerts);
+              setNextState(node.connections.right, conjectures.enabled);
+              validate.nodes(node.connections.right.nodes, alerts);
               validate.connection(node.connections.right, alerts);
             "
             >
-            <i class="unpossible glyphicon glyphicon-remove"></i>
+            <i class="unpossible glyphicon glyphicon-remove"
+              ng-class="{
+                'glyphicon-remove': inode.connections.right.conjecture,
+                'glyphicon-remove-circle': node.connections.right.conjecture,
+              }"
+            ></i>
           </div>
 
           <div class="below connectionator"
             ng-if="node.connections.below"
             ng-click="
-              node.connections.below.state = nextState(node.connections.below.state);
-              validate.node(node.connections.below.nodes[0], alerts);
-              validate.node(node.connections.below.nodes[1], alerts);
+              setNextState(node.connections.below, conjectures.enabled);
+              validate.nodes(node.connections.below.nodes, alerts);
               validate.connection(node.connections.below, alerts);
             "
             >
-            <i class="unpossible glyphicon glyphicon-remove"></i>
+            <i class="unpossible glyphicon glyphicon-remove"
+              ng-class="{
+                'glyphicon-remove': inode.connections.below.conjecture,
+                'glyphicon-remove-circle': node.connections.below.conjecture,
+              }"
+            ></i>
           </div>
         </div>
       </div>
@@ -139,6 +149,28 @@
   <div ng-if="buildData" class="well">
     <h4>Copy/paste me into a new puzzle JSON file</h4>
     <div>{{buildData}}</div>
+  </div>
+
+  <div ng-show="conjectureModeShow">
+    <button class="btn btn-sm btn-primary" ng-click="
+        conjectureHelp = conjectures.enabled ? true : false;
+        conjectures.enabled = true;
+      "
+      >
+      <input type="checkbox" ng-checked="conjectures.enabled"/>
+      Conjecture Mode
+    </button>
+    <span ng-show="conjectures.enabled" ng-click="conjectures.enabled = false;">
+      <button class="btn btn-sm btn-default" ng-click="conjectures.clear(grid.connections)">
+        Clear Conjectures
+      </button>
+      <button class="btn btn-sm btn-default" ng-click="conjectures.accept(grid.connections)">
+        Accept Conjectures as Truth
+      </button>
+    </span>
+    <p ng-show="conjectures.enabled && conjectureHelp">
+      In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can may make temporary assumptions. When you're done you must either <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em>.
+    </p>
   </div>
 
   <br/>
@@ -189,13 +221,14 @@
   <ol>
     <li>Add in validation
       <ul>
-        <li>Each validation type should not only cause bad things to become extra visible, make sure works for color blind folks), it should also have a nice human readable warning.</li>
+        <li><strike>Each validation type should not only cause bad things to become extra visible, make sure works for color blind folks), it should also have a nice human readable warning.</strike></li>
         <li><strike>(easy) when a node has more than it's proper number of connections</strike></li>
         <li><strike>(easy) when a connection branches at an empty node</strike></li>
         <li><strike>(harder) when a long connection has more than one 90 degree angle</strike></li>
         <li><strike>(harder) when two connected nodes are the same number.</strike>
           <ul><li><strike><strong>Bug:</strong> Mix of branching and connecting.</strike></li></ul>
         </li>
+        <li>Completion validation</li>
       </ul>
     </li>
     <li>
@@ -206,7 +239,7 @@
         <li>BONUS: history slider so you can scrub back and forth quickly</li>
       </ul>
     </li>
-    <li>"What if?" mode -- this one will take some thought to get user experience right. I think they should be able to enter this mode, then all the paths or X's they add will look visually different (gray and something else for colorblind folks) then when they exit it they should have the choice to clear their gray things (default), make the gray truth, or cancel and stay in what-if mode</li>
+    <li><strike>"conjecture" mode -- this one will take some thought to get user experience right. I think they should be able to enter this mode, then all the paths or X's they add will look visually different (gray and something else for colorblind folks) then when they exit it they should have the choice to clear their gray things (default), make the gray truth, or cancel and stay in what-if mode</strike></li>
     <li>drag to select a path</li>
   </ol>
 

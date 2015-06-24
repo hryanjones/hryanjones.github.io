@@ -64,6 +64,10 @@
   width: 110%; /* 110% so that lines overlap enough to form unbroken path */
  border-top: .3em solid hsla(178, 100%, 50%, 1);
 }
+.right-active.right-conjecture {
+  border-top-color: gray;
+  border-top-width: .2em;
+}
 .right-active.right-invalid {
   border-top-color: red;
   border-top-style: groove;
@@ -74,6 +78,10 @@
 .below-active {
   height: 110%;
   border-left: .3em solid hsla(178, 100%, 50%, 1);
+}
+.below-active.below-conjecture {
+  border-left-color: gray;
+  border-left-width: .2em;
 }
 .below-active.below-invalid {
   border-left-color: red;
@@ -95,6 +103,10 @@
   font-size: 72%;
   position: absolute;
   display: none;
+}
+.right-conjecture .right .unpossible,
+.below-conjecture .below .unpossible {
+  color: gray;
 }
 /*.right-invalid .right .unpossible,  This shouldn't happen, but I need to see when it does
 .below-invalid .below .unpossible {

@@ -3,8 +3,9 @@ angular
 .controller('gridder', ['$scope', '$localStorage', '$http', function($scope, $localStorage, $http) {
 
     $scope.clear = clear;
-    $scope.nextState = nextState;
+    $scope.setNextState = setNextState;
     $scope.alerts = validate().newAlerts();
+    $scope.conjectures = conjectures();
 
     $scope.jsonUrl = './example.json';
     loadPuzzle($scope.jsonUrl);
@@ -163,22 +164,21 @@ function generate() {
         }
 
     /**
-     * Create a new connection with a state and whether or not it's a guess.
+     * Create a new connection with a state and whether or not it's a conjecture.
      *     Possible states are:
      *         * null -- standing for empty grid line
      *         * active -- standing for a filled in line
      *         * unpossible -- standing for a line that user has marked which shouldn't be filled
-     *     guess could be:
-     *         * null -- this should always be guess when state is null
+     *     conjecture could be:
      *         * false -- the user is pretty sure the state is correct
-     *         * true -- the user wants this marked as a guess
+     *         * true -- the user wants this marked as a conjecture
      *     invalid is either false or true
      *     type is either 'vertical' or 'horizontal' TODO add validation
     */
         function newConnection(type) {
             return {
                 state: null,
-                guess: null,
+                conjecture: false,
                 invalidReasons: {
                     connectsSameNodes: false,
                     moreThanOneBend: false,
@@ -215,23 +215,35 @@ function generate() {
 
 }
 
-/**
- * cycle to the nextState given state
- * null -> 'unpossible' -> 'active' -> null (etc.)
- */
-function nextState(state) {
-    return {
-        'null': 'active',
-        'active': 'unpossible',
-        // 'unpossible': 'active'
-    }[state] || null;
+function setNextState(connection, conjecturesEnabled) {
+    connection.state = nextState(connection.state);
+    if (!connection.state) {
+        connection.conjecture = false;
+        return;
+    }
+
+    if (conjecturesEnabled) {
+        connection.conjecture = true;
+    }
+
+    /**
+     * cycle to the nextState given state
+     * null -> 'unpossible' -> 'active' -> null (etc.)
+     */
+    function nextState(state) {
+        return {
+            'null': 'active',
+            'active': 'unpossible',
+            // 'unpossible': 'active'
+        }[state] || null;
+    }
 }
 
 function validate(numColumns, numRows) {
     var LIMIT = numColumns * numRows; //max number of connections to follow, prevents infinite while loop
     return {
         newAlerts: newAlerts,
-        node: validateNode,
+        nodes: validateNodes,
         connection: validateConnection,
     }
 
@@ -245,6 +257,12 @@ function validate(numColumns, numRows) {
             connectsSameNodes: 0,
             moreThanOneBend: 0,
         }
+    }
+
+    function validateNodes(nodes, alerts) {
+        nodes.forEach(function(n) {
+            validateNode(n, alerts);
+        });
     }
 
     /**
@@ -532,5 +550,43 @@ function validate(numColumns, numRows) {
     function isEmptyNode(node) {
         return Number(node.number) !== node.number;
     }
+}
+
+function conjectures() {
+    return {
+        enabled: false,
+        clear: clearConjectures,
+        accept: acceptConjectures,
+    };
+
+    function applyFunctionToAllConnections(callback, connections) {
+        connections.vertical.forEach(applyToRow);
+        connections.horizontal.forEach(applyToRow);
+
+        function applyToRow(row) {
+            row.forEach(callback);
+        }
+    }
+
+    function clearConjectures(connections) {
+        applyFunctionToAllConnections(
+            function(conn) {
+                if (conn.conjecture) {
+                    conn.state = null;
+                    removeConjectureFlag(conn);
+                }
+            },
+            connections
+        );
+    }
+
+    function acceptConjectures(connections) {
+        applyFunctionToAllConnections(removeConjectureFlag, connections);
+    }
+
+    function removeConjectureFlag(connection) {
+        connection.conjecture = false;
+    }
+
 }
 
