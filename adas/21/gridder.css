@@ -172,3 +172,13 @@
 .build-input {
   width: 26px;
 }
+
+.tab {
+  background: hsla(0, 0%, 80%, 1);
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0px;
+  padding: 1px 12px;
+}
+.tab.selected {
+  background: white;
+}

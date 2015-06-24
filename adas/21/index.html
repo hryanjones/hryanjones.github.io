@@ -27,9 +27,39 @@
     </small>
   </h1>
 
+  <div class="well text-danger">
+    <strong>Warning</strong>: This development version doesn't have in-browser persistence <em>yet</em>. (Last month's did)
+  </div>
+
   <div>
     1st click - sets connection, 2nd click - sets it to not possible, 3rd resets to unknown
   </div>
+
+  <div ng-if="buildData">
+    <label>
+      Rows:
+      <input type="number" ng-model="buildData.numRows" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
+    </label>
+    <label>
+      Columns:
+      <input type="number" ng-model="buildData.numColumns" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
+    </label>
+  </div>
+
+  <form id="tabs">
+    <label class="tab" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
+        jsonUrl = './example.json';
+        loadPuzzle(jsonUrl);
+      ">
+      example
+    </label>
+    <label class="tab" ng-class="{selected: jsonUrl === './nope.json'}" ng-click="
+        jsonUrl = './nope.json';
+        loadPuzzle(jsonUrl);
+      ">
+      (build)
+    </label>
+  </form>
 
   <div id="puzzle-container">
 
@@ -40,16 +70,16 @@
         >
         <div class="node"
           ng-class="{
-			empty: !node.number,
-			invalid: node.invalid
-        }"
-        >
+      			empty: !node.number && !buildData,
+      			invalid: node.invalid
+          }">
           <div class="node-label">
             {{node.number}}
           </div>
-          <input type="number" ng-if="buildMode" min="0" max="4" class="build-input"
+          <input type="number" ng-if="buildData" min="0" max="4" class="build-input"
             ng-model="node.number"
-            ng-change="addNodeNumber(nodeNumbers, rowIndex, colIndex, node.number)"
+            ng-change="addNodeNumber(buildData.nodeNumbers, rowIndex, colIndex, node.number)"
+            style="z-index: 6;"
           />
         </div>
 
@@ -102,6 +132,11 @@
 
   </div>
 
+  <div ng-if="buildData" class="well">
+    <h4>Copy/paste me into a new puzzle JSON file</h4>
+    <div>{{buildData}}</div>
+  </div>
+
   <br/>
   <div ng-show="alerts.overloadedNode" class="alert bg-danger h4">
     <i class="glyphicon glyphicon-warning-sign text-danger"></i>
@@ -129,20 +164,31 @@
   </ol>
 
   <h3>TODO <small>in rough priority order</small></h3>
+
+  <h4>For Release</h4>
+
   <ol>
-    <li>Add in basic validation
+    <li><strike>ability to load in different puzzles (so you could work the example for yourself and then move on to the real puzzle)</strike></li>
+    <li><strike>need the UI (e.g. tabs for the example vs. the real thing),</strike> and a loading message and/or spinner</li>
+    <li>in browser persistence</li>
+    <li>Legend</li>
+    <li>more detailed instructions</li>
+  </ol>
+
+  <h4>Nice-to-haves</h4>
+
+  <ol>
+    <li>Add in validation
       <ul>
         <li>Each validation type should not only cause bad things to become extra visible, make sure works for color blind folks), it should also have a nice human readable warning.</li>
         <li><strike>(easy) when a node has more than it's proper number of connections</strike></li>
         <li><strike>(easy) when a connection branches at an empty node</strike></li>
         <li>(harder) when a long connection has more than one 90 degree angle</li>
         <li><strike>(harder) when two connected nodes are the same number.</strike>
-			    <ul><li><strike><strong>Bug:</strong> Mix of branching and connecting.</strike></li></ul>
+          <ul><li><strike><strong>Bug:</strong> Mix of branching and connecting.</strike></li></ul>
         </li>
       </ul>
     </li>
-    <li>Legend</li>
-    <li>more detailed instructions</li>
     <li>
       history
       <ul>
@@ -151,9 +197,15 @@
         <li>BONUS: history slider so you can scrub back and forth quickly</li>
       </ul>
     </li>
-    <li>Guessing mode -- this one will take some thought to get user experience right. I think they should be able to enter guessing mode, then when they exit it they should have the choice to clear their guesses (default), make their guesses truth, or cancel and stay in guessing mode</li>
+    <li>"What if?" mode -- this one will take some thought to get user experience right. I think they should be able to enter this mode, then all the paths or X's they add will look visually different (gray and something else for colorblind folks) then when they exit it they should have the choice to clear their gray things (default), make the gray truth, or cancel and stay in what-if mode</li>
     <li>drag to select a path</li>
   </ol>
+
+  <h4>Report issues beyond what's above</h4>
+  <p>
+    Please send an email to <a href="mailto:hryanjones@gmail.com">hryanjones@gmail.com</a> about any issues, bugs, or feature requests that come up.
+  </p>
+
 
   <!-- <h3>nodeNumbers</h3><pre>{{nodeNumbers|json}}</pre> -->
   <!-- <h3>grid</h3><pre>{{grid|json}}</pre> -->

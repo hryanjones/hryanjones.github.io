@@ -1,21 +1,16 @@
 angular
 .module('app', ['ngStorage'])
-.controller('gridder', ['$scope', '$localStorage', function($scope, $localStorage) {
-
-    var numColumns = 8; // TODO load this along with nodeNumbers so that you can have different puzzles loaded with the same puzzle engine
-    var numRows = 8;
-
-    $scope.nodeNumbers = getNodeNumbers() || {};
-    $scope.buildMode = !(getNodeNumbers()) || /build/.test(window.location.search);
-    if ($scope.buildMode) {
-        $scope.addNodeNumber = generate().addNodeNumber;
-    }
+.controller('gridder', ['$scope', '$localStorage', '$http', function($scope, $localStorage, $http) {
 
     $scope.clear = clear;
     $scope.nextState = nextState;
     $scope.validate = validate();
     $scope.alerts = validate().newAlerts();
-    setUpBoard();
+
+    $scope.jsonUrl = './example.json';
+    loadPuzzle($scope.jsonUrl);
+
+    $scope.loadPuzzle = loadPuzzle; // for switching to a different puzzle
 
     return;
 
@@ -31,7 +26,7 @@ angular
      * link the $scope version to the localstorage version
      * also generate regions
      */
-    function setUpBoard() {
+    function setUpBoard(data) {
         // if ($localStorage.grid) {
         //     $scope.grid = $localStorage.grid;
         // }
@@ -40,8 +35,40 @@ angular
         //     $localStorage.grid = $scope.grid;
         // }
         // $scope.regions = generateRegionLookup($scope.grid);
-        $scope.grid = generate().newEmptyGrid(numRows, numColumns, $scope.nodeNumbers);
+        $scope.grid = generate().newEmptyGrid(data.numRows, data.numColumns, data.nodeNumbers);
+
     }
+
+    /**
+     * function to load static puzzle size and nodeNumbers
+     */
+    function loadPuzzle(jsonUrl) {
+        delete $scope.buildData;
+        delete $scope.grid;
+
+        $scope.puzzleLoadRequest = $http
+        .get(jsonUrl, {cache: true})
+        .success(function(data) {
+            setUpBoard(data);
+            delete $scope.puzzleLoadRequest;
+        })
+        .error(function(err) {
+            if (err !== 'Not found\n') { return; } // FIXME, need to make sure this is the same error on github.io
+
+            // buildMode
+            $scope.buildData = {
+                numRows: 3,
+                numColumns: 6,
+                nodeNumbers: {}
+            };
+
+            setUpBoard($scope.buildData);
+            $scope.addNodeNumber = generate().addNodeNumber; // only for buildMode
+            $scope.setUpBoard = setUpBoard; // only for build mode
+
+        });
+    }
+
 }]);
 
 function generate() {
@@ -76,8 +103,8 @@ function generate() {
                 var connectionLeft = j ? grid.connections.horizontal[i][j-1] : null;
 
                 // new connections to create
-                var connectionRight = lastColumn ? null : newConnection();
-                var connectionBelow = lastRow ? null : newConnection();
+                var connectionRight = lastColumn ? null : newConnection('horizontal');
+                var connectionBelow = lastRow ? null : newConnection('vertical');
 
                 // populate new connections and node into the grid
                 if (connectionRight) {
@@ -147,12 +174,14 @@ function generate() {
      *         * false -- the user is pretty sure the state is correct
      *         * true -- the user wants this marked as a guess
      *     invalid is either false or true
+     *     type is either 'vertical' or 'horizontal' TODO add validation
     */
-        function newConnection() {
+        function newConnection(type) {
             return {
                 state: null,
                 guess: null,
                 invalid: false,
+                type: type,
                 nodes: [], // this is where pointers to the two nodes this connection connects will be placed
             };
         }
@@ -405,39 +434,3 @@ function validate() {
     }
 }
 
-/**
- * function to hold the hard-coded puzzle nodeNumbers
- */
-function getNodeNumbers() {
-    return {
-        "0": {
-            "2": 1,
-            "4": 2
-        },
-        "1": {
-            "1": 2,
-            "3": 1,
-            "6": 4
-        },
-        "2": {
-            "0": 2,
-            "2": 2
-        },
-        "4": {
-            "1": 3,
-            "5": 3,
-            "7": 3
-        },
-        "5": {
-            "4": 2,
-            "6": 2
-        },
-        "6": {
-            "3": 2
-        },
-        "7": {
-            "1": 3
-        }
-    };
-    // return false;
-}
