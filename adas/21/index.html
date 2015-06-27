@@ -28,7 +28,7 @@
   </h1>
 
   <div class="well text-danger">
-    <strong>Warning</strong>: This development version doesn't have in-browser persistence <em>yet</em>. (Last month's did)
+    <strong>Warning</strong>: This development version doesn't have in-browser persistence <em>yet</em>. (it will before release)
   </div>
 
   <div>
@@ -53,13 +53,18 @@
       ">
       example
     </label>
-    <label class="tab" ng-class="{selected: jsonUrl === './nope.json'}" ng-click="
-        jsonUrl = './nope.json';
+    <label class="tab" ng-class="{selected: jsonUrl === './real-deal-puzzle.json'}" ng-click="
+        jsonUrl = './real-deal-puzzle.json';
         loadPuzzle(jsonUrl);
       ">
-      (build)
+      Ænigma #21
     </label>
   </form>
+
+  <!-- below image is for verifying that I entered the puzzle correctly -->
+  <!-- <div style="position: relative">
+    <img style="position: absolute; left: -1px; top: 4px; width: 779px; opacity: 0.4; z-index: 10;" src="/puzzle.png"/>
+  </div> -->
 
   <div id="puzzle-container" ng-click="conjectureModeShow = true;">
 
@@ -211,9 +216,20 @@
   <ol>
     <li><strike>ability to load in different puzzles (so you could work the example for yourself and then move on to the real puzzle)</strike></li>
     <li><strike>need the UI (e.g. tabs for the example vs. the real thing),</strike> and a loading message and/or spinner</li>
-    <li>in browser persistence</li>
+    <li>
+      history
+      <ul>
+        <li>load a history stack (essential)<li>
+        <li>backward</li>
+        <li>forward</li>
+        <li>BONUS: history slider so you can scrub back and forth quickly</li>
+      </ul>
+    </li>
+    <li>in browser persistence (will have to be based on history due to circular data structures)</li>
+    <li>Global Re-do of validation otherwise Conjecture Mode and loading history will put things in a bad state</li>
     <li>Legend</li>
     <li>more detailed instructions</li>
+    <li>Addition of letters to the puzzle and probably a toggle to show/hide them</li>
   </ol>
 
   <h4>Nice-to-haves</h4>
@@ -229,14 +245,8 @@
           <ul><li><strike><strong>Bug:</strong> Mix of branching and connecting.</strike></li></ul>
         </li>
         <li>Completion validation</li>
-      </ul>
-    </li>
-    <li>
-      history
-      <ul>
-        <li>backward</li>
-        <li>forward</li>
-        <li>BONUS: history slider so you can scrub back and forth quickly</li>
+        <li>Ability to turn validation off in case it's distracting to some solvers</li>
+        <li>Should I have some type of indicator that all the paths have been used from a given circle?</li>
       </ul>
     </li>
     <li><strike>"conjecture" mode -- this one will take some thought to get user experience right. I think they should be able to enter this mode, then all the paths or X's they add will look visually different (gray and something else for colorblind folks) then when they exit it they should have the choice to clear their gray things (default), make the gray truth, or cancel and stay in what-if mode</strike></li>

@@ -9,6 +9,7 @@
 
 .node-row { /* It's not clear to me why I need to force the height to be correct */
   height: 35px;
+  white-space: nowrap;
 }
 
 .node-container {

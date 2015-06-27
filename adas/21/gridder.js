@@ -8,6 +8,7 @@ angular
     $scope.conjectures = conjectures();
 
     $scope.jsonUrl = './example.json';
+    // $scope.jsonUrl = './real-deal-puzzle.json';
     loadPuzzle($scope.jsonUrl);
 
     $scope.loadPuzzle = loadPuzzle; // for switching to a different puzzle
@@ -17,8 +18,11 @@ angular
     // Controller-dependent local functions
 
     function clear() {
+        var confirmed = window.confirm('Clear all of the progress on the current puzzle?');
         // delete $localStorage.grid;
-        loadPuzzle($scope.jsonUrl);
+        if (confirmed) {
+            loadPuzzle($scope.jsonUrl);
+        }
     }
 
     /**
