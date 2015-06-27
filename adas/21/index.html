@@ -156,8 +156,12 @@
     <div>{{buildData}}</div>
   </div>
 
-  <div>
-    <button class="btn btn-sm btn-primary" ng-click="
+  <div ng-class="{'bg-info text-info info-bubble': conjectures.enabled && conjectureHelp}">
+    <p ng-show="conjectures.enabled && conjectureHelp">
+      <i class="glyphicon glyphicon-info-sign"></i>
+      In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can may make temporary assumptions. When you're done you must either <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em>.
+    </p>
+    <button class="btn btn-primary" ng-click="
         conjectureHelp = conjectures.enabled ? true : false;
         conjectures.enabled = true;
       "
@@ -167,22 +171,22 @@
     </button>
     <span ng-show="conjectures.enabled" ng-click="conjectures.enabled = false;">
       <button class="btn btn-sm btn-default"
+        ng-class="{'btn-lg': conjectureHelp, 'btn-sm': !conjectureHelp}"
         ng-click="
           conjectures.clear(grid.connections);
           history.clearConjectures(history.data);
         ">
         Clear Conjectures
       </button>
-      <button class="btn btn-sm btn-default" ng-click="conjectures.accept(grid.connections)">
+      <button class="btn btn-default" ng-click="conjectures.accept(grid.connections)"
+        ng-class="{'btn-lg': conjectureHelp, 'btn-sm': !conjectureHelp}"
+        >
         Accept Conjectures as Truth
       </button>
     </span>
-    <p ng-show="conjectures.enabled && conjectureHelp">
-      In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can may make temporary assumptions. When you're done you must either <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em>.
-    </p>
   </div>
 
-  <div ng-if="true">
+  <div ng-if="false">
     <h3>History</h3>
     <pre>{{history.data|json}}</pre>
   </div>

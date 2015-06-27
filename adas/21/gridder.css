@@ -63,7 +63,8 @@
 }
 .right-active {
   width: 110%; /* 110% so that lines overlap enough to form unbroken path */
- border-top: .3em solid hsla(178, 100%, 50%, 1);
+
+  border-top: .3em solid hsla(262, 100%, 20%, 1);
 }
 .right-active.right-conjecture {
   border-top-color: gray;
@@ -71,14 +72,14 @@
 }
 .right-active.right-invalid {
   border-top-color: red;
-  border-top-style: groove;
+  border-top-style: dotted;
 }
 .below-none {
   border-left: none;
 }
 .below-active {
   height: 110%;
-  border-left: .3em solid hsla(178, 100%, 50%, 1);
+  border-left: .3em solid hsla(262, 100%, 20%, 1);
 }
 .below-active.below-conjecture {
   border-left-color: gray;
@@ -86,18 +87,19 @@
 }
 .below-active.below-invalid {
   border-left-color: red;
-  border-left-style: groove;
+  border-left-style: dotted;
 }
 
 /* connectionators, elements for creating connections */
 .connectionator {
   position: absolute;
   z-index: 0;
-  cursor: pointer;
+  cursor: crosshair;
   /* background-color: hsla(60, 100%, 50%, .4); */
 }
 .connectionator:hover {
-  background-color: hsla(60, 100%, 50%, .4);
+  background-color: hsla(60, 100%, 50%, 0.7);
+  border: solid 1px gray;
 }
 .unpossible { /* unpossible X's are hidden unless the appropriate class is on connector */
   color: purple;
@@ -172,10 +174,17 @@
   background-image: url("http://hryanjones.com/adalogical-aenigmas/20-10-below.png");
 }
 
-.alert {
-  border: 1px solid red;
+.alert,
+.info-bubble {
   border-radius: 8px;
   display: inline-block;
+}
+.info-bubble {
+  border: 1px solid blue;
+  padding: 10px;
+}
+.alert {
+  border: 1px solid red;
 }
 
 .no-margin {
