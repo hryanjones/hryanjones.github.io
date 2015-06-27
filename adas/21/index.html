@@ -27,10 +27,6 @@
     </small>
   </h1>
 
-  <div class="well text-danger">
-    <strong>Warning</strong>: This development version doesn't have in-browser persistence <em>yet</em>. (it will before release)
-  </div>
-
   <div>
     1st click - sets connection, 2nd click - sets it to not possible, 3rd resets to unknown
   </div>
@@ -66,7 +62,7 @@
     <img style="position: absolute; left: -1px; top: 4px; width: 779px; opacity: 0.4; z-index: 10;" src="/puzzle.png"/>
   </div> -->
 
-  <div id="puzzle-container" ng-click="conjectureModeShow = true;">
+  <div id="puzzle-container">
 
     <div ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row">
       <div ng-repeat="node in row track by $index"
@@ -116,7 +112,9 @@
           <div class="right connectionator"
             ng-if="node.connections.right"
             ng-click="
-              setNextState(node.connections.right, conjectures.enabled);
+              history.data.push(
+                setNextStateAndGetChanges(node.connections.right, conjectures.enabled, rowIndex, colIndex)
+              );
               validate.nodes(node.connections.right.nodes, alerts);
               validate.connection(node.connections.right, alerts);
             "
@@ -132,7 +130,9 @@
           <div class="below connectionator"
             ng-if="node.connections.below"
             ng-click="
-              setNextState(node.connections.below, conjectures.enabled);
+              history.data.push(
+                setNextStateAndGetChanges(node.connections.below, conjectures.enabled, rowIndex, colIndex)
+              );
               validate.nodes(node.connections.below.nodes, alerts);
               validate.connection(node.connections.below, alerts);
             "
@@ -156,7 +156,7 @@
     <div>{{buildData}}</div>
   </div>
 
-  <div ng-show="conjectureModeShow">
+  <div>
     <button class="btn btn-sm btn-primary" ng-click="
         conjectureHelp = conjectures.enabled ? true : false;
         conjectures.enabled = true;
@@ -166,7 +166,11 @@
       Conjecture Mode
     </button>
     <span ng-show="conjectures.enabled" ng-click="conjectures.enabled = false;">
-      <button class="btn btn-sm btn-default" ng-click="conjectures.clear(grid.connections)">
+      <button class="btn btn-sm btn-default"
+        ng-click="
+          conjectures.clear(grid.connections);
+          history.clearConjectures(history.data);
+        ">
         Clear Conjectures
       </button>
       <button class="btn btn-sm btn-default" ng-click="conjectures.accept(grid.connections)">
@@ -176,6 +180,11 @@
     <p ng-show="conjectures.enabled && conjectureHelp">
       In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can may make temporary assumptions. When you're done you must either <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em>.
     </p>
+  </div>
+
+  <div ng-if="true">
+    <h3>History</h3>
+    <pre>{{history.data|json}}</pre>
   </div>
 
   <br/>
@@ -226,14 +235,16 @@
     <li>
       history
       <ul>
-        <li>load a history stack (essential)</li>
+        <li><strike>save history</strike></li>
+        <li><strike>load a history stack (essential)</strike></li>
         <li>backward</li>
         <li>forward</li>
         <li>BONUS: history slider so you can scrub back and forth quickly</li>
       </ul>
     </li>
-    <li>in browser persistence (will have to be based on history due to circular data structures)</li>
+    <li><strike>in browser persistence (will have to be based on history due to circular data structures)</strike></li>
     <li>Global Re-do of validation otherwise Conjecture Mode and loading history will put things in a bad state</li>
+    <li>Query string to select appropriate puzzle tab</li>
     <li>Legend</li>
     <li>more detailed instructions</li>
     <li>Addition of letters to the puzzle and probably a toggle to show/hide them</li>

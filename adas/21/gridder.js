@@ -3,7 +3,7 @@ angular
 .controller('gridder', ['$scope', '$localStorage', '$http', function($scope, $localStorage, $http) {
 
     $scope.clear = clear;
-    $scope.setNextState = setNextState;
+    $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
     $scope.alerts = validate().newAlerts();
     $scope.conjectures = conjectures();
 
@@ -12,6 +12,7 @@ angular
     loadPuzzle($scope.jsonUrl);
 
     $scope.loadPuzzle = loadPuzzle; // for switching to a different puzzle
+    $scope.history = history();
 
     return;
 
@@ -21,6 +22,7 @@ angular
         var confirmed = window.confirm('Clear all of the progress on the current puzzle?');
         // delete $localStorage.grid;
         if (confirmed) {
+            $localStorage.history[$scope.jsonUrl] = [];
             loadPuzzle($scope.jsonUrl);
         }
     }
@@ -30,16 +32,19 @@ angular
      * link the $scope version to the localstorage version
      * also generate regions
      */
-    function setUpBoard(data) {
-        // if ($localStorage.grid) {
-        //     $scope.grid = $localStorage.grid;
-        // }
-        // else {
-        //     $scope.grid = getStates();
-        //     $localStorage.grid = $scope.grid;
-        // }
-        // $scope.regions = generateRegionLookup($scope.grid);
+    function setUpBoard(data, historyData) {
         $scope.grid = generate().newEmptyGrid(data.numRows, data.numColumns, data.nodeNumbers);
+        $scope.history.data = historyData;
+
+        // update the grid to have all the changes so far
+        $scope.history.doChanges($scope.history.data, $scope.grid);
+
+        // set Conjecture Mode as on if the last change has a conjecture
+        $scope.conjectures.enabled = conjectures().lastChangeHasConjecture($scope.history.data);
+
+        // TODO should have a loading variable so we can prevent user from changing things before this point?
+
+        // initialize validation functions with proper number of rows and columns
         $scope.validate = validate(data.numRows, data.numColumns);
     }
 
@@ -53,12 +58,25 @@ angular
         $scope.puzzleLoadRequest = $http
         .get(jsonUrl, {cache: true})
         .success(function(data) {
-            setUpBoard(data);
+            setUpBoard(data, loadHistory(jsonUrl));
             delete $scope.puzzleLoadRequest;
         })
         .error(function(err) {
             if (err !== 'Not found\n') { return; } // FIXME, need to make sure this is the same error on github.io
+            enterBuildMode();
 
+        });
+
+        /**
+         * Loads history from browser local storage. Failing that returns a new history array linked to storage.
+         */
+        function loadHistory(namespace) {
+            $localStorage.history = $localStorage.history || {};
+            $localStorage.history[namespace] = $localStorage.history[namespace] || [];
+            return $localStorage.history[namespace];
+        }
+
+        function enterBuildMode() {
             // buildMode
             $scope.buildData = {
                 numRows: 3,
@@ -69,8 +87,7 @@ angular
             setUpBoard($scope.buildData);
             $scope.addNodeNumber = generate().addNodeNumber; // only for buildMode
             $scope.setUpBoard = setUpBoard; // only for build mode
-
-        });
+        }
     }
 
 }]);
@@ -219,16 +236,34 @@ function generate() {
 
 }
 
-function setNextState(connection, conjecturesEnabled) {
-    connection.state = nextState(connection.state);
-    if (!connection.state) {
-        connection.conjecture = false;
-        return;
+/**
+ * This mutates the connection state to update it to the new one. It is marked as a conjecture if conjectures are enabled.
+ * Finally, it returns a history change to be stored.
+ * TODO break change part into a history function (in history() space) that takes appropriate parameters?
+ */
+function setNextStateAndGetChanges(connection, conjecturesEnabled, row, column) {
+
+    var newState = nextState(connection.state)
+
+    // a change is a part of a history chain
+    var change = {
+        row: row,
+        column, column,
+        type: connection.type,
+        state: {
+            from: connection.state,
+            to: newState
+        },
+    };
+
+    connection.state = newState;
+    connection.conjecture = conjecturesEnabled;
+
+    if (connection.conjecture) { // by not storing non-conjecture we'll save a bit of space
+        change.conjecture = true;
     }
 
-    if (conjecturesEnabled) {
-        connection.conjecture = true;
-    }
+    return {changes: [change]};
 
     /**
      * cycle to the nextState given state
@@ -240,6 +275,10 @@ function setNextState(connection, conjecturesEnabled) {
             'active': 'unpossible',
             // 'unpossible': 'active'
         }[state] || null;
+    }
+
+    function getConjectureState(connState, enabled) {
+        return !connState ? false : enabled;
     }
 }
 
@@ -473,7 +512,6 @@ function validate(numColumns, numRows) {
 
         // Need a sane limit in here because it's possible for someone to make a closed loop
         // Half the total number of connections seems good, which is just M times N
-        // FIXME make it so that this number gets updated automatically and is stored somewhere on the top level of validation
         if (connectionCallback) {
             connectionCallback(connection);
         }
@@ -561,6 +599,7 @@ function conjectures() {
         enabled: false,
         clear: clearConjectures,
         accept: acceptConjectures,
+        lastChangeHasConjecture: lastChangeHasConjecture,
     };
 
     function applyFunctionToAllConnections(callback, connections) {
@@ -592,5 +631,58 @@ function conjectures() {
         connection.conjecture = false;
     }
 
+    function lastChangeHasConjecture(history) {
+        var lastChange = history.slice(-1)[0];
+        return !!(lastChange && changeHasConjecture(lastChange));
+
+		function changeHasConjecture(change) {
+		    return change.changes.some(function(c) { return c.conjecture; });
+		}
+	}
+
+
 }
 
+function history() {
+    return {
+        doChanges: doChanges,
+        clearConjectures: clearConjectures,
+        // undoChanges(changes, grid),
+    };
+
+    /**
+     * Applies the connection changes to the grid. If there's a mismatch in initial state of a connection it throws
+     * an error. TODO how to handle these errors and propogate them up to the user? Ideally they should just not happen
+     */
+    function doChanges(changes, grid) {
+        changes.forEach(function(groupOfChanges) {
+            groupOfChanges.changes.forEach(updateConnectionBasedOnChange);
+        });
+
+        function updateConnectionBasedOnChange(change) {
+            var connToChange = grid.connections[change.type][change.row][change.column];
+            verifyConnectionStateBeforeChange(connToChange, change);
+            connToChange.state = change.state.to;
+            if (change.conjecture) {
+                connToChange.conjecture = change.conjecture;
+            }
+        }
+
+        function verifyConnectionStateBeforeChange(connection, change) {
+            if (connection.state !== change.state.from) {
+                var msg = 'Connection state differs from expected.'
+                console.error(msg + ' connection', connection, 'change', change);
+                throw new Error(msg);
+            }
+        }
+    }
+
+    // FIXME:
+    // Has to clear only conjecture changes out of a group of changes
+    // Really should just be using the undo feature (which isn't written yet)
+    function clearConjectures(history) {
+        while (history.length && conjectures().lastChangeHasConjecture(history)) {
+            history.pop();
+        }
+    }
+}
