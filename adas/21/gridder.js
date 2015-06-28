@@ -4,7 +4,6 @@ angular
 
     $scope.clear = clear;
     $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
-    $scope.alerts = validate().newAlerts();
     $scope.conjectures = conjectures();
 
     $scope.jsonUrl = './example.json';
@@ -39,13 +38,16 @@ angular
         // update the grid to have all the changes so far
         $scope.history.doChanges($scope.history.data, $scope.grid);
 
+        // initialize validation functions with proper number of rows and columns
+        $scope.validate = validate(data.numRows, data.numColumns);
+        $scope.alerts = $scope.validate.newAlerts();
+        // redo node validation
+        $scope.validate.redo($scope.grid, $scope.alerts);
+
         // set Conjecture Mode as on if the last change has a conjecture
         $scope.conjectures.enabled = conjectures().lastChangeHasConjecture($scope.history.data);
 
         // TODO should have a loading variable so we can prevent user from changing things before this point?
-
-        // initialize validation functions with proper number of rows and columns
-        $scope.validate = validate(data.numRows, data.numColumns);
     }
 
     /**
@@ -140,7 +142,7 @@ function generate() {
             }
         }
 
-        setPointersToNodesOnConnections(grid);
+        linkAllNodesOnConnections(grid);
 
         return grid;
 
@@ -210,17 +212,17 @@ function generate() {
         }
 
         /**
-         * Cycle through all the nodes, for each connection on each node, add a pointer to the node
+         * Cycle through all the nodes, for each connection on each node, add a pointer to the node.
          */
-        function setPointersToNodesOnConnections(grid) {
-            grid.nodes.forEach(function(row) {
-                row.forEach(function(node) {
-                    node.connections.all.forEach(function(connection) {
-                        connection.nodes.push(node); // DANGER this is creating a circular reference, which may cause problems in the future!
-                    })
-                })
-            })
+        function linkAllNodesOnConnections(grid) {
+            utility().forAllNodes(grid.nodes, linkNodeOnConnections);
 
+            function linkNodeOnConnections(node) {
+                node.connections.all.forEach(function(connection) {
+                    // NOTE: this creates a circular reference, preventing JSON stringifying
+                    connection.nodes.push(node);
+                });
+            }
         }
     }
 
@@ -248,7 +250,7 @@ function setNextStateAndGetChanges(connection, conjecturesEnabled, row, column) 
     // a change is a part of a history chain
     var change = {
         row: row,
-        column, column,
+        column: column,
         type: connection.type,
         state: {
             from: connection.state,
@@ -283,11 +285,16 @@ function setNextStateAndGetChanges(connection, conjecturesEnabled, row, column) 
 }
 
 function validate(numColumns, numRows) {
+    if (!numColumns || !numRows) {
+        throw new Error('You must initialize validator with number of rows and columns.');
+    }
     var LIMIT = numColumns * numRows; //max number of connections to follow, prevents infinite while loop
+
     return {
         newAlerts: newAlerts,
         nodes: validateNodes,
         connection: validateConnection,
+        redo: redoValidation,
     }
 
     /**
@@ -376,7 +383,7 @@ function validate(numColumns, numRows) {
             }
         }
 
-        validateconnectsSameNodes(connection, alerts);
+        validateConnectsSameNodes(connection, alerts);
         validateNoMoreThanOneBend(connection, alerts);
 
         function connectedToInvalidNodes(connection) {
@@ -394,7 +401,7 @@ function validate(numColumns, numRows) {
      * traverse along a longer connection. If it terminates in two non-empty nodes, make sure they're not the same number
      * @FIXME -- this is very similar to validateNoMoreThanOneBend, combine in an intelligible way
      */
-    function validateconnectsSameNodes(connection, alerts) {
+    function validateConnectsSameNodes(connection, alerts) {
         var nodeA = traverseLongConnection('findEndNode', connection, connection.nodes[0]);
         var nodeB = traverseLongConnection('findEndNode', connection, connection.nodes[1]);
 
@@ -448,7 +455,6 @@ function validate(numColumns, numRows) {
             return;
         }
 
-        // yuck, if a segment is removed in the middle we need to decrement our alerts counter and revalidate both sides
 
         var numberOfBends = traverseLongConnection('getNumberOfBends', connection, connection.nodes[0]) +
             traverseLongConnection('getNumberOfBends', connection, connection.nodes[1]);
@@ -509,6 +515,7 @@ function validate(numColumns, numRows) {
     function traverseLongConnection(action, connection, node, connectionCallback) {
         // action can be either 'findEnd Node' or 'getNumberOfBends'
         var limit = LIMIT;
+        // console.error('action = ', action, '\n connection = ', connection, '\nnode = ', node, '\nconnectionCallback', connectionCallback);
 
         // Need a sane limit in here because it's possible for someone to make a closed loop
         // Half the total number of connections seems good, which is just M times N
@@ -545,7 +552,12 @@ function validate(numColumns, numRows) {
             connectionCallback(connection);
         }
 
-        console.error('node = ', node, ', connection = ', connection);
+        console.error(
+            'action = ', action,
+            '\n connection = ', connection,
+            '\nnode = ', node,
+            '\nconnectionCallback', connectionCallback
+        );
         throw new Error('Did not find an end node. Should not happen. Might need to increase limit.');
     }
 
@@ -589,10 +601,43 @@ function validate(numColumns, numRows) {
         return true;
     }
 
+    function redoValidation(grid, alerts) {
+        clearValidation(grid);
+        utility().forAllNodes(grid.nodes, revalidateNode);
+        utility().forAllConnections(grid.connections, revalidateConnection);
+
+        function revalidateNode(node) {
+            validateNode(node, alerts);
+        }
+
+        function revalidateConnection(conn) {
+            if (conn.state !== 'active') { return; }
+
+            // if it is invalid then we've checked adjoining connections and need not check again
+            if (conn.invalidReasons.connectsSameNodes || conn.invalidReasons.moreThanOneBend) { return; }
+
+            validateConnection(conn, alerts);
+        }
+    }
+
+    function clearValidation(grid) {
+        utility().forAllConnections(grid.connections, resetConnectionInvalidState);
+        utility().forAllNodes(grid.nodes, resetNodeInvalidState);
+
+        function resetConnectionInvalidState(connection) {
+            connection.invalidReasons = {};
+        }
+
+        function resetNodeInvalidState(node) {
+            node.invalid = false;
+        }
+    }
+
     function isEmptyNode(node) {
         return Number(node.number) !== node.number;
     }
 }
+
 
 function conjectures() {
     return {
@@ -602,29 +647,19 @@ function conjectures() {
         lastChangeHasConjecture: lastChangeHasConjecture,
     };
 
-    function applyFunctionToAllConnections(callback, connections) {
-        connections.vertical.forEach(applyToRow);
-        connections.horizontal.forEach(applyToRow);
+    function clearConjectures(connections) {
+        utility().forAllConnections(connections, removeStateAndConjecture);
 
-        function applyToRow(row) {
-            row.forEach(callback);
+        function removeStateAndConjecture(conn) {
+            if (conn.conjecture) {
+                conn.state = null;
+                removeConjectureFlag(conn);
+            }
         }
     }
 
-    function clearConjectures(connections) {
-        applyFunctionToAllConnections(
-            function(conn) {
-                if (conn.conjecture) {
-                    conn.state = null;
-                    removeConjectureFlag(conn);
-                }
-            },
-            connections
-        );
-    }
-
     function acceptConjectures(connections) {
-        applyFunctionToAllConnections(removeConjectureFlag, connections);
+        utility().forAllConnections(connections, removeConjectureFlag);
     }
 
     function removeConjectureFlag(connection) {
@@ -635,10 +670,10 @@ function conjectures() {
         var lastChange = history.slice(-1)[0];
         return !!(lastChange && changeHasConjecture(lastChange));
 
-		function changeHasConjecture(change) {
-		    return change.changes.some(function(c) { return c.conjecture; });
-		}
-	}
+        function changeHasConjecture(change) {
+            return change.changes.some(function(c) { return c.conjecture; });
+        }
+    }
 
 
 }
@@ -655,9 +690,7 @@ function history() {
      * an error. TODO how to handle these errors and propogate them up to the user? Ideally they should just not happen
      */
     function doChanges(changes, grid) {
-        changes.forEach(function(groupOfChanges) {
-            groupOfChanges.changes.forEach(updateConnectionBasedOnChange);
-        });
+        forEachChange(changes, updateConnectionBasedOnChange);
 
         function updateConnectionBasedOnChange(change) {
             var connToChange = grid.connections[change.type][change.row][change.column];
@@ -672,17 +705,56 @@ function history() {
             if (connection.state !== change.state.from) {
                 var msg = 'Connection state differs from expected.'
                 console.error(msg + ' connection', connection, 'change', change);
-                throw new Error(msg);
+                // This does appear to happen in the wild so I messed something up somewhere, seems better for users
+                // to continue on rather than throwing an error
+                // throw new Error(msg);
             }
         }
+    }
+
+    function forEachChange(changes, callback) {
+        changes.forEach(function(groupOfChanges) {
+            groupOfChanges.changes.forEach(callback);
+        });
     }
 
     // FIXME:
     // Has to clear only conjecture changes out of a group of changes
     // Really should just be using the undo feature (which isn't written yet)
-    function clearConjectures(history) {
-        while (history.length && conjectures().lastChangeHasConjecture(history)) {
-            history.pop();
+    function clearConjectures(changes) {
+        while (changes.length && conjectures().lastChangeHasConjecture(changes)) {
+            changes.pop();
+        }
+    }
+
+    function markConjecturesAsTruth(changes) {
+        forEachChange(changes, deleteConjectureFlag);
+
+        function deleteConjectureFlag(change) {
+            delete change.conjecture;
         }
     }
 }
+
+function utility() {
+    return {
+        forAllConnections: forAllConnections,
+        forAllNodes: forAllNodes,
+    };
+
+    function forAllConnections(connections, callback) {
+        connections.vertical.forEach(applyToRow);
+        connections.horizontal.forEach(applyToRow);
+
+        function applyToRow(row) {
+            row.forEach(callback);
+        }
+    }
+
+    function forAllNodes(nodes, callback) {
+        nodes.forEach(function(row) {
+            row.forEach(callback);
+        });
+    }
+}
+
