@@ -15,6 +15,8 @@
 .node-container {
   position: relative;
   display: inline-block;
+  width: 35px;
+  height: 35px;
 }
 
 .node {
@@ -110,6 +112,7 @@
 .right-conjecture .right .unpossible,
 .below-conjecture .below .unpossible {
   color: gray;
+  font-size: 100%;
 }
 /*.right-invalid .right .unpossible,  This shouldn't happen, but I need to see when it does
 .below-invalid .below .unpossible {
@@ -144,51 +147,36 @@
   display: block;
 }
 
-.filled,
-.filled.legend-square
-{
-  background: hsla(248, 49%, 46%, 0.75);
-}
-
-.legend .label {
+.legend .badge,
+.legend .badge label {
   cursor: help;
 }
-.legend-square {
+.legend label {
+  vertical-align: top;
+  padding: 5px;
+}
+.legend .node-container {
   background: white;
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  position: relative;
-  vertical-align: middle;
-  border: 1px solid black;
+  border: 5px solid white;
 }
-
-.legend-square.number {
-  background-size: cover;
-}
-
-.legend-square.number.right {
-  background-image: url("http://hryanjones.com/adalogical-aenigmas/20-6-to-right.png");
-}
-.legend-square.number.below {
-  background-image: url("http://hryanjones.com/adalogical-aenigmas/20-10-below.png");
+.connections.no-offset {
+  left: 0;
+  top: 0;
 }
 
 .alert,
 .info-bubble {
   border-radius: 8px;
-  display: inline-block;
 }
 .info-bubble {
   border: 1px solid blue;
   padding: 10px;
 }
+.legend .info-bubble {
+  padding: 2px;
+}
 .alert {
   border: 1px solid red;
-}
-
-.no-margin {
-  margin: 0;
 }
 
 .build-input {
@@ -204,3 +192,22 @@
 .tab.selected {
   background: white;
 }
+
+.twitter-mention-button {
+  vertical-align: middle;
+}
+
+/* GENERAL HELPERS */
+
+.no-margin {
+  margin: 0;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+

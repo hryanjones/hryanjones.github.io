@@ -1,98 +1,111 @@
 angular
 .module('app', ['ngStorage'])
-.controller('gridder', ['$scope', '$localStorage', '$http', function($scope, $localStorage, $http) {
+.controller('gridder', [
+    '$scope',
+    '$localStorage',
+    '$http',
+    '$location',
+    function($scope, $localStorage, $http, $location) {
 
-    $scope.clear = clear;
-    $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
-    $scope.conjectures = conjectures();
+        $scope.clear = clear;
+        $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
+        $scope.conjectures = conjectures();
 
-    $scope.jsonUrl = './example.json';
-    // $scope.jsonUrl = './real-deal-puzzle.json';
-    loadPuzzle($scope.jsonUrl);
+        var puzzleName = $location.search().puzzle;
 
-    $scope.loadPuzzle = loadPuzzle; // for switching to a different puzzle
-    $scope.history = history();
+        $scope.setQueryString = setQueryString;
+        $scope.jsonUrl = puzzleName ? './' + puzzleName + '.json' : './example.json';
+        // $scope.jsonUrl = './real-deal-puzzle.json';
+        loadPuzzle($scope.jsonUrl);
 
-    return;
+        $scope.loadPuzzle = loadPuzzle; // for switching to a different puzzle
+        $scope.history = history();
 
-    // Controller-dependent local functions
+        return;
 
-    function clear() {
-        var confirmed = window.confirm('Clear all of the progress on the current puzzle?');
-        // delete $localStorage.grid;
-        if (confirmed) {
-            $localStorage.history[$scope.jsonUrl] = [];
-            loadPuzzle($scope.jsonUrl);
+        // Controller-dependent local functions
+
+        function clear() {
+            var confirmed = window.confirm('Clear all of the progress on the current puzzle?');
+            // delete $localStorage.grid;
+            if (confirmed) {
+                $localStorage.history[$scope.jsonUrl] = [];
+                loadPuzzle($scope.jsonUrl);
+            }
         }
-    }
-
-    /**
-     * set up the board at $scope.grid if there's a version in local storage use that
-     * link the $scope version to the localstorage version
-     * also generate regions
-     */
-    function setUpBoard(data, historyData) {
-        $scope.grid = generate().newEmptyGrid(data.numRows, data.numColumns, data.nodeNumbers);
-        $scope.history.data = historyData;
-
-        // update the grid to have all the changes so far
-        $scope.history.doChanges($scope.history.data, $scope.grid);
-
-        // initialize validation functions with proper number of rows and columns
-        $scope.validate = validate(data.numRows, data.numColumns);
-        $scope.alerts = $scope.validate.newAlerts();
-        // redo node validation
-        $scope.validate.redo($scope.grid, $scope.alerts);
-
-        // set Conjecture Mode as on if the last change has a conjecture
-        $scope.conjectures.enabled = conjectures().lastChangeHasConjecture($scope.history.data);
-
-        // TODO should have a loading variable so we can prevent user from changing things before this point?
-    }
-
-    /**
-     * function to load static puzzle size and nodeNumbers
-     */
-    function loadPuzzle(jsonUrl) {
-        delete $scope.buildData;
-        delete $scope.grid;
-
-        $scope.puzzleLoadRequest = $http
-        .get(jsonUrl, {cache: true})
-        .success(function(data) {
-            setUpBoard(data, loadHistory(jsonUrl));
-            delete $scope.puzzleLoadRequest;
-        })
-        .error(function(err) {
-            if (err !== 'Not found\n') { return; } // FIXME, need to make sure this is the same error on github.io
-            enterBuildMode();
-
-        });
 
         /**
-         * Loads history from browser local storage. Failing that returns a new history array linked to storage.
+         * set up the board at $scope.grid if there's a version in local storage use that
+         * link the $scope version to the localstorage version
+         * also generate regions
          */
-        function loadHistory(namespace) {
-            $localStorage.history = $localStorage.history || {};
-            $localStorage.history[namespace] = $localStorage.history[namespace] || [];
-            return $localStorage.history[namespace];
+        function setUpBoard(data, historyData) {
+            $scope.grid = generate().newEmptyGrid(data.numRows, data.numColumns, data.nodeNumbers);
+            $scope.history.data = historyData;
+
+            // update the grid to have all the changes so far
+            $scope.history.doChanges($scope.history.data, $scope.grid);
+
+            // initialize validation functions with proper number of rows and columns
+            $scope.validate = validate(data.numRows, data.numColumns);
+            $scope.alerts = $scope.validate.newAlerts();
+            // redo node validation
+            $scope.validate.redo($scope.grid, $scope.alerts);
+
+            // set Conjecture Mode as on if the last change has a conjecture
+            $scope.conjectures.enabled = conjectures().lastChangeHasConjecture($scope.history.data);
+
+            // TODO should have a loading variable so we can prevent user from changing things before this point?
         }
 
-        function enterBuildMode() {
-            // buildMode
-            $scope.buildData = {
-                numRows: 3,
-                numColumns: 6,
-                nodeNumbers: {}
-            };
+        /**
+         * function to load static puzzle size and nodeNumbers
+         */
+        function loadPuzzle(jsonUrl) {
+            delete $scope.buildData;
+            delete $scope.grid;
 
-            setUpBoard($scope.buildData);
-            $scope.addNodeNumber = generate().addNodeNumber; // only for buildMode
-            $scope.setUpBoard = setUpBoard; // only for build mode
+            $scope.puzzleLoadRequest = $http
+            .get(jsonUrl, {cache: true})
+            .success(function(data) {
+                setUpBoard(data, loadHistory(jsonUrl));
+                delete $scope.puzzleLoadRequest;
+            })
+            .error(function(err) {
+                if (err !== 'Not found\n') { return; } // FIXME, need to make sure this is the same error on github.io
+                enterBuildMode();
+
+            });
+
+            /**
+             * Loads history from browser local storage. Failing that returns a new history array linked to storage.
+             */
+            function loadHistory(namespace) {
+                $localStorage.history = $localStorage.history || {};
+                $localStorage.history[namespace] = $localStorage.history[namespace] || [];
+                return $localStorage.history[namespace];
+            }
+
+            function enterBuildMode() {
+                // buildMode
+                $scope.buildData = {
+                    numRows: 3,
+                    numColumns: 6,
+                    nodeNumbers: {}
+                };
+
+                setUpBoard($scope.buildData);
+                $scope.addNodeNumber = generate().addNodeNumber; // only for buildMode
+                $scope.setUpBoard = setUpBoard; // only for build mode
+            }
         }
+
+        function setQueryString(str) {
+            $location.search({puzzle: str});
+        }
+
     }
-
-}]);
+]);
 
 function generate() {
     return    {
