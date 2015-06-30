@@ -20,11 +20,11 @@
 }
 
 .node {
-  border: .2em solid black;
+  border: .18em solid black;
   height: 1.5em;
   width: 1.5em;
-  margin: .5em;
-  border-radius: 0.75em;
+  margin: .7em .5em .5em .7em;
+  border-radius: 1em;
   background: white;
   z-index: 2;
   position: relative;
@@ -40,9 +40,10 @@
 .node-label {
   position: absolute;
   font-weight: bold;
-  left: 4.5px;
+  left: 3.5px;
   top: -1px;
   color: black;
+  /* display: none; */
 }
 .invalid .node-label {
   color: red;
@@ -69,7 +70,7 @@
   border-top: .3em solid hsla(262, 100%, 20%, 1);
 }
 .right-active.right-conjecture {
-  border-top-color: gray;
+  border-top-color: hsla(0, 0%, 74%, 1);
   border-top-width: .2em;
 }
 .right-active.right-invalid {
