@@ -29,6 +29,9 @@
   z-index: 2;
   position: relative;
 }
+.node.start-or-end {
+  background: gray;
+}
 .node.empty {
   z-index: -1;
 }
@@ -192,6 +195,9 @@
 }
 .tab.selected {
   background: white;
+}
+#tabs .checkbox {
+  min-height: 18px;
 }
 
 .twitter-mention-button {

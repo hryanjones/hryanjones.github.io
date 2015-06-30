@@ -7,6 +7,7 @@ angular
     '$location',
     function($scope, $localStorage, $http, $location) {
 
+        $scope.answer = '        ';
         $scope.clear = clear;
         $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
         $scope.conjectures = conjectures();
@@ -15,7 +16,7 @@ angular
 
         $scope.setQueryString = setQueryString;
         $scope.jsonUrl = puzzleName ? './' + puzzleName + '.json' : './example.json';
-        // $scope.jsonUrl = './real-deal-puzzle.json';
+        // $scope.jsonUrl = './nope.json';
         loadPuzzle($scope.jsonUrl);
 
         $scope.loadPuzzle = loadPuzzle; // for switching to a different puzzle
@@ -40,7 +41,7 @@ angular
          * also generate regions
          */
         function setUpBoard(data, historyData) {
-            $scope.grid = generate().newEmptyGrid(data.numRows, data.numColumns, data.nodeNumbers);
+            $scope.grid = generate().newEmptyGrid(data.numRows, data.numColumns, data.nodeData);
             $scope.history.data = historyData;
 
             // update the grid to have all the changes so far
@@ -59,7 +60,7 @@ angular
         }
 
         /**
-         * function to load static puzzle size and nodeNumbers
+         * function to load static puzzle size and nodeData
          */
         function loadPuzzle(jsonUrl) {
             delete $scope.buildData;
@@ -91,7 +92,7 @@ angular
                 $scope.buildData = {
                     numRows: 3,
                     numColumns: 6,
-                    nodeNumbers: {}
+                    nodeData: {}
                 };
 
                 setUpBoard($scope.buildData);
@@ -120,7 +121,7 @@ function generate() {
      * @arg {int} numRows -- Number of rows of the grid
      * @arg {int} numColumns
      */
-    function newEmptyGrid(numRows, numColumns, nodeNumbers) {
+    function newEmptyGrid(numRows, numColumns, nodeData) {
         var grid = newEmptyGrid();
 
         for (var i = 0; i < numRows; i++) {
@@ -150,8 +151,8 @@ function generate() {
                     grid.connections.vertical[i][j] = connectionBelow;
                 }
 
-                var number = nodeNumbers && nodeNumbers[i] && nodeNumbers[i][j];
-                grid.nodes[i][j] = newNode(connectionAbove, connectionRight, connectionBelow, connectionLeft, number);
+                var data = nodeData && nodeData[i] && nodeData[i][j];
+                grid.nodes[i][j] = newNode(connectionAbove, connectionRight, connectionBelow, connectionLeft, data);
             }
         }
 
@@ -166,12 +167,15 @@ function generate() {
             };
         }
 
-        function newNode(above, right, below, left, number) {
+        function newNode(above, right, below, left, data) {
+            var number = data && data.number;
             var node = {
                 state: null,    // a node, if it has a number, may possibly have a state of "invalid" for purposes of notifying
                                             // the puzzler that they've screwed up
                 number: Number(number) === number ? number : null, // If the node has a number (fixed and defined by the puzzle)
                                                                                                                      // it goes here
+                letter: data && data.letter,
+                startOrEnd: data && data.startOrEnd,
                 connections: { // pointers to connections in different directions
                     all: []
                 },
@@ -240,13 +244,13 @@ function generate() {
     }
 
     /**
-     * In order to make it simple to create a new puzzle the nodeNumbers need to be generated, which is most easily done
+     * In order to make it simple to create a new puzzle the nodeData need to be generated, which is most easily done
      * by explicitly setting these in a separate data structure. This function sets the node in a "sparse array", a.k.a.
      * an object (double-nested of course)
      */
-    function addNodeNumber(nodeNumbers, row, column, value) {
-        nodeNumbers[row] = nodeNumbers[row] || {};
-        nodeNumbers[row][column] = value;
+    function addNodeNumber(nodeData, row, column, value) {
+        nodeData[row] = nodeData[row] || {};
+        nodeData[row][column] = {number: value};
     }
 
 }
