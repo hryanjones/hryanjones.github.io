@@ -7,7 +7,6 @@ angular
     '$location',
     function($scope, $localStorage, $http, $location) {
 
-        $scope.answer = '        ';
         $scope.clear = clear;
         $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
         $scope.conjectures = conjectures();
@@ -69,6 +68,7 @@ angular
             $scope.puzzleLoadRequest = $http
             .get(jsonUrl, {cache: true})
             .success(function(data) {
+                $scope.answer = loadAnswer(jsonUrl, data.answerLength);
                 setUpBoard(data, loadHistory(jsonUrl));
                 delete $scope.puzzleLoadRequest;
             })
@@ -85,6 +85,12 @@ angular
                 $localStorage.history = $localStorage.history || {};
                 $localStorage.history[namespace] = $localStorage.history[namespace] || [];
                 return $localStorage.history[namespace];
+            }
+
+            function loadAnswer(namespace, length) {
+                $localStorage.answer = $localStorage.answer || {};
+                $localStorage.answer[namespace] = $localStorage.answer[namespace] || new Array(length).join('.').split('.');
+                return $localStorage.answer[namespace];
             }
 
             function enterBuildMode() {

@@ -110,5 +110,6 @@
             "12": {"number": 3, "letter": "Z"},
             "18": {"number": 2, "letter": "Q"}
         }
-    }
+    },
+    "answerLength": 8
 }

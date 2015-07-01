@@ -38,12 +38,6 @@
     </label>
   </div>
 
-  <div class="bg-info text-info info-bubble block" ng-show="showLetters">
-      <i class="glyphicon glyphicon-info-sign"></i>
-      Showing letters is probably only useful if you've been able to solve the whole puzzle so far...
-  </div>
-  <br/>
-
   <form id="tabs">
     <label class="tab" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
         setQueryString('example');
@@ -87,10 +81,11 @@
               node.connections.above.invalidReasons.connectsSameNodes ||
               node.connections.right.invalidReasons.connectsSameNodes ||
               node.connections.below.invalidReasons.connectsSameNodes ||
-              node.connections.left.invalidReasons.connectsSameNodes
+              node.connections.left.invalidReasons.connectsSameNodes,
+            'no-border': showLetters,
           }">
           <div class="node-label">
-            {{showLetters ? node.letter : node.number}}
+            {{node.number}}<sub ng-show="showLetters">{{node.letter}}</sub>
           </div>
           <input type="number" ng-if="buildData" min="0" max="4" class="build-input"
             ng-model="node.number"
@@ -315,7 +310,12 @@
     <li>The two circles connected by each path must contain different numbers.</li>
   </ol>
 
-  <h3>Flavor Text <small>from the <a href="">PDF version</a></small></h3>
+  <div class="bg-info text-info info-bubble block" ng-show="jsonUrl === './example.json'">
+      <i class="glyphicon glyphicon-info-sign"></i>
+      See the <a href="http://www.pavelspuzzles.com/adas/21/">PDF</a> for a short walk-through on solving the example.
+  </div>
+
+  <h3>Flavor Text <small>from the <a href="http://www.pavelspuzzles.com/adas/21/">PDF version</a></small></h3>
   <p>
     Gentle Patron,
   </p>
@@ -337,18 +337,20 @@
   <p>
     Good luck!
   </p>
+  <p>
+    <img src="http://www.pavelspuzzles.com/adas/signature.jpg"/>
+  </p>
+  <p>
+    Fill in your answer and give to a cashier at <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> for your prize. This month’s prize: <strong><u>one free non-alcoholic drink!</u></strong>
+    <br/>(Limit one per solver. Offer available through 31st July 2015.)
+  </p>
 
-<!--   Need better input <div class="label">
-    <input ng-model="answer[0]"/>
-    <input ng-model="answer[1]"/>
-    <input ng-model="answer[2]"/>
-    <input ng-model="answer[3]"/>
-    <input ng-model="answer[4]"/>
-    <input ng-model="answer[5]"/>
-    <input ng-model="answer[6]"/>
-    <input ng-model="answer[7]"/>
+  <div class="info-bubble answer bg-primary inline-block">
+    <span ng-repeat="letter in answer track by $index">
+      <input maxlength="1" ng-model="answer[$index]"/>
+    </span>
   </div>
- -->
+
   <hr/>
 
   <div>
@@ -356,15 +358,11 @@
   </div>
 
   <h4>
-    <a href="https://github.com/hryanjones/hryanjones.github.io/tree/adas21">Code</a>
-    <small>on Github</small>
-  </h4>
-  <h4>
-    Contact Web Developer
-    <a href="mailto:hryanjones@gmail.com" class="btn btn-default">
+    Contact Puzzle Creators
+    <a href="mailto:pavel@pavelspuzzles.com,hryanjones@gmail.com" class="btn btn-default">
       <small>
         <i class="glyphicon glyphicon-envelope"></i>
-        email
+        email Mr. Pavel Curtis and Mr. H. Ryan Jones
       </small>
     </a>
     <!-- Twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
@@ -374,6 +372,10 @@
       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
       </small>
     </a>
+  </h4>
+  <h4>
+    <a href="https://github.com/hryanjones/hryanjones.github.io">Code</a>
+    <small>on Github</small>
   </h4>
 
   <div ng-init="showTODO = false;">

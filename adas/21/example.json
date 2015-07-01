@@ -30,5 +30,6 @@
         "7": {
             "1": {"number": 3, "letter": "P"}
         }
-    }
+    },
+    "answerLength": 7
 }

@@ -20,7 +20,7 @@
 }
 
 .node {
-  border: .18em solid black;
+   border: .18em solid black;
   height: 1.5em;
   width: 1.5em;
   margin: .7em .5em .5em .7em;
@@ -29,8 +29,11 @@
   z-index: 2;
   position: relative;
 }
+.node.no-border {
+  border: none;
+}
 .node.start-or-end {
-  background: gray;
+  background: rgb(195, 195, 195);
 }
 .node.empty {
   z-index: -1;
@@ -191,6 +194,7 @@
   background: hsla(0, 0%, 80%, 1);
   border-radius: 8px 8px 0 0;
   margin-bottom: 0px;
+  cursor: pointer;
   padding: 1px 12px;
 }
 .tab.selected {
@@ -198,6 +202,14 @@
 }
 #tabs .checkbox {
   min-height: 18px;
+}
+
+.answer input {
+  color: black;
+  height: 35px;
+  width: 35px;
+  padding: 5px;
+  font-size: 200%;
 }
 
 .twitter-mention-button {
