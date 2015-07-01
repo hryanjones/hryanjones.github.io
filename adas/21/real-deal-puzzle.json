@@ -1,0 +1,115 @@
+{
+    "numRows": 13,
+    "numColumns": 22,
+    "nodeData": {
+        "0": {
+            "2":  {"number": 2, "letter": "G"},
+            "7":  {"number": 3, "letter": "I"},
+            "13": {"number": 1, "letter": "A"},
+            "18": {"number": 2, "letter": "N"},
+            "20": {"number": 2, "letter": "G"}
+        },
+        "1": {
+            "0":  {"number": 2, "letter": "R", "startOrEnd": true},
+            "5":  {"number": 3, "letter": "M"},
+            "11": {"number": 4, "letter": "F"},
+            "15": {"number": 2, "letter": "H"}
+        },
+        "2": {
+            "3":  {"number": 2, "letter": "X"},
+            "6":  {"number": 1, "letter": "C"},
+            "8":  {"number": 1, "letter": "C"},
+            "9":  {"number": 3, "letter": "A"},
+            "14": {"number": 4, "letter": "V"},
+            "17": {"number": 3, "letter": "S"},
+            "19": {"number": 3, "letter": "R"}
+        },
+        "3": {
+            "1":  {"number": 3, "letter": "C"},
+            "4":  {"number": 2, "letter": "E", "startOrEnd": true},
+            "7":  {"number": 2, "letter": "E"},
+            "10": {"number": 2, "letter": "L"},
+            "12": {"number": 2, "letter": "S"},
+            "20": {"number": 4, "letter": "O"}
+        },
+        "4": {
+            "3":  {"number": 1, "letter": "O"},
+            "5":  {"number": 3, "letter": "T"},
+            "7":  {"number": 2, "letter": "W"},
+            "9":  {"number": 1, "letter": "R"},
+            "11": {"number": 2, "letter": "H"},
+            "13": {"number": 2, "letter": "E"},
+            "16": {"number": 2, "letter": "N"},
+            "18": {"number": 2, "letter": "G"}
+        },
+        "5": {
+            "4":  {"number": 2, "letter": "I"},
+            "8":  {"number": 1, "letter": "D"},
+            "10": {"number": 4, "letter": "."},
+            "12": {"number": 2, "letter": "I"},
+            "15": {"number": 3, "letter": "S"},
+            "17": {"number": 1, "letter": "I"},
+            "21": {"number": 2, "letter": "C"}
+        },
+        "6": {
+            "1":  {"number": 3, "letter": "P"},
+            "2":  {"number": 3, "letter": "Q"},
+            "9":  {"number": 2, "letter": "A"},
+            "11": {"number": 1, "letter": "N"},
+            "14": {"number": 2, "letter": "R"}
+        },
+        "7": {
+            "4":  {"number": 4, "letter": "Z"},
+            "6":  {"number": 2, "letter": "C"},
+            "8":  {"number": 2, "letter": "U"},
+            "10": {"number": 3, "letter": "T"},
+            "13": {"number": 2, "letter": "Y"},
+            "15": {"number": 1, "letter": "G"},
+            "17": {"number": 3, "letter": "R"},
+            "19": {"number": 3, "letter": "R"}
+        },
+        "8": {
+            "5":  {"number": 1, "letter": "T"},
+            "7":  {"number": 3, "letter": "Q"},
+            "12": {"number": 3, "letter": "B"},
+            "15": {"number": 1, "letter": "O"},
+            "18": {"number": 2, "letter": "S"},
+            "21": {"number": 2, "letter": "Y"}
+        },
+        "9": {
+            "0":  {"number": 2, "letter": "F"},
+            "2":  {"number": 1, "letter": "B"},
+            "5":  {"number": 3, "letter": "I"},
+            "8":  {"number": 2, "letter": "Y"},
+            "11": {"number": 2, "letter": "V"},
+            "14": {"number": 1, "letter": "R"},
+            "17": {"number": 3, "letter": "P"},
+            "19": {"number": 3, "letter": "A"},
+            "21": {"number": 2, "letter": "E"}
+        },
+        "10": {
+            "1":  {"number": 2, "letter": "L"},
+            "4":  {"number": 2, "letter": "L"},
+            "7":  {"number": 2, "letter": "I"},
+            "10": {"number": 3, "letter": "A"},
+            "13": {"number": 2, "letter": "N"},
+            "15": {"number": 2, "letter": "X"}
+        },
+        "11": {
+            "0":  {"number": 1, "letter": "U"},
+            "3":  {"number": 2, "letter": "T"},
+            "8":  {"number": 2, "letter": "W"},
+            "10": {"number": 2, "letter": "Z"},
+            "14": {"number": 3, "letter": "G"},
+            "17": {"number": 4, "letter": "A"},
+            "20": {"number": 1, "letter": "E"}
+        },
+        "12": {
+            "2":  {"number": 3, "letter": "N"},
+            "5":  {"number": 3, "letter": "G"},
+            "12": {"number": 3, "letter": "Z"},
+            "18": {"number": 2, "letter": "Q"}
+        }
+    },
+    "answerLength": 8
+}

@@ -1,0 +1,232 @@
+/*div {
+  box-sizing: border-box;
+}*/
+/* border-box doesn't seem to help anything ... */
+#puzzle-container {
+  background: white;
+  display: inline-block;
+}
+
+.node-row { /* It's not clear to me why I need to force the height to be correct */
+  height: 35px;
+  white-space: nowrap;
+}
+
+.node-container {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+}
+
+.node {
+   border: .18em solid black;
+  height: 1.5em;
+  width: 1.5em;
+  margin: .7em .5em .5em .7em;
+  border-radius: 1em;
+  background: white;
+  z-index: 2;
+  position: relative;
+}
+.node.no-border {
+  border: none;
+}
+.node.start-or-end {
+  background: rgb(195, 195, 195);
+}
+.node.empty {
+  z-index: -1;
+}
+.node.invalid {
+  border-color: red;
+  border-style: dotted;
+  background-color: yellow;
+}
+.node-label {
+  position: absolute;
+  font-weight: bold;
+  left: 3.5px;
+  top: -1px;
+  color: black;
+  /* display: none; */
+}
+.invalid .node-label {
+  color: red;
+}
+
+.connections {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 47%;
+  top: 47%;
+  border-top: .1em dotted gray;
+  border-left: .1em dotted gray;
+  z-index: 1;
+}
+
+/* different connection states */
+.right-none {
+  border-top: none;
+}
+.right-active {
+  width: 110%; /* 110% so that lines overlap enough to form unbroken path */
+
+  border-top: .3em solid hsla(262, 100%, 20%, 1);
+}
+.right-active.right-conjecture {
+  border-top-color: hsla(0, 0%, 74%, 1);
+  border-top-width: .2em;
+}
+.right-active.right-invalid {
+  border-top-color: red;
+  border-top-style: dotted;
+}
+.below-none {
+  border-left: none;
+}
+.below-active {
+  height: 110%;
+  border-left: .3em solid hsla(262, 100%, 20%, 1);
+}
+.below-active.below-conjecture {
+  border-left-color: gray;
+  border-left-width: .2em;
+}
+.below-active.below-invalid {
+  border-left-color: red;
+  border-left-style: dotted;
+}
+
+/* connectionators, elements for creating connections */
+.connectionator {
+  position: absolute;
+  z-index: 0;
+  cursor: crosshair;
+  /* background-color: hsla(60, 100%, 50%, .4); */
+}
+.connectionator:hover {
+  background-color: hsla(60, 100%, 50%, 0.7);
+  border: solid 1px gray;
+}
+.unpossible { /* unpossible X's are hidden unless the appropriate class is on connector */
+  color: purple;
+  font-size: 72%;
+  position: absolute;
+  display: none;
+}
+.right-conjecture .right .unpossible,
+.below-conjecture .below .unpossible {
+  color: gray;
+  font-size: 100%;
+}
+/*.right-invalid .right .unpossible,  This shouldn't happen, but I need to see when it does
+.below-invalid .below .unpossible {
+  color: purple;
+}*/
+.right.connectionator {
+  height: 15px;
+  width: 35px;
+  left: 0px;
+  top: -8px;
+  /* background-color: yellow; */
+}
+.right.connectionator .unpossible {
+  left: 35%;
+  top: 3px;
+}
+.right-unpossible .right .unpossible {
+  display: block;
+}
+.below.connectionator {
+  height: 35px;
+  width: 15px;
+  left: -8px;
+  top: 0px;
+  /* background-color: blue; */
+}
+.below.connectionator .unpossible {
+  top: 35%;
+  left: 2px;
+}
+.below-unpossible .below .unpossible {
+  display: block;
+}
+
+.legend .badge,
+.legend .badge label {
+  cursor: help;
+}
+.legend label {
+  vertical-align: top;
+  padding: 5px;
+}
+.legend .node-container {
+  background: white;
+  border: 5px solid white;
+}
+.connections.no-offset {
+  left: 0;
+  top: 0;
+}
+
+.alert,
+.info-bubble {
+  border-radius: 8px;
+}
+.info-bubble {
+  border: 1px solid blue;
+  padding: 10px;
+}
+.legend .info-bubble {
+  padding: 2px;
+}
+.alert {
+  border: 1px solid red;
+}
+
+.build-input {
+  width: 26px;
+}
+
+.tab {
+  background: hsla(0, 0%, 80%, 1);
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0px;
+  cursor: pointer;
+  padding: 1px 12px;
+}
+.tab.selected {
+  background: white;
+}
+#tabs .checkbox {
+  min-height: 18px;
+}
+
+.answer input {
+  color: black;
+  height: 35px;
+  width: 35px;
+  padding: 5px;
+  font-size: 200%;
+}
+
+.twitter-mention-button {
+  vertical-align: middle;
+}
+
+/* GENERAL HELPERS */
+
+.no-margin {
+  margin: 0;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+

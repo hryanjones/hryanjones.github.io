@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="/assets/css/bootstrap-solarized-light.css" rel="stylesheet" type="text/css" />
+  <link href="./gridder.css" rel="stylesheet" type="text/css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+  <script src="http://hryanjones.com/js/ngStorage.min.js"></script>
+  <script src="./gridder.js"></script>
+
+  <meta name="viewport" content="width=device-width, user-scalable=yes">
+  <meta charset="utf-8">
+  <title>Ænigma #21</title>
+</head>
+
+<body ng-app="app" ng-controller="gridder" class="well" ng-init="showLetters = false;">
+
+  <h1>
+    Web Version of
+    <a href="http://www.pavelspuzzles.com/adas/21/" target="_blank">
+      Adalogical Ænigma #21
+    </a>
+    <br/>
+    <small>
+      click on the grid to set a path, click again to denote a path cannot be
+  </h1>
+
+  <div ng-if="buildData">
+    <label>
+      Rows:
+      <input type="number" ng-model="buildData.numRows" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
+    </label>
+    <label>
+      Columns:
+      <input type="number" ng-model="buildData.numColumns" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
+    </label>
+  </div>
+
+  <form id="tabs">
+    <label class="tab" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
+        setQueryString('example');
+        jsonUrl = './example.json';
+        loadPuzzle(jsonUrl);
+      ">
+      example
+    </label>
+    <label class="tab" ng-class="{selected: jsonUrl === './real-deal-puzzle.json'}" ng-click="
+        setQueryString('real-deal-puzzle');
+        jsonUrl = './real-deal-puzzle.json';
+        loadPuzzle(jsonUrl);
+      ">
+      Ænigma #21
+    </label>
+    <div class="checkbox inline-block no-margin">
+      <label>
+        <input type="checkbox" ng-model="showLetters"/>
+        show letters
+      </label>
+    </div>
+  </form>
+
+  <!-- below image is for verifying that I entered the puzzle correctly -->
+  <!-- <div style="position: relative">
+    <img style="position: absolute; left: -1px; top: 4px; width: 779px; opacity: 0.4; z-index: 10;" src="/puzzle.png"/>
+  </div> -->
+
+  <div id="puzzle-container">
+
+    <div ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row">
+      <div ng-repeat="node in row track by $index"
+        class="node-container"
+        ng-init="colIndex = $index;"
+        >
+        <div class="node"
+          ng-class="{
+            empty: !node.number && !buildData,
+            'start-or-end': showLetters && node.startOrEnd,
+            invalid: node.invalid ||
+              node.connections.above.invalidReasons.connectsSameNodes ||
+              node.connections.right.invalidReasons.connectsSameNodes ||
+              node.connections.below.invalidReasons.connectsSameNodes ||
+              node.connections.left.invalidReasons.connectsSameNodes,
+            'no-border': showLetters,
+          }">
+          <div class="node-label">
+            {{node.number}}<sub ng-show="showLetters">{{node.letter}}</sub>
+          </div>
+          <input type="number" ng-if="buildData" min="0" max="4" class="build-input"
+            ng-model="node.number"
+            ng-change="addNodeNumber(buildData.nodeData, rowIndex, colIndex, node.number)"
+            style="z-index: 6;"
+          />
+        </div>
+
+        <div class="connections"
+          ng-class="{
+            'right-none': !node.connections.right,
+            'below-none': !node.connections.below,
+            'right-active': node.connections.right.state === 'active',
+            'below-active': node.connections.below.state === 'active',
+            'right-unpossible': node.connections.right.state === 'unpossible',
+            'below-unpossible': node.connections.below.state === 'unpossible',
+            'right-invalid':
+              node.connections.right.nodes[0].invalid ||
+              node.connections.right.nodes[1].invalid ||
+              node.connections.right.invalidReasons.connectsSameNodes ||
+              node.connections.right.invalidReasons.moreThanOneBend,
+            'below-invalid':
+              node.connections.below.nodes[0].invalid ||
+              node.connections.below.nodes[1].invalid ||
+              node.connections.below.invalidReasons.connectsSameNodes ||
+              node.connections.below.invalidReasons.moreThanOneBend,
+            'right-conjecture': node.connections.right.conjecture,
+            'below-conjecture': node.connections.below.conjecture,
+          }"
+          >
+
+          <!-- Connectionators are the elements that when clicked or dragged through they activate a given connection -->
+
+          <div class="right connectionator"
+            ng-if="node.connections.right"
+            ng-click="
+              history.data.push(
+                setNextStateAndGetChanges(node.connections.right, conjectures.enabled, rowIndex, colIndex)
+              );
+              validate.nodes(node.connections.right.nodes, alerts);
+              validate.connection(node.connections.right, alerts);
+            "
+            >
+            <i class="unpossible glyphicon"
+              ng-class="{
+                'glyphicon-remove': !node.connections.right.conjecture,
+                'glyphicon-remove-circle': node.connections.right.conjecture,
+              }"
+            ></i>
+          </div>
+
+          <div class="below connectionator"
+            ng-if="node.connections.below"
+            ng-click="
+              history.data.push(
+                setNextStateAndGetChanges(node.connections.below, conjectures.enabled, rowIndex, colIndex)
+              );
+              validate.nodes(node.connections.below.nodes, alerts);
+              validate.connection(node.connections.below, alerts);
+            "
+            >
+            <i class="unpossible glyphicon"
+              ng-class="{
+                'glyphicon-remove': !node.connections.below.conjecture,
+                'glyphicon-remove-circle': node.connections.below.conjecture,
+              }"
+            ></i>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div ng-if="buildData" class="well">
+    <h4>Copy/paste me into a new puzzle JSON file</h4>
+    <div>{{buildData}}</div>
+  </div>
+
+  <br/>
+  <div ng-show="alerts.overloadedNode" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    A circle cannot have more paths connect to it than the number it contains.
+    (at {{alerts.overloadedNode}} circle<span ng-show="alerts.overloadedNode > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.branchInEmptyNode" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    Paths may not branch, touch or cross each other.
+    (at {{alerts.branchInEmptyNode}} intersection<span ng-show="alerts.branchInEmptyNode > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.connectsSameNodes" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    Two circles containing the same number may not be connected by a path.
+    ({{alerts.connectsSameNodes}} path<span ng-show="alerts.connectsSameNodes > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.moreThanOneBend" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    Any path between circles may only bend at most once.
+    ({{alerts.moreThanOneBend}} path<span ng-show="alerts.moreThanOneBend > 1">s</span> above)
+  </div>
+
+  <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
+    <button class="btn btn-primary" ng-click="
+        conjectures.enabled && conjectures.clear(grid.connections);
+        conjectures.enabled && history.clearConjectures(history.data);
+        alerts = conjectures.enabled ? validate.newAlerts() : alerts;
+        conjectures.enabled && validate.redo(grid, alerts);
+
+        conjectures.enabled = !conjectures.enabled;
+      ">
+      <input type="checkbox" ng-checked="conjectures.enabled"/>
+      Conjecture Mode
+      <span ng-show="conjectures.enabled">-- Clear Conjectures</span>
+    </button>
+    <span ng-show="conjectures.enabled" ng-click="conjectures.enabled = false;">
+    -or-
+      <button class="btn btn-sm btn-default" ng-click="
+          conjectures.accept(grid.connections);
+          history.markConjecturesAsTruth(history.data);
+        ">
+        Accept Conjectures as Truth
+      </button>
+    </span>
+    <p ng-show="conjectures.enabled">
+      <br/>
+      <i class="glyphicon glyphicon-info-sign"></i>
+      In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can make temporary assumptions. <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em> when you're done.
+    </p>
+  </span>
+
+  <button ng-click="
+      alerts = validate.newAlerts();
+      validate.redo(grid, alerts);
+    "
+    class="btn btn-default"
+    >
+    Redo Validation
+  </button>
+  <div class="btn btn-danger" ng-click="clear();" ng-if="clear">
+    Clear Puzzle Progress
+  </div>
+
+  <div ng-if="false">
+    <h3>History</h3>
+    <pre>{{history.data|json}}</pre>
+  </div>
+
+  <br/>
+  <br/>
+  <div class="bg-info info-bubble text-info legend">
+    <h3>Legend</h3>
+
+    <div class="badge" title="Clicking on an empty grid section will cause it to become a path.">
+      <div class="node-container"><div class="no-offset connections"></div></div>
+      <label>empty</br> grid</label>
+    </div>
+
+    <div class="badge" title="Create paths to connect circles, clicking a path will make it a 'not possible' path (or X).">
+      <div class="node-container"><div class="no-offset connections right-active below-active"></div></div>
+      <label>a path</label>
+    </div>
+
+    <div class="badge" title="X's denote a place where a path cannot exist. Clicking an X will reset the path to empty grid.">
+      <div class="node-container"><div class="no-offset connections right-unpossible below-unpossible">
+        <div class="right connectionator">
+            <i class="unpossible glyphicon glyphicon-remove"></i>
+        </div>
+        <div class="below connectionator">
+            <i class="unpossible glyphicon glyphicon-remove"></i>
+        </div>
+      </div></div>
+      <label>can't be<br/> a path</label>
+    </div>
+
+    <div class="badge" title="This signifies that you've made a mistake and violated a rule. Look for a message stating which rule you broke.">
+      <div class="node-container"><div class="no-offset connections right-active right-invalid below-active below-invalid"></div></div>
+      <label>an invalid<br/> path</label>
+    </div>
+
+    <div class="badge" title="This is a path in conjecture mode. You can put these down to test out ideas about 'what if' there was a path here. Suggestion: treat them as temporary.">
+      <div class="node-container"><div class="no-offset connections right-active right-conjecture below-active below-conjecture"></div></div>
+      <label>conjecture path<br/> assumed</label>
+    </div>
+
+    <div class="badge" title="This is an X in conjecture mode. You've assumed there's no path here. Careful!">
+      <div class="node-container"><div class="no-offset connections right-unpossible below-unpossible right-conjecture below-conjecture">
+        <div class="right connectionator">
+            <i class="unpossible glyphicon glyphicon-remove-circle"></i>
+        </div>
+        <div class="below connectionator">
+            <i class="unpossible glyphicon glyphicon-remove-circle"></i>
+        </div>
+      </div></div>
+      <label>assumed to not be<br/> a path (conjecture)</label>
+    </div>
+
+    <div class="badge" title="Circles are where paths end and must connect to exactly the number of paths in the circle.">
+      <div class="node-container">
+        <div class="connections"></div>
+        <div class="node"><div class="node-label">3</div></div>
+      </div>
+      <label>a circle, this one must<br/> have three paths</label>
+    </div>
+
+    <div class="badge" title="This is a circle that denotes a mistake (in this instance 2 paths connecting to a 1-circle). Look for a message below the board if you're not sure why it's invalid.">
+      <div class="node-container">
+        <div class="connections right-active right-invalid below-active below-invalid"></div>
+        <div class="node invalid"><div class="node-label">1</div></div>
+      </div>
+      <label>an invalid<br/> circle</label>
+    </div>
+
+  </div>
+
+  <h3>Rules</h3>
+  <ol>
+    <li>Draw paths along grid lines, each path connecting two circles to form <em>a single connected network</em>.</li>
+    <li>The number in each circle indicates how many paths connect to that circle.</li>
+    <li>Each path may bend 90&deg; <em>at most</em> once.</li>
+    <li>Paths may not touch or cross each other.</li>
+    <li>The two circles connected by each path must contain different numbers.</li>
+  </ol>
+
+  <div class="bg-info text-info info-bubble block" ng-show="jsonUrl === './example.json'">
+      <i class="glyphicon glyphicon-info-sign"></i>
+      See the <a href="http://www.pavelspuzzles.com/adas/21/">PDF</a> for a short walk-through on solving the example.
+  </div>
+
+  <h3>Flavor Text <small>from the <a href="http://www.pavelspuzzles.com/adas/21/">PDF version</a></small></h3>
+  <p>
+    Gentle Patron,
+  </p>
+  <p>
+    It came to me recently, as it has done many times before, that Life presents itself to us like a particularly <em>devious</em> sort of maze: one wherein <em>not only</em> must we twist and turn on our ways, oft encountering blank endings and curs’d loopings back, but in which even the labyrinthine pathways themselves are <em>hidden</em> from us, such that we must feel out the walls blindly, stubbing our toes and bruising both body and soul.
+  </p>
+  <p>
+    These are the <em>cheery</em> musings that inspired the ænigma below.
+  </p>
+  <p>
+    I should like you to draw the pathways of a single connected maze along the <em>lines</em> of the grid below. Each path must connect two of the circles I’ve laid out; the number in each circle indicates how many paths must connect to that circle. The two circles connected by each path must contain <em>different</em> numbers.
+  </p>
+  <p>
+    So as to prevent the individual paths themselves from being tedious, each path may bend by 90 degrees <em>at most once</em>. Paths may not touch or cross one another.
+  </p>
+  <p>
+    Once you’ve completed your maze, you must walk it to find the final answer to my ænigma. Note that two of the circles have been <em>shaded</em>; walk the route from the upper such circle to the lower, never revisiting a circle. Whenever you come to a fork in that route, where more than one option would lead you to your goal, prefer to turn right or, failing that, to continue straight. At each circle, including the first, advance the letter written therein forward in the alphabet (wrapping around from Z to A if necessary) by the <em>final digit</em> in the sum of all of the numbers so far encountered. Those letters will reveal a clue to your final answer.
+  </p>
+  <p>
+    Good luck!
+  </p>
+  <p>
+    <img src="http://www.pavelspuzzles.com/adas/signature.jpg"/>
+  </p>
+  <p>
+    Fill in your answer and give to a cashier at <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> for your prize. This month’s prize: <strong><u>one free non-alcoholic drink!</u></strong>
+    <br/>(Limit one per solver. Offer available through 31st July 2015.)
+  </p>
+
+  <div class="info-bubble answer bg-primary inline-block">
+    <span ng-repeat="letter in answer track by $index">
+      <input maxlength="1" ng-model="answer[$index]"/>
+    </span>
+  </div>
+
+  <hr/>
+
+  <div>
+    The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
+  </div>
+
+  <h4>
+    Contact Puzzle Creators
+    <a href="mailto:pavel@pavelspuzzles.com,hryanjones@gmail.com" class="btn btn-default">
+      <small>
+        <i class="glyphicon glyphicon-envelope"></i>
+        email Mr. Pavel Curtis and Mr. H. Ryan Jones
+      </small>
+    </a>
+    <!-- Twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
+    <a href="https://twitter.com/intent/tweet?screen_name=hryanjones" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
+      <small>
+      @hryanjones
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      </small>
+    </a>
+  </h4>
+  <h4>
+    <a href="https://github.com/hryanjones/hryanjones.github.io">Code</a>
+    <small>on Github</small>
+  </h4>
+
+  <div ng-init="showTODO = false;">
+    <label class="btn btn-default h4">
+      <input type="checkbox" ng-model="showTODO" ng-hide="true">
+      {{showTODO ? 'Hide' : 'Show'}} TODO
+    </label>
+  <div ng-show="showTODO">
+    <h3>TODO <small>in rough priority order</small></h3>
+
+    <h4>For Release</h4>
+
+    <ol>
+      <li><strike>ability to load in different puzzles (so you could work the example for yourself and then move on to the real puzzle)</strike></li>
+      <li><strike>need the UI (e.g. tabs for the example vs. the real thing),</strike> and a loading message and/or spinner</li>
+      <li>
+        history
+        <ul>
+          <li><strike>save history</strike></li>
+          <li><strike>load a history stack (essential)</strike></li>
+          <li>backward</li>
+          <li>forward</li>
+          <li>BONUS: history slider so you can scrub back and forth quickly</li>
+        </ul>
+      </li>
+      <li><strike>in browser persistence (will have to be based on history due to circular data structures)</strike></li>
+      <li><strike>Global Re-do of validation otherwise Conjecture Mode and loading history will put things in a bad state</strike></li>
+      <li><strike>Query string to select appropriate puzzle tab</strike></li>
+      <li><strike>Legend</strike></li>
+      <li>more detailed instructions</li>
+      <li>Addition of letters to the puzzle and probably a toggle to show/hide them</li>
+    </ol>
+
+    <h4>Nice-to-haves</h4>
+
+    <ol>
+      <li>Add in validation
+        <ul>
+          <li><strike>Each validation type should not only cause bad things to become extra visible, make sure works for color blind folks), it should also have a nice human readable warning.</strike></li>
+          <li><strike>(easy) when a node has more than it's proper number of connections</strike></li>
+          <li><strike>(easy) when a connection branches at an empty node</strike></li>
+          <li><strike>(harder) when a long connection has more than one 90 degree angle</strike></li>
+          <li><strike>(harder) when two connected nodes are the same number.</strike>
+            <ul><li><strike><strong>Bug:</strong> Mix of branching and connecting.</strike></li></ul>
+          </li>
+          <li>Completion validation</li>
+          <li>Ability to turn validation off in case it's distracting to some solvers</li>
+          <li>Should I have some type of indicator that all the paths have been used from a given circle?</li>
+        </ul>
+      </li>
+      <li><strike>"conjecture" mode -- this one will take some thought to get user experience right. I think they should be able to enter this mode, then all the paths or X's they add will look visually different (gray and something else for colorblind folks) then when they exit it they should have the choice to clear their gray things (default), make the gray truth, or cancel and stay in what-if mode</strike></li>
+      <li>drag to select a path</li>
+    </ol>
+
+    <h4>Report issues beyond what's above</h4>
+    <p>
+      Please send an email to <a href="mailto:hryanjones@gmail.com">hryanjones@gmail.com</a> about any issues, bugs, or feature requests that come up.
+    </p>
+  </div>
+
+
+</body>
+</html>

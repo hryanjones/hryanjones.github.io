@@ -1,0 +1,35 @@
+{
+    "numColumns": 8,
+    "numRows": 8,
+    "nodeData": {
+        "0": {
+            "2": {"number": 1, "letter": "A"},
+            "4": {"number": 2, "letter": "K", "startOrEnd": true}
+        },
+        "1": {
+            "1": {"number": 2, "letter": "I"},
+            "3": {"number": 1, "letter": "X", "startOrEnd": true},
+            "6": {"number": 4, "letter": "C"}
+        },
+        "2": {
+            "0": {"number": 2, "letter": "D"},
+            "2": {"number": 2, "letter": "Q"}
+        },
+        "4": {
+            "1": {"number": 3, "letter": "B"},
+            "5": {"number": 3, "letter": "L"},
+            "7": {"number": 3, "letter": "E"}
+        },
+        "5": {
+            "4": {"number": 2, "letter": "A"},
+            "6": {"number": 2, "letter": "N"}
+        },
+        "6": {
+            "3": {"number": 2, "letter": "U"}
+        },
+        "7": {
+            "1": {"number": 3, "letter": "P"}
+        }
+    },
+    "answerLength": 7
+}
