@@ -22,9 +22,11 @@
    border: .18em solid black;
   height: 1.5em;
   width: 1.5em;
-  margin: .7em .5em .5em .7em;
+  
+   margin: .4em .5em .5em .4em;
   border-radius: 1em;
-  background: white;
+  
+   background: white;
   z-index: 2;
   position: relative;
 }
@@ -45,8 +47,8 @@
 .node-label {
   position: absolute;
   font-weight: bold;
-  left: 3.5px;
-  top: -1px;
+  left: 5px;
+  top: -2px;
   color: black;
   /* display: none; */
 }
