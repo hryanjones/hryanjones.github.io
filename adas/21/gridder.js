@@ -112,7 +112,23 @@ angular
         }
 
     }
-]);
+])
+.filter('puzzleNameFormat', function() {
+    return puzzleNameFormat;
+});
+
+function puzzleNameFormat(jsonUrl) {
+    return jsonUrl
+    .replace(/^\.\//, '')
+    .replace(/\.json$/, '')
+    .split('-')
+    .map(capitalizeWord)
+    .join(' ')
+
+    function capitalizeWord(word) {
+        return word.slice(0, 1).toUpperCase() + word.slice(1);
+    }
+}
 
 function generate() {
     return    {

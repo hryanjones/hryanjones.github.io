@@ -25,6 +25,7 @@
     <br/>
     <small>
       click on the grid to set a path, click again to denote a path cannot be
+    </small>
   </h1>
 
   <div ng-if="buildData">
@@ -46,9 +47,9 @@
       ">
       example
     </label>
-    <label class="tab" ng-class="{selected: jsonUrl === './real-deal.json'}" ng-click="
-        setQueryString('real-deal');
-        jsonUrl = './real-deal.json';
+    <label class="tab" ng-class="{selected: jsonUrl === './aenigma-21.json'}" ng-click="
+        setQueryString('aenigma-21');
+        jsonUrl = './aenigma-21.json';
         loadPuzzle(jsonUrl);
       ">
       Ænigma #21
@@ -68,7 +69,7 @@
 
   <div id="puzzle-container">
 
-    <div ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row">
+    <div ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row nowrap">
       <div ng-repeat="node in row track by $index"
         class="node-container"
         ng-init="colIndex = $index;"
@@ -301,6 +302,15 @@
 
   </div>
 
+  <div class="info-bubble answer bg-primary inline-block">
+    <h3 class="inline-block no-margin">Final Answer for <strong>{{jsonUrl | puzzleNameFormat}}</strong>:</h3>
+    <div class="inline-block nowrap">
+      <span ng-repeat="letter in answer track by $index">
+        <input maxlength="1" ng-model="answer[$index]"/>
+      </span>
+    </div>
+  </div>
+
   <div class="bg-info text-info info-bubble block" ng-show="jsonUrl === './example.json'">
       <i class="glyphicon glyphicon-info-sign"></i>
       See the <a href="http://www.pavelspuzzles.com/adas/21/">PDF</a> for a short walk-through on solving the example.
@@ -342,12 +352,6 @@
     Fill in your answer and give to a cashier at <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> for your prize. This month’s prize: <strong><u>one free non-alcoholic drink!</u></strong>
     <br/>(Limit one per solver. Offer available through 31st July 2015.)
   </p>
-
-  <div class="info-bubble answer bg-primary inline-block">
-    <span ng-repeat="letter in answer track by $index">
-      <input maxlength="1" ng-model="answer[$index]"/>
-    </span>
-  </div>
 
   <hr/>
 

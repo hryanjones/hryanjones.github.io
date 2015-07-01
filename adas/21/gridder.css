@@ -9,7 +9,6 @@
 
 .node-row { /* It's not clear to me why I need to force the height to be correct */
   height: 35px;
-  white-space: nowrap;
 }
 
 .node-container {
@@ -178,6 +177,7 @@
 .info-bubble {
   border: 1px solid blue;
   padding: 10px;
+  margin: 2px 0px;
 }
 .legend .info-bubble {
   padding: 2px;
@@ -209,7 +209,7 @@
   height: 35px;
   width: 35px;
   padding: 5px;
-  font-size: 200%;
+  font-size: 180%;
 }
 
 .twitter-mention-button {
@@ -228,5 +228,9 @@
 
 .block {
   display: block;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
