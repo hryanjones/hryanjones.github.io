@@ -46,9 +46,9 @@
       ">
       example
     </label>
-    <label class="tab" ng-class="{selected: jsonUrl === './real-deal-puzzle.json'}" ng-click="
-        setQueryString('real-deal-puzzle');
-        jsonUrl = './real-deal-puzzle.json';
+    <label class="tab" ng-class="{selected: jsonUrl === './real-deal.json'}" ng-click="
+        setQueryString('real-deal');
+        jsonUrl = './real-deal.json';
         loadPuzzle(jsonUrl);
       ">
       Ænigma #21
@@ -365,6 +365,15 @@
         email Mr. Pavel Curtis and Mr. H. Ryan Jones
       </small>
     </a>
+
+    <!-- Twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
+    <a href="https://twitter.com/intent/tweet?screen_name=pavelcurtis" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
+      <small>
+      @pavelcurtis
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      </small>
+    </a>
+
     <!-- Twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
     <a href="https://twitter.com/intent/tweet?screen_name=hryanjones" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
       <small>
@@ -372,6 +381,7 @@
       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
       </small>
     </a>
+
   </h4>
   <h4>
     <a href="https://github.com/hryanjones/hryanjones.github.io">Code</a>
