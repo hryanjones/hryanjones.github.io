@@ -83,7 +83,8 @@
               node.connections.right.invalidReasons.connectsSameNodes ||
               node.connections.below.invalidReasons.connectsSameNodes ||
               node.connections.left.invalidReasons.connectsSameNodes,
-            'no-border': showLetters,
+            'letter-mode': showLetters,
+            muted: node.numberConnections === node.number,
           }">
           <div class="node-label">
             {{node.number}}<sub ng-show="showLetters">{{node.letter}}</sub>
@@ -284,12 +285,20 @@
       <label>assumed to not be<br/> a path (conjecture)</label>
     </div>
 
-    <div class="badge" title="Circles are where paths end and must connect to exactly the number of paths in the circle.">
+    <div class="badge" title="Circles are where paths end and must connect to exactly the number of paths as the number in the circle.">
       <div class="node-container">
         <div class="connections"></div>
         <div class="node"><div class="node-label">3</div></div>
       </div>
       <label>a circle, this one must<br/> have three paths</label>
+    </div>
+
+    <div class="badge" title="No less than the number of paths and no more.">
+      <div class="node-container">
+        <div class="connections right-active below-active"></div>
+        <div class="node muted"><div class="node-label">2</div></div>
+      </div>
+      <label>a circle that has all the paths<br/> it can, in this case, 2</label>
     </div>
 
     <div class="badge" title="This is a circle that denotes a mistake (in this instance 2 paths connecting to a 1-circle). Look for a message below the board if you're not sure why it's invalid.">

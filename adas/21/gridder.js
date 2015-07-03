@@ -357,12 +357,14 @@ function validate(numColumns, numRows) {
     /**
      * set .valid attr to false if the number of active connections to this node are greater than it's node.number
      * also, for empty nodes the number is 2 because branching is not allowed on an empty node
+     * Also store on the node the number of connections so we can mute it if it's fulfilled
      */
     function validateNode(node, alerts) {
         var initialState = node.invalid;
 
         var maxConns = isEmptyNode(node) ? 2 : node.number;
         var numConns = numberActiveConnections(node);
+        node.numberConnections = numConns;
 
         node.invalid = numConns > maxConns;
 
