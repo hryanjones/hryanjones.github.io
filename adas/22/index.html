@@ -75,10 +75,9 @@
       <td ng-repeat="node in row track by $index"
         class="node"
         ng-init="colIndex = $index;"
-        ng-class="{
-          empty: !node.number && !buildData,
-          invalid: node.invalid,
-        }">
+        ng-class="[node.state, node.invalid]"
+        ng-click="history.data.push(setNextStateAndGetChanges(node, conjectures.enabled));"
+        >
 
         <div ng-if="!buildData">
           {{node.number}}
@@ -131,7 +130,6 @@
     </tr>
 
   </table>
-  <br/>
 
   <div ng-if="buildData" class="well">
     <h4>Copy/paste me into a new puzzle JSON file</h4>
@@ -143,21 +141,6 @@
     <i class="glyphicon glyphicon-warning-sign text-danger"></i>
     A circle cannot have more paths connect to it than the number it contains.
     (at {{alerts.overloadedNode}} circle<span ng-show="alerts.overloadedNode > 1">s</span> above)
-  </div>
-  <div ng-show="alerts.branchInEmptyNode" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    Paths may not branch, touch or cross each other.
-    (at {{alerts.branchInEmptyNode}} intersection<span ng-show="alerts.branchInEmptyNode > 1">s</span> above)
-  </div>
-  <div ng-show="alerts.connectsSameNodes" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    Two circles containing the same number may not be connected by a path.
-    ({{alerts.connectsSameNodes}} path<span ng-show="alerts.connectsSameNodes > 1">s</span> above)
-  </div>
-  <div ng-show="alerts.moreThanOneBend" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    Any path between circles may only bend at most once.
-    ({{alerts.moreThanOneBend}} path<span ng-show="alerts.moreThanOneBend > 1">s</span> above)
   </div>
 
 <!--   <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
@@ -187,19 +170,19 @@
       <i class="glyphicon glyphicon-info-sign"></i>
       In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can make temporary assumptions. <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em> when you're done.
     </p>
-  </span>
+  </span> -->
 
-  <button ng-click="
+<!--   <button ng-click="
       alerts = validate.newAlerts();
       validate.redo(grid, alerts);
     "
     class="btn btn-default"
     >
     Redo Validation
-  </button>
+  </button> -->
   <div class="btn btn-danger" ng-click="clear();" ng-if="clear">
     Clear Puzzle Progress
-  </div> -->
+  </div>
 
   <div ng-if="false">
     <h3>History</h3>

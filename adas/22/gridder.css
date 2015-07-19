@@ -18,6 +18,12 @@
   /* position: relative; */
   color: black;
 }
+.node.blank {
+  background-color: lightyellow;
+}
+.node.filled {
+  background-color: indigo;
+}
 .node.letter-mode {
   border: none;
 }
