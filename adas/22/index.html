@@ -79,7 +79,7 @@
         ng-click="history.data.push(setNextStateAndGetChanges(node, conjectures.enabled));"
         >
 
-        <div ng-if="!buildData">
+        <div class="node-label" ng-if="!buildData">
           {{node.number}}
           <!-- <sub ng-show="showLetters">{{node.letter}}</sub> -->
           <div ng-class="'arrow-' + node.direction"></div>
