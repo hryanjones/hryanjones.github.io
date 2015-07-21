@@ -75,14 +75,15 @@
       <td ng-repeat="node in row track by $index"
         class="node"
         ng-init="colIndex = $index;"
-        ng-class="[node.state, node.invalid]"
+        ng-class="[node.state, node.invalid, node.conjecture ? 'conjecture' : '']"
         ng-click="history.data.push(setNextStateAndGetChanges(node, conjectures.enabled));"
         >
 
-        <div class="node-label" ng-if="!buildData">
-          {{node.number}}
+        <div class="node-label" ng-if="!buildData" ng-class="{'left-or-right': node.direction === 'left' || node.direction === 'right'}">
+          {{node.number}}<span class="down-arrow" ng-show="node.direction === 'down'"></span><span class="up-arrow" ng-show="node.direction === 'up'"></span>
+          <div class="right-arrow" ng-show="node.direction === 'right'"></div>
+          <div class="left-arrow" ng-show="node.direction === 'left'"></div>
           <!-- <sub ng-show="showLetters">{{node.letter}}</sub> -->
-          <div ng-class="'arrow-' + node.direction"></div>
         </div>
 
         <div ng-if="buildData" class="build-mode-inputs">
@@ -143,9 +144,9 @@
     (at {{alerts.overloadedNode}} circle<span ng-show="alerts.overloadedNode > 1">s</span> above)
   </div>
 
-<!--   <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
+  <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
     <button class="btn btn-primary" ng-click="
-        conjectures.enabled && conjectures.clear(grid.connections);
+        conjectures.enabled && conjectures.clear(grid.nodes);
         conjectures.enabled && history.clearConjectures(history.data);
         alerts = conjectures.enabled ? validate.newAlerts() : alerts;
         conjectures.enabled && validate.redo(grid, alerts);
@@ -170,7 +171,7 @@
       <i class="glyphicon glyphicon-info-sign"></i>
       In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can make temporary assumptions. <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em> when you're done.
     </p>
-  </span> -->
+  </span>
 
 <!--   <button ng-click="
       alerts = validate.newAlerts();

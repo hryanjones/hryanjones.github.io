@@ -1,6 +1,3 @@
-/*div {
-  box-sizing: border-box;
-}*/
 /* border-box doesn't seem to help anything ... */
 #puzzle-container {
   background: white;
@@ -10,13 +7,12 @@
 
 .node {
   border: 2px solid black;
-  height: 25px;
-  width: 25px;
+  height: 24px;
+  width: 24px;
   text-align: center;
 
   background: white;
-  z-index: 2;
-  /* position: relative; */
+  position: relative;
   color: black;
   cursor: pointer;
 
@@ -25,11 +21,59 @@
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
 }
-.node.blank {
-  background-color: lightyellow;
+.conjecture.blank .node-label::after,
+.conjecture.filled .node-label::after {
+  content: "?";
+  position: absolute;
+  right: 1px;
+  bottom: 0px;
+  font-size: 10px;
+  font-weight: bold;
+  color: hsla(0, 0%, 50%, 1);
+}
+.conjecture.filled .node-label::after {
+  color: white
+}
+.node-label {
+  height: 22px;
+  width: 22px;
+  line-height: 1.1;
+  padding-top: 3px;
+}
+.blank .node-label {
+  padding-top: 2px;
+}
+.node-label.left-or-right {
+  padding-top: 5px;
+}
+.blank {
+  background-color: hsla(200, 100%, 64%, .3);
+}
+.blank.conjecture {
+  background-color: hsla(200, 0%, 64%, .3);
+}
+.blank .node-label {
+  border-color: hsla(200, 100%, 64%, .7);
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+  background-color: white;
+}
+.blank.conjecture .node-label {
+  border-color: hsla(200, 0%, 64%, .7);
 }
 .node.filled {
-  background-color: indigo;
+  background-color: hsla(260, 100%, 20%, 1);
+}
+.node.filled.conjecture {
+  background: repeating-linear-gradient(
+    45deg,
+    hsla(260, 0%, 20%, 1),
+    hsla(260, 0%, 70%, 1) 5px
+  );
+}
+.blank .node-label.left-or-right {
+  padding-top: 4px;
 }
 .invalid .node-label {
   color: red;
@@ -63,6 +107,7 @@
 .build-mode-inputs input {
   width: 26px;
 }
+.node-label.left-or-right,
 .build-mode-inputs button.right-arrow,
 .build-mode-inputs button.left-arrow
 {

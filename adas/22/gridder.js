@@ -61,7 +61,6 @@ angular
             $scope.conjectures.enabled = conjectures().lastChangeHasConjecture($scope.history.data);
 
             // TODO should have a loading variable so we can prevent user from changing things before this point?
-            console.log($scope.grid.nodes)
         }
 
         /**
@@ -173,7 +172,7 @@ function generate() {
                 column: j,
                 state: null,
                 direction: direction || null,
-                number: number || null,
+                number: Number(number) === number ? number : null,
                 letter: data && data.letter,
                 startOrEnd: data && data.startOrEnd,
                 neighbors: {},
@@ -352,6 +351,7 @@ function conjectures() {
     };
 
     function clearConjectures(nodes) {
+        utility().forAllNodes(nodes, removeStateAndConjecture);
 
         function removeStateAndConjecture(node) {
             if (node.conjecture) {
