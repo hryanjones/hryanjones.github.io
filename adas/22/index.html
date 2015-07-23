@@ -75,9 +75,15 @@
       <td ng-repeat="node in row track by $index"
         class="node"
         ng-init="colIndex = $index;"
-        ng-class="[node.state, node.invalid, node.conjecture ? 'conjecture' : '']"
-        ng-click="history.data.push(setNextStateAndGetChanges(node, conjectures.enabled));"
-        >
+        ng-class="[
+          node.state,
+          node.conjecture ? 'conjecture' : '',
+          node.invalidReasons.adjacentFilledNeighbors ? 'invalid-filled' : '',
+        ]"
+        ng-click="
+          history.data.push(setNextStateAndGetChanges(node, conjectures.enabled));
+          validate.node(node, grid.nodes);
+        ">
 
         <div class="node-label" ng-if="!buildData" ng-class="{'left-or-right': node.direction === 'left' || node.direction === 'right'}">
           {{node.number}}<span class="down-arrow" ng-show="node.direction === 'down'"></span><span class="up-arrow" ng-show="node.direction === 'up'"></span>
@@ -138,18 +144,17 @@
   </div>
 
   <br/>
-  <div ng-show="alerts.overloadedNode" class="alert bg-danger h4">
+  <div ng-show="alerts.adjacentFilledNeighbors" class="alert bg-danger h4">
     <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    A circle cannot have more paths connect to it than the number it contains.
-    (at {{alerts.overloadedNode}} circle<span ng-show="alerts.overloadedNode > 1">s</span> above)
+    A filled square vertically or horizontally next to another filled square.
+    (at {{alerts.adjacentFilledNeighbors}} circle<span ng-show="alerts.adjacentFilledNeighbors > 1">s</span> above)
   </div>
 
   <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
     <button class="btn btn-primary" ng-click="
         conjectures.enabled && conjectures.clear(grid.nodes);
         conjectures.enabled && history.clearConjectures(history.data);
-        alerts = conjectures.enabled ? validate.newAlerts() : alerts;
-        conjectures.enabled && validate.redo(grid, alerts);
+        conjectures.enabled && validate.redo(grid);
 
         conjectures.enabled = !conjectures.enabled;
       ">
@@ -174,7 +179,6 @@
   </span>
 
 <!--   <button ng-click="
-      alerts = validate.newAlerts();
       validate.redo(grid, alerts);
     "
     class="btn btn-default"
@@ -189,81 +193,28 @@
     <h3>History</h3>
     <pre>{{history.data|json}}</pre>
   </div>
-<!--
-  <br/>
+
+<!--   <br/>
   <br/>
   <div class="bg-info info-bubble text-info legend">
     <h3>Legend</h3>
 
-    <div class="badge" title="Clicking on an empty grid section will cause it to become a path.">
+    <div class="badge" title="">
       <div class="node-container"><div class="no-offset connections"></div></div>
-      <label>empty</br> grid</label>
+      <label></label>
     </div>
-
-    <div class="badge" title="Create paths to connect circles, clicking a path will make it a 'not possible' path (or X).">
-      <div class="node-container"><div class="no-offset connections right-active below-active"></div></div>
-      <label>a path</label>
-    </div>
-
-    <div class="badge" title="X's denote a place where a path cannot exist. Clicking an X will reset the path to empty grid.">
-      <div class="node-container"><div class="no-offset connections right-unpossible below-unpossible">
-        <div class="right connectionator">
-            <i class="unpossible glyphicon glyphicon-remove"></i>
-        </div>
-        <div class="below connectionator">
-            <i class="unpossible glyphicon glyphicon-remove"></i>
-        </div>
-      </div></div>
-      <label>can't be<br/> a path</label>
-    </div>
-
-    <div class="badge" title="This signifies that you've made a mistake and violated a rule. Look for a message stating which rule you broke.">
-      <div class="node-container"><div class="no-offset connections right-active right-invalid below-active below-invalid"></div></div>
-      <label>an invalid<br/> path</label>
-    </div>
-
-    <div class="badge" title="This is a path in conjecture mode. You can put these down to test out ideas about 'what if' there was a path here. Suggestion: treat them as temporary.">
-      <div class="node-container"><div class="no-offset connections right-active right-conjecture below-active below-conjecture"></div></div>
-      <label>conjecture path<br/> assumed</label>
-    </div>
-
-    <div class="badge" title="This is an X in conjecture mode. You've assumed there's no path here. Careful!">
-      <div class="node-container"><div class="no-offset connections right-unpossible below-unpossible right-conjecture below-conjecture">
-        <div class="right connectionator">
-            <i class="unpossible glyphicon glyphicon-remove-circle"></i>
-        </div>
-        <div class="below connectionator">
-            <i class="unpossible glyphicon glyphicon-remove-circle"></i>
-        </div>
-      </div></div>
-      <label>assumed to not be<br/> a path (conjecture)</label>
-    </div>
-
-    <div class="badge" title="Circles are where paths end and must connect to exactly the number of paths as the number in the circle.">
-      <div class="node-container">
-        <div class="connections"></div>
-        <div class="node"><div class="node-label">3</div></div>
-      </div>
-      <label>a circle, this one must<br/> have three paths</label>
-    </div>
-
-    <div class="badge" title="No less than the number of paths and no more.">
-      <div class="node-container">
-        <div class="connections right-active below-active"></div>
-        <div class="node muted"><div class="node-label">2</div></div>
-      </div>
-      <label>a circle that has all the paths<br/> it can, in this case, 2</label>
-    </div>
-
-    <div class="badge" title="This is a circle that denotes a mistake (in this instance 2 paths connecting to a 1-circle). Look for a message below the board if you're not sure why it's invalid.">
-      <div class="node-container">
-        <div class="connections right-active right-invalid below-active below-invalid"></div>
-        <div class="node invalid"><div class="node-label">1</div></div>
-      </div>
-      <label>an invalid<br/> circle</label>
-    </div>
-
   </div> -->
+
+  <h3>Basic Instructions <small>will be replaced by puzzle flavor text</small></h3>
+  <ul>
+    <li>Blacken some squares of the grid, possibly including some squares containing clues.</li>
+    <li>Unblackened clues specify exactly how many blackened squares there are, in the same row or column, in the indicated direction.</li>
+    <li>Blackened clues should be ignored.</li>
+    <li>Blackened squares may not be horizontally or vertically</li>
+adjacent.
+    <li>All unblackened squares, as a group, must be
+connected to one another, horizontally or vertically.</li>
+  </ul>
 
 <!--   <div class="info-bubble answer bg-primary inline-block">
     <h3 class="inline-block no-margin">Final Answer for <strong>{{jsonUrl | puzzleNameFormat}}</strong>:</h3>
@@ -364,13 +315,16 @@
     <h4>For Release</h4>
 
     <ol>
-      <li></li>
+      <li>alerts for validation</li>
+      <li>validation for too many marked squares past a square that is "blank" (and therefore true)</li>
+      <li>validation for not enough empty+marked squares past a square that is "blank"</li>
     </ol>
 
     <h4>Nice-to-haves</h4>
 
     <ol>
-      <li></li>
+      <li>History back-and-forth</li>
+      <li>change colors</li>
     </ol>
 
 <!--     <h4>Report issues beyond what's above</h4>

@@ -65,6 +65,18 @@
 .node.filled {
   background-color: hsla(260, 100%, 20%, 1);
 }
+.node.filled.invalid-filled {
+  background-color: hsla(0, 100%, 20%, 1);
+}
+.node.filled.invalid-filled::after {
+  content: "!";
+  position: absolute;
+  left: 1px;
+  top: -3px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+}
 .node.filled.conjecture {
   background: repeating-linear-gradient(
     45deg,

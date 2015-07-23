@@ -53,7 +53,8 @@ angular
 
             // initialize validation functions with proper number of rows and columns
             $scope.validate = validate(data.numRows, data.numColumns);
-            $scope.alerts = $scope.validate.newAlerts();
+            // FIXME alerts are real broke
+            $scope.alerts = $scope.validate.alerts;
             // redo node validation
             $scope.validate.redo($scope.grid, $scope.alerts);
 
@@ -159,7 +160,7 @@ function generate() {
             }
         }
 
-        linkNodesToNeighbors(grid);
+        linkNodesToNeighbors(grid.nodes);
 
         return grid;
 
@@ -175,8 +176,8 @@ function generate() {
                 number: Number(number) === number ? number : null,
                 letter: data && data.letter,
                 startOrEnd: data && data.startOrEnd,
-                neighbors: {},
-                invalid: false,
+                neighbors: [],
+                invalidReasons: null,
             };
         }
 
@@ -184,31 +185,30 @@ function generate() {
         /**
          * Cycle through all the nodes and add pointers to all its neighbors.
          */
-        function linkNodesToNeighbors(grid) {
-            utility().forAllNodes(grid.nodes, linkNodeToNeighbors);
+        function linkNodesToNeighbors(nodes) {
+            utility().forAllNodes(nodes, linkNodeToNeighbors);
 
             /**
              * @WARNING this creates a circular reference, preventing JSON stringifying
              */
             function linkNodeToNeighbors(node) {
-                var nodeInFirstRow = !node.row;
-                var nodeInFirstColumn = !node.column;
+                node.neighbors = getNeighbors(node);
 
-                if (!nodeInFirstRow) { // above
-                    node.neighbors.above = grid.nodes[node.row - 1][node.column];
-                }
-                if (!nodeInFirstColumn) { // left
-                    node.neighbors.left = grid.nodes[node.row][node.column - 1];
-                }
+                function getNeighbors(node) {
+                    return [
+                        getNodeAt(node.row - 1, node.column),
+                        getNodeAt(node.row + 1, node.column),
+                        getNodeAt(node.row, node.column - 1),
+                        getNodeAt(node.row, node.column + 1),
+                    ].filter(truthy);
 
-                var neighborRight = grid.nodes[node.row][node.column + 1];
-                if (neighborRight) {
-                    node.neighbors.right = neighborRight;
-                }
+                    function getNodeAt(i, j) {
+                        return nodes[i] && nodes[i][j];
+                    }
 
-                var rowBelow = grid.nodes[node.row + 1];
-                if (rowBelow) {
-                    node.neighbors.below = rowBelow[node.column];
+                    function truthy(thing) {
+                        return !!thing;
+                    }
                 }
             }
         }
@@ -275,10 +275,11 @@ function validate(numColumns, numRows) {
         throw new Error('You must initialize validator with number of rows and columns.');
     }
     var LIMIT = numColumns * numRows; //max number of neighbors to follow, prevents infinite while loop
+    var alerts = newAlerts();
 
     return {
-        newAlerts: newAlerts,
-        nodes: validateNodes,
+        alerts: alerts,
+        node: validateNode,
         redo: redoValidation,
     }
 
@@ -286,30 +287,89 @@ function validate(numColumns, numRows) {
      * a data structure to contain the count of validation alerts we've seen for notifying users
      */
     function newAlerts() {
-        return { // a count of how many errors we've found for a given type
-            filledNeighborNodes: 0,
+        return { // a count of how many nodes are invalid due to this
+            adjacentFilledNeighbors: 0,
         }
     }
 
-    function validateNodes(nodes, alerts) {
+    function validateNodes(nodes) {
         nodes.forEach(function(n) {
-            validateNode(n, alerts);
+            validateNode(n, nodes);
         });
     }
 
-    /**
-     */
-    function validateNode(node, alerts) {
+    function validateNode(node, nodes) {
+        adjacentFilledNeighborsTest(node, nodes);
     }
 
-    function incrementAlerts(alerts, alertType, increment) {
+    function adjacentFilledNeighborsTest(node, nodes) {
+        var invalidReason = 'adjacentFilledNeighbors';
+        var alreadyInvalid = node.invalidReasons && node.invalidReasons[invalidReason];
+        // console.log('adjacentFilledNeighborsTest, node = ', node, 'alreadyInvalid = ', alreadyInvalid)
+        if (!filled(node)) {
+            // This node wasn't invalid and can't be now (as it's not filled)
+            if (!alreadyInvalid) { return; }
+
+            // node was invalid, but it can't be invalid now because it's not filled
+            markValid(node);
+            node.neighbors.filter(filled).forEach(recheckNeighbor);
+            return;
+        }
+
+        var filledNeighbors = node.neighbors.filter(filled);
+        if (filledNeighbors.length === 0) { // all is good
+            markValid(node);
+            return;
+        }
+
+        filledNeighbors.push(node);
+        filledNeighbors.forEach(markInvalid);
+
+        function recheckNeighbor(n) {
+            adjacentFilledNeighborsTest(n, nodes);
+        }
+
+        function filled(n) {
+            return n && n.state === 'filled';
+        }
+
+        function markInvalid(n) {
+            addNodeInvalidReason(n, invalidReason);
+        }
+
+        function markValid(n) {
+            removeNodeInvalidReason(n, invalidReason);
+        }
+    }
+
+    function addNodeInvalidReason(node, reason) {
+        node.invalidReasons = node.invalidReasons || {};
+        if (node.invalidReasons[reason]) { return; }
+        node.invalidReasons[reason] = true;
+        updateAlertCount(alerts, reason, 1);
+    }
+
+    function removeNodeInvalidReason(node, reason) {
+        if (!node.invalidReasons) {
+            // can't remove a value when no invalidReasons set
+            return;
+        }
+
+        delete node.invalidReasons[reason];
+        updateAlertCount(alerts, reason, -1);
+        if (Object.keys(node.invalidReasons)) { // reset invalid reasons to null if this is the last reason
+            node.invalidReasons = null;
+        }
+    }
+
+    function updateAlertCount(alerts, alertType, updateAmount) {
         if (!alerts || alerts[alertType] === undefined) {
             console.error('alerts ', alerts, ', alertType', alertType);
             throw Error('alertType not found in alerts');
         }
 
-        if (increment) {
-            alerts[alertType] += 1;
+        if (updateAmount >= 0) {
+            alerts[alertType] += updateAmount;
             return;
         }
 
@@ -319,12 +379,15 @@ function validate(numColumns, numRows) {
     }
 
 
-    function redoValidation(grid, alerts) {
+    function redoValidation(grid) {
+        alerts = newAlerts();
         clearValidation(grid);
         utility().forAllNodes(grid.nodes, revalidateNode);
 
+        // console.log(grid) // TEMP
+
         function revalidateNode(node) {
-            validateNode(node, alerts);
+            validateNode(node, grid.nodes);
         }
     }
 
@@ -332,7 +395,7 @@ function validate(numColumns, numRows) {
         utility().forAllNodes(grid.nodes, resetNodeInvalidState);
 
         function resetNodeInvalidState(node) {
-            node.invalid = false;
+            node.invalidReasons = null;
         }
     }
 
