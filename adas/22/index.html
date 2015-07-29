@@ -25,7 +25,7 @@
     </a>
     <br/>
     <small>
-      click on a box to mark it <em>empty</em>, click again to mark it <em>filled</em>
+      click on a box to mark it <em>blank</em>, click again (or right-click) to mark it <em>filled</em>
     </small>
   </h1>
 
@@ -81,12 +81,19 @@
           node.invalidReasons.adjacentFilledNeighbors ? 'invalid-filled' : '',
           node.invalidReasons.overSaturatedClue || node.invalidReasons.underSaturatedClue ? 'invalid-clue' : '',
         ]"
+        ng-right-click="
+          history.data.push(setNextStateAndGetChanges(node, conjectures.enabled, 'onlyFilled'));
+          validate.node(node, grid.nodes);
+          validate.row(grid.nodes, rowIndex);
+          validate.column(grid.nodes, colIndex);
+        "
         ng-click="
           history.data.push(setNextStateAndGetChanges(node, conjectures.enabled));
           validate.node(node, grid.nodes);
           validate.row(grid.nodes, rowIndex);
           validate.column(grid.nodes, colIndex);
-        ">
+        "
+        >
 
         <div class="node-label" ng-if="!buildData" ng-class="{'left-or-right': node.direction === 'left' || node.direction === 'right'}">
           {{node.number}}<span class="down-arrow" ng-show="node.direction === 'down'"></span><span class="up-arrow" ng-show="node.direction === 'up'"></span>
@@ -149,7 +156,7 @@
   <br/>
   <div ng-show="alerts.adjacentFilledNeighbors" class="alert bg-danger h4">
     <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    A filled square vertically or horizontally next to another filled square.
+    A filled square cannot be next to another filled square, vertically or horizontally.
     ({{alerts.adjacentFilledNeighbors}} square<span ng-show="alerts.adjacentFilledNeighbors > 1">s</span> above)
   </div>
   <div ng-show="alerts.overSaturatedClue" class="alert bg-danger h4">
@@ -367,17 +374,20 @@ connected to one another, horizontally or vertically.</li>
     <h4>For Release</h4>
 
     <ol>
-      <li>alerts for validation</li>
-      <li>validation for too many marked squares past a square that is "blank" (and therefore true)</li>
-      <li>validation for not enough empty+marked squares past a square that is "blank"</li>
-      <li>Legend</li>
+      <li><strike>alerts for validation</strike></li>
+      <li><strike>validation for too many marked squares past a square that is "blank" (and therefore true)</strike></li>
+      <li><strike>validation for not enough empty+marked squares past a square that is "blank"</strike></li>
+      <li><strike>Legend</strike></li>
+      <li>Completed puzzle validation</li>
     </ol>
 
     <h4>Nice-to-haves</h4>
 
     <ol>
-      <li>History back-and-forth</li>
+      <li><strike>right-click to mark as filled</strike></li>
+      <li>History back-and-forth and maybe slider</li>
       <li>change colors</li>
+      <li>click-and-drag (with either left or right mouse) to select multiple in a direction</li>
     </ol>
 
 <!--     <h4>Report issues beyond what's above</h4>

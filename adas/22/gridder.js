@@ -124,7 +124,18 @@ angular
 .directive('leftArrow', function() {return {restrict: 'C', template: '&#8592;'} })
 .directive('upArrow', function() {return {restrict: 'C', template: '&#8593;'} })
 .directive('rightArrow', function() {return {restrict: 'C', template: '&#8594;'} })
-.directive('downArrow', function() {return {restrict: 'C', template: '&#8595;'} });
+.directive('downArrow', function() {return {restrict: 'C', template: '&#8595;'} })
+.directive('ngRightClick', function($parse) { // stolen from http://stackoverflow.com/questions/15731634/how-do-i-handle-right-click-events-in-angular-js
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
+    };
+});
 
 function puzzleNameFormat(jsonUrl) {
     return jsonUrl
@@ -233,10 +244,10 @@ function generate() {
  * TODO break change part into a history function (in history() space) that takes appropriate parameters?
  * @warning mutates the node state and conjecture state
  */
-function setNextStateAndGetChanges(node, conjecturesEnabled) {
-    console.log(node);
+function setNextStateAndGetChanges(node, conjecturesEnabled, onlyFilled) {
+    // console.log(node);
 
-    var newState = nextState(node.state)
+    var newState = nextState(node.state, onlyFilled);
 
     // a change is a part of a history chain
     var change = {
@@ -253,19 +264,18 @@ function setNextStateAndGetChanges(node, conjecturesEnabled) {
     node.state = newState;
     node.conjecture = conjecturesEnabled;
 
-    console.log(node);
-
     return {changes: [change]};
 
     /**
      * cycle to the nextState given state
      * null -> 'blank' -> 'filled' -> null (etc.)
+     * if onlyFilled is true, then null -> 'filled' -> null (and 'blank' -> 'filled')
      */
-    function nextState(state) {
-        return {
-            'null': 'blank',
-            'blank': 'filled',
-        }[state] || null;
+    function nextState(state, onlyFilled) {
+        return (onlyFilled ?
+            {'null': 'filled', 'blank': 'filled'}[state] :
+            {'null': 'blank', 'blank': 'filled', }[state]
+        ) || null;
     }
 }
 
