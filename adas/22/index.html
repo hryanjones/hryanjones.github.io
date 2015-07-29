@@ -152,6 +152,16 @@
     A filled square vertically or horizontally next to another filled square.
     ({{alerts.adjacentFilledNeighbors}} square<span ng-show="alerts.adjacentFilledNeighbors > 1">s</span> above)
   </div>
+  <div ng-show="alerts.overSaturatedClue" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    A "true" clue square should not "see" more filled squares than its number in the indicated direction.
+    ({{alerts.overSaturatedClue}} clue<span ng-show="alerts.overSaturatedClue > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.underSaturatedClue" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    A "true" clue square must "see" exactly the same number of filled squares as its number.
+    ({{alerts.underSaturatedClue}} clue<span ng-show="alerts.underSaturatedClue > 1">s</span> above)
+  </div>
 
   <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
     <button class="btn btn-primary" ng-click="
@@ -249,12 +259,12 @@
 
   <h3>Basic Instructions <small>will be replaced by puzzle flavor text</small></h3>
   <ul>
-    <li>Blacken some squares of the grid, possibly including some squares containing clues.</li>
-    <li>Unblackened clues specify exactly how many blackened squares there are, in the same row or column, in the indicated direction.</li>
-    <li>Blackened clues should be ignored.</li>
-    <li>Blackened squares may not be horizontally or vertically</li>
+    <li>Fill some squares of the grid, possibly including some squares containing clues.</li>
+    <li>"Blank" clues are "true" and specify exactly how many filled squares it can "see" in the same row or column, in the indicated direction.</li>
+    <li>Filled clues should be ignored.</li>
+    <li>Filled squares may not be horizontally or vertically</li>
 adjacent.
-    <li>All unblackened squares, as a group, must be
+    <li>All "blank" squares, as a group, must be
 connected to one another, horizontally or vertically.</li>
   </ul>
 

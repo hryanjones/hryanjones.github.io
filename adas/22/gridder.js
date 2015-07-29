@@ -377,15 +377,19 @@ function validate(numColumns, numRows) {
             underSaturateMarkFunction(node, 'underSaturatedClue');
 
             function overSaturated(node) {
-                return node.number < counts.filled[i];
+                return trueNode(node) && node.number < counts.filled[i];
             }
 
             function underSaturated(node) {
-                return counts.filled[i] + counts.empty[i] < node.number;
+                return trueNode(node) && counts.filled[i] + counts.empty[i] < node.number;
             }
 
             function isClueAndMarkedAsTrue(node) {
-                return Number(node.number) === node.number && node.state === 'blank';
+                return Number(node.number) === node.number;
+            }
+
+            function trueNode(node) {
+                return node.state === 'blank';
             }
 
             function isCorrectClueDirection(node) {
