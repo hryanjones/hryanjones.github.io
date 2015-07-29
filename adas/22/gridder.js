@@ -275,7 +275,9 @@ function validate(numColumns, numRows) {
         throw new Error('You must initialize validator with number of rows and columns.');
     }
     var LIMIT = numColumns * numRows; //max number of neighbors to follow, prevents infinite while loop
-    var alerts = newAlerts();
+
+    var alerts = {};
+    resetAlerts();
 
     return {
         alerts: alerts,
@@ -284,12 +286,10 @@ function validate(numColumns, numRows) {
     }
 
     /**
-     * a data structure to contain the count of validation alerts we've seen for notifying users
+     * a data structure to contain the count of nodes with validation problems
      */
-    function newAlerts() {
-        return { // a count of how many nodes are invalid due to this
-            adjacentFilledNeighbors: 0,
-        }
+    function resetAlerts() {
+        alerts.adjacentFilledNeighbors = 0;
     }
 
     function validateNodes(nodes) {
@@ -380,11 +380,9 @@ function validate(numColumns, numRows) {
 
 
     function redoValidation(grid) {
-        alerts = newAlerts();
+        resetAlerts();
         clearValidation(grid);
         utility().forAllNodes(grid.nodes, revalidateNode);
-
-        // console.log(grid) // TEMP
 
         function revalidateNode(node) {
             validateNode(node, grid.nodes);

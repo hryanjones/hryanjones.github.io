@@ -147,7 +147,7 @@
   <div ng-show="alerts.adjacentFilledNeighbors" class="alert bg-danger h4">
     <i class="glyphicon glyphicon-warning-sign text-danger"></i>
     A filled square vertically or horizontally next to another filled square.
-    (at {{alerts.adjacentFilledNeighbors}} circle<span ng-show="alerts.adjacentFilledNeighbors > 1">s</span> above)
+    ({{alerts.adjacentFilledNeighbors}} square<span ng-show="alerts.adjacentFilledNeighbors > 1">s</span> above)
   </div>
 
   <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
@@ -318,6 +318,7 @@ connected to one another, horizontally or vertically.</li>
       <li>alerts for validation</li>
       <li>validation for too many marked squares past a square that is "blank" (and therefore true)</li>
       <li>validation for not enough empty+marked squares past a square that is "blank"</li>
+      <li>Legend</li>
     </ol>
 
     <h4>Nice-to-haves</h4>
