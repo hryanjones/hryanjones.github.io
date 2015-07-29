@@ -68,7 +68,7 @@
   background-color: hsla(260, 100%, 20%, 1);
 }
 .node.filled.invalid-filled {
-  background-color: hsla(0, 100%, 20%, 1);
+  background-color: red;
 }
 .node.filled.invalid-filled::after {
   content: "!";
@@ -87,10 +87,10 @@
   content: "!";
   position: absolute;
   left: -2px;
-  top: -2px;
+  top: -5px;
   font-size: 24px;
   font-weight: bold;
-  color: hsla(0, 100%, 20%, 1);
+  color: red;
 }
 .node.filled.conjecture {
   background: repeating-linear-gradient(

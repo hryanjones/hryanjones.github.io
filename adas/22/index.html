@@ -79,10 +79,13 @@
           node.state,
           node.conjecture ? 'conjecture' : '',
           node.invalidReasons.adjacentFilledNeighbors ? 'invalid-filled' : '',
+          node.invalidReasons.overSaturatedClue || node.invalidReasons.underSaturatedClue ? 'invalid-clue' : '',
         ]"
         ng-click="
           history.data.push(setNextStateAndGetChanges(node, conjectures.enabled));
           validate.node(node, grid.nodes);
+          validate.row(grid.nodes, rowIndex);
+          validate.column(grid.nodes, colIndex);
         ">
 
         <div class="node-label" ng-if="!buildData" ng-class="{'left-or-right': node.direction === 'left' || node.direction === 'right'}">
@@ -234,7 +237,7 @@
       <div class="node inline-block filled invalid-filled"><div class="node-label"></div></div>
     </div>
 
-    <div class="badge" title="If a clue square is marked as \"blank\" this forces it to be true, however, if there's too many filled squares or too many open squares left, there's a problem.">
+    <div class="badge" title="If a clue square is marked as 'blank' this forces it to be true, however, if there's too many filled squares or too many open squares left, there's a problem.">
       <label>clue marked as true<br/>with a problem</label>
         <div class="node inline-block blank invalid-clue">
           <div class="node-label left-or-right">

@@ -281,14 +281,18 @@ function validate(numColumns, numRows) {
     return {
         alerts: alerts,
         node: validateNode,
+        row: validateRow,
+        column: validateColumn,
         redo: redoValidation,
-    }
+    };
 
     /**
      * a data structure to contain the count of nodes with validation problems
      */
     function resetAlerts() {
         alerts.adjacentFilledNeighbors = 0;
+        alerts.overSaturatedClue = 0;
+        alerts.underSaturatedClue = 0;
     }
 
     function validateNodes(nodes) {
@@ -341,16 +345,112 @@ function validate(numColumns, numRows) {
         }
     }
 
+    function validateRow(nodes, row) {
+        validateLineOfNodes(nodes[row], {left: 'before', right: 'after'});
+    }
+
+    function validateColumn(nodes, col) {
+        validateLineOfNodes(getColumn(nodes), {up: 'before', down: 'after'});
+
+        function getColumn(nodes) {
+            return nodes.map(getColNodeFromRow);
+
+            function getColNodeFromRow(row) {
+                return row[col];
+            }
+        }
+    }
+
+    function validateLineOfNodes(nodes, directions) {
+        var nodeCountsByIndex = getFilledAndEmptyNodeCounts(nodes);
+        nodes.forEach(validateClue);
+
+        function validateClue(node, i) {
+            if (!isClueAndMarkedAsTrue(node) || !isCorrectClueDirection(node)) { return; }
+
+            var counts = nodeCountsByIndex[directions[node.direction]];
+
+            var overSaturateMarkFunction = overSaturated(node) ? addNodeInvalidReason : removeNodeInvalidReason;
+            overSaturateMarkFunction(node, 'overSaturatedClue');
+
+            var underSaturateMarkFunction = underSaturated(node) ? addNodeInvalidReason : removeNodeInvalidReason;
+            underSaturateMarkFunction(node, 'underSaturatedClue');
+
+            function overSaturated(node) {
+                return node.number < counts.filled[i];
+            }
+
+            function underSaturated(node) {
+                return counts.filled[i] + counts.empty[i] < node.number;
+            }
+
+            function isClueAndMarkedAsTrue(node) {
+                return Number(node.number) === node.number && node.state === 'blank';
+            }
+
+            function isCorrectClueDirection(node) {
+                return Object.keys(directions).indexOf(node.direction) !== -1;
+            }
+        }
+
+    }
+
+    /**
+     * Count the number of nodes after and before the current index which are filled and empty
+     */
+    function getFilledAndEmptyNodeCounts(nodes) {
+        var result = {
+            before: {
+                filled: [],
+                empty: []
+            },
+            after: {
+                filled: [],
+                empty: []
+            },
+        };
+        var filledHere = 0;
+        var emptyHere = 0;
+        for (var i = 0; i < nodes.length; i++) {
+            result.before.filled[i] = filledHere;
+            result.before.empty[i] = emptyHere;
+            var nodeState = nodes[i].state;
+            if (nodeState === 'filled') {
+                filledHere += 1;
+            }
+            if (nodeState === null) {
+                emptyHere += 1;
+            }
+        }
+
+        // do the same thing backwards (couldn't think of an easy way to DRY this up)
+        filledHere = 0;
+        emptyHere = 0;
+        for (var i = nodes.length - 1; i >= 0; i--) {
+            result.after.filled[i] = filledHere;
+            result.after.empty[i] = emptyHere;
+            var nodeState = nodes[i].state;
+            if (nodeState === 'filled') {
+                filledHere += 1;
+            }
+            if (nodeState === null) {
+                emptyHere += 1;
+            }
+        }
+        return result;
+    }
+
     function addNodeInvalidReason(node, reason) {
         node.invalidReasons = node.invalidReasons || {};
-        if (node.invalidReasons[reason]) { return; }
+        if (node.invalidReasons[reason]) { return; } // already set, nothing to do
         node.invalidReasons[reason] = true;
         updateAlertCount(alerts, reason, 1);
     }
 
     function removeNodeInvalidReason(node, reason) {
-        if (!node.invalidReasons) {
+        if (!node.invalidReasons || !node.invalidReasons[reason]) {
             // can't remove a value when no invalidReasons set
+            // and can't remove a specific one if it wasn't there in the first place
             return;
         }
 
@@ -382,6 +482,13 @@ function validate(numColumns, numRows) {
         resetAlerts();
         clearValidation(grid);
         utility().forAllNodes(grid.nodes, revalidateNode);
+
+        grid.nodes.forEach(function(row, i) {
+            validateRow(grid.nodes, i);
+            row.forEach(function(node, j) {
+                validateColumn(grid.nodes, j);
+            });
+        });
 
         function revalidateNode(node) {
             validateNode(node, grid.nodes);
