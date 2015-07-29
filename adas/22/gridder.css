@@ -45,11 +45,13 @@
 .node-label.left-or-right {
   padding-top: 5px;
 }
-.blank {
-  background-color: hsla(200, 100%, 64%, .3);
+.blank,
+.legend .node.blank {
+  background-color: hsla(200, 100%, 89%, 1);
 }
-.blank.conjecture {
-  background-color: hsla(200, 0%, 64%, .3);
+.blank.conjecture,
+.legend .blank.conjecture {
+  background-color: hsla(200, 0%, 89%, 1);
 }
 .blank .node-label {
   border-color: hsla(200, 100%, 64%, .7);
@@ -61,7 +63,8 @@
 .blank.conjecture .node-label {
   border-color: hsla(200, 0%, 64%, .7);
 }
-.node.filled {
+.node.filled,
+.legend .node.filled {
   background-color: hsla(260, 100%, 20%, 1);
 }
 .node.filled.invalid-filled {
@@ -76,11 +79,31 @@
   font-weight: bold;
   color: white;
 }
+.node.blank.invalid-clue .node-label {
+  background-color: black;
+  color: white;
+}
+.node.blank.invalid-clue::after {
+  content: "!";
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  font-size: 24px;
+  font-weight: bold;
+  color: hsla(0, 100%, 20%, 1);
+}
 .node.filled.conjecture {
   background: repeating-linear-gradient(
     45deg,
-    hsla(260, 0%, 20%, 1),
-    hsla(260, 0%, 70%, 1) 5px
+    hsla(0, 0%, 20%, 1),
+    hsla(0, 0%, 70%, 1) 5px
+  );
+}
+.node.filled.conjecture.invalid-filled {
+  background: repeating-linear-gradient(
+    45deg,
+    hsla(0, 100%, 20%, 1),
+    hsla(0, 100%, 70%, 1) 5px
   );
 }
 .blank .node-label.left-or-right {
@@ -90,13 +113,20 @@
   color: red;
 }
 
-.legend .badge,
-.legend .badge label {
+.legend .badge[title],
+.legend .badge[title] * {
   cursor: help;
 }
 .legend label {
   vertical-align: top;
   padding: 5px;
+}
+.legend .node {
+  background-color: white;
+}
+.legend .node-label {
+  height: 20px;
+  width: 20px;
 }
 
 .alert,

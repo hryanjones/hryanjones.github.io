@@ -265,7 +265,6 @@ function setNextStateAndGetChanges(node, conjecturesEnabled) {
         return {
             'null': 'blank',
             'blank': 'filled',
-            // 'unpossible': 'active'
         }[state] || null;
     }
 }

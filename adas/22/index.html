@@ -194,16 +194,55 @@
     <pre>{{history.data|json}}</pre>
   </div>
 
-<!--   <br/>
+  <br/>
   <br/>
   <div class="bg-info info-bubble text-info legend">
     <h3>Legend</h3>
 
-    <div class="badge" title="">
-      <div class="node-container"><div class="no-offset connections"></div></div>
-      <label></label>
+    <div class="badge" title="This clue means that there are exactly 3 squares filled to the left. If a clue square is filled, then you can ignore the clue.">
+      <label>clue<br/>square</label>
+        <div class="node inline-block">
+          <div class="node-label left-or-right">
+          3
+          <div class="left-arrow"></div>
+        </div>
+      </div>
     </div>
-  </div> -->
+
+    <div class="badge" title="Squares that are filled must connect to all others.">
+      <label>square marked<br/> as "blank"</label>
+      <div class="node inline-block blank"><div class="node-label"></div></div>
+    </div>
+
+    <div class="badge" title="Filled squares cannot be next to each other.">
+      <label>square marked<br/> as "filled"</label>
+      <div class="node inline-block filled"><div class="node-label"></div></div>
+    </div>
+
+    <div class="badge">
+      <label>"blank"<br/>conjecture</label>
+      <div class="node inline-block blank conjecture"><div class="node-label"></div></div>
+    </div>
+
+    <div class="badge">
+      <label>"filled"<br/>conjecture</label>
+      <div class="node inline-block filled conjecture"><div class="node-label"></div></div>
+    </div>
+
+    <div class="badge">
+      <label>"filled" squares<br/>cannot touch</label>
+      <div class="node inline-block filled invalid-filled"><div class="node-label"></div></div>
+    </div>
+
+    <div class="badge" title="If a clue square is marked as \"blank\" this forces it to be true, however, if there's too many filled squares or too many open squares left, there's a problem.">
+      <label>clue marked as true<br/>with a problem</label>
+        <div class="node inline-block blank invalid-clue">
+          <div class="node-label left-or-right">
+          2<span class="up-arrow"></span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <h3>Basic Instructions <small>will be replaced by puzzle flavor text</small></h3>
   <ul>
