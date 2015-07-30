@@ -79,7 +79,9 @@
           node.state,
           node.conjecture ? 'conjecture' : '',
           node.invalidReasons.adjacentFilledNeighbors ? 'invalid-filled' : '',
-          node.invalidReasons.overSaturatedClue || node.invalidReasons.underSaturatedClue ? 'invalid-clue' : '',
+          (node.invalidReasons.overSaturatedClue ||
+            node.invalidReasons.underSaturatedClue ||
+            node.invalidReasons.trappedSingleBlankNode) ? 'invalid-clue' : '',
         ]"
         ng-right-click="
           history.data.push(setNextStateAndGetChanges(node, conjectures.enabled, 'onlyFilled'));
@@ -168,6 +170,11 @@
     <i class="glyphicon glyphicon-warning-sign text-danger"></i>
     A "true" clue square must "see" exactly the same number of filled squares as its number.
     ({{alerts.underSaturatedClue}} clue<span ng-show="alerts.underSaturatedClue > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.trappedSingleBlankNode" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    A square marked as "blank" must connect to other "blank" squares.
+    ({{alerts.trappedSingleBlankNode}} square<span ng-show="alerts.trappedSingleBlankNode > 1">s</span> above)
   </div>
 
   <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
@@ -380,6 +387,7 @@ connected to one another, horizontally or vertically.</li>
       <li><strike>Legend</strike></li>
       <li>Completed puzzle validation</li>
       <li>Make the puzzle bigger, have the body size be set and put some auto borders on the sides</li>
+      <li><strike>Add validation for a single trapped "blank" node</strike></li>
     </ol>
 
     <h4>Nice-to-haves</h4>

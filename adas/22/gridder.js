@@ -303,6 +303,7 @@ function validate(numColumns, numRows) {
         alerts.adjacentFilledNeighbors = 0;
         alerts.overSaturatedClue = 0;
         alerts.underSaturatedClue = 0;
+        alerts.trappedSingleBlankNode = 0;
     }
 
     function validateNodes(nodes) {
@@ -312,47 +313,36 @@ function validate(numColumns, numRows) {
     }
 
     function validateNode(node, nodes) {
-        adjacentFilledNeighborsTest(node, nodes);
+        adjacentFilledNeighborsTest(node);
+        node.neighbors.forEach(adjacentFilledNeighborsTest)
+        trappedSingleBlankNodeTest(node);
+        node.neighbors.forEach(trappedSingleBlankNodeTest);
     }
 
-    function adjacentFilledNeighborsTest(node, nodes) {
+    function adjacentFilledNeighborsTest(node) {
         var invalidReason = 'adjacentFilledNeighbors';
-        var alreadyInvalid = node.invalidReasons && node.invalidReasons[invalidReason];
-        // console.log('adjacentFilledNeighborsTest, node = ', node, 'alreadyInvalid = ', alreadyInvalid)
-        if (!filled(node)) {
-            // This node wasn't invalid and can't be now (as it's not filled)
-            if (!alreadyInvalid) { return; }
+        if (nodeIsFilled(node) && node.neighbors.filter(nodeIsFilled).length !== 0) {
+            addNodeInvalidReason(node, invalidReason);
+        }
+        else {
+            removeNodeInvalidReason(node, invalidReason);
+        }
+    }
 
-            // node was invalid, but it can't be invalid now because it's not filled
-            markValid(node);
-            node.neighbors.filter(filled).forEach(recheckNeighbor);
-            return;
+    function trappedSingleBlankNodeTest(node) {
+        var invalidReason = 'trappedSingleBlankNode';
+
+        if (node.state === 'blank' && node.neighbors.every(nodeIsFilled)) {
+            addNodeInvalidReason(node, invalidReason);
+        }
+        else {
+            removeNodeInvalidReason(node, invalidReason);
         }
 
-        var filledNeighbors = node.neighbors.filter(filled);
-        if (filledNeighbors.length === 0) { // all is good
-            markValid(node);
-            return;
-        }
+    }
 
-        filledNeighbors.push(node);
-        filledNeighbors.forEach(markInvalid);
-
-        function recheckNeighbor(n) {
-            adjacentFilledNeighborsTest(n, nodes);
-        }
-
-        function filled(n) {
-            return n && n.state === 'filled';
-        }
-
-        function markInvalid(n) {
-            addNodeInvalidReason(n, invalidReason);
-        }
-
-        function markValid(n) {
-            removeNodeInvalidReason(n, invalidReason);
-        }
+    function nodeIsFilled(node) {
+        return node && node.state === 'filled';
     }
 
     function validateRow(nodes, row) {
@@ -470,9 +460,6 @@ function validate(numColumns, numRows) {
 
         delete node.invalidReasons[reason];
         updateAlertCount(alerts, reason, -1);
-        if (Object.keys(node.invalidReasons)) { // reset invalid reasons to null if this is the last reason
-            node.invalidReasons = null;
-        }
     }
 
     function updateAlertCount(alerts, alertType, updateAmount) {
