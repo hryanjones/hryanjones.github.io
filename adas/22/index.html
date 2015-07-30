@@ -65,10 +65,10 @@
  </form>
 
   <!-- below image is for verifying that I entered the puzzle correctly -->
-  <!-- <div style="position: relative">
-    <img style="position: absolute; left: -1px; top: 4px; width: 779px; opacity: 0.4; z-index: 10;" src="/puzzle.png"/>
-  </div> -->
-
+<!--   <div style="position: relative">
+    <img style="position: absolute; left: 9px; top: 9px; width: 507px; opacity: 0.4; z-index: 10;" src="./puzzle.png"/>
+  </div>
+ -->
   <table id="puzzle-container">
 
     <tr ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row nowrap">
@@ -379,6 +379,7 @@ connected to one another, horizontally or vertically.</li>
       <li><strike>validation for not enough empty+marked squares past a square that is "blank"</strike></li>
       <li><strike>Legend</strike></li>
       <li>Completed puzzle validation</li>
+      <li>Make the puzzle bigger, have the body size be set and put some auto borders on the sides</li>
     </ol>
 
     <h4>Nice-to-haves</h4>
