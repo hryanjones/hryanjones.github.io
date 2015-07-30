@@ -2,18 +2,19 @@
 #puzzle-container {
   background: white;
   display: inline-block;
-  padding: 10px;
+  padding: 15px;
 }
 
 .node {
   border: 2px solid black;
-  height: 24px;
-  width: 24px;
+  height: 36px;
+  width: 36px;
   text-align: center;
 
   position: relative;
   color: black;
   cursor: pointer;
+  font-size: 20px;
 
   /* so that users don't accidentally select part of the board */
   -webkit-user-select: none; /* Chrome/Safari */
@@ -26,24 +27,24 @@
   position: absolute;
   right: 1px;
   bottom: 0px;
-  font-size: 10px;
+  font-size: 16px;
   font-weight: bold;
-  color: hsla(0, 0%, 50%, 1);
+  color: hsla(0, 1%, 50%, 1);
 }
 .conjecture.filled .node-label::after {
   color: white
 }
 .node-label {
-  height: 22px;
-  width: 22px;
+  height: 34px;
+  width: 34px;
   line-height: 1.1;
-  padding-top: 3px;
+  padding-top: 4px;
 }
 .blank .node-label {
-  padding-top: 2px;
+  padding-top: 4px;
 }
 .node-label.left-or-right {
-  padding-top: 5px;
+  padding-top: 7px;
 }
 .blank,
 .legend .node.blank {
@@ -51,7 +52,7 @@
 }
 .blank.conjecture,
 .legend .blank.conjecture {
-  background-color: hsla(200, 0%, 89%, 1);
+  background-color: hsla(200, 1%, 89%, 1);
 }
 .blank .node-label {
   border-color: hsla(200, 100%, 64%, .7);
@@ -61,7 +62,7 @@
   background-color: white;
 }
 .blank.conjecture .node-label {
-  border-color: hsla(200, 0%, 64%, .7);
+  border-color: hsla(200, 1%, 64%, .7);
 }
 .node.filled,
 .legend .node.filled {
@@ -74,8 +75,8 @@
   content: "!";
   position: absolute;
   left: 1px;
-  top: -3px;
-  font-size: 13px;
+  top: 0px;
+  font-size: 21px;
   font-weight: bold;
   color: white;
 }
@@ -86,17 +87,17 @@
 .node.blank.invalid-clue::after {
   content: "!";
   position: absolute;
-  left: -2px;
-  top: -5px;
-  font-size: 24px;
+  left: 0px;
+  top: -4px;
+  font-size: 32px;
   font-weight: bold;
   color: red;
 }
 .node.filled.conjecture {
   background: repeating-linear-gradient(
     45deg,
-    hsla(0, 0%, 20%, 1),
-    hsla(0, 0%, 70%, 1) 5px
+    hsla(0, 1%, 20%, 1),
+    hsla(0, 1%, 70%, 1) 5px
   );
 }
 .node.filled.conjecture.invalid-filled {
@@ -107,7 +108,7 @@
   );
 }
 .blank .node-label.left-or-right {
-  padding-top: 4px;
+  padding-top: 7px;
 }
 .invalid .node-label {
   color: red;
@@ -125,8 +126,8 @@
   background-color: white;
 }
 .legend .node-label {
-  height: 20px;
-  width: 20px;
+  height: 100%;
+  width: 100%;
 }
 
 .alert,
@@ -152,15 +153,15 @@
 .build-mode-inputs button.right-arrow,
 .build-mode-inputs button.left-arrow
 {
-  line-height: 0.5;
+  line-height: 0.6;
 }
 
 .tab {
-  background: hsla(0, 0%, 80%, 1);
+  background: hsla(0, 1%, 80%, 1);
   border-radius: 8px 8px 0 0;
   margin-bottom: 0px;
   cursor: pointer;
-  padding: 1px 12px;
+  padding: 6px 16px;
 }
 .tab.selected {
   background: white;
@@ -202,5 +203,10 @@
 
 .nowrap {
   white-space: nowrap;
+}
+
+body {
+  width: 970px;
+  margin: 0 auto;
 }
 

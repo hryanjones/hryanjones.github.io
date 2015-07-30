@@ -321,7 +321,7 @@ function validate(numColumns, numRows) {
 
     function adjacentFilledNeighborsTest(node) {
         var invalidReason = 'adjacentFilledNeighbors';
-        if (nodeIsFilled(node) && node.neighbors.filter(nodeIsFilled).length !== 0) {
+        if (nodeIsFilled(node) && node.neighbors.some(nodeIsFilled)) {
             addNodeInvalidReason(node, invalidReason);
         }
         else {

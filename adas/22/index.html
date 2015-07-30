@@ -41,14 +41,14 @@
   </div>
 
   <form id="tabs">
-    <label class="tab" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
+    <label class="tab h4" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
         setQueryString('example');
         jsonUrl = './example.json';
         loadPuzzle(jsonUrl);
       ">
       example
     </label>
-    <label class="tab" ng-class="{selected: jsonUrl === './aenigma-22.json'}" ng-click="
+    <label class="tab h4" ng-class="{selected: jsonUrl === './aenigma-22.json'}" ng-click="
         setQueryString('aenigma-22');
         jsonUrl = './aenigma-22.json';
         loadPuzzle(jsonUrl);
@@ -386,7 +386,9 @@ connected to one another, horizontally or vertically.</li>
       <li><strike>validation for not enough empty+marked squares past a square that is "blank"</strike></li>
       <li><strike>Legend</strike></li>
       <li>Completed puzzle validation</li>
-      <li>Make the puzzle bigger, have the body size be set and put some auto borders on the sides</li>
+      <li>Letters</li>
+      <li>Flavor text</li>
+      <li><strike>Make the puzzle bigger, have the body size be set and put some auto borders on the sides</strike></li>
       <li><strike>Add validation for a single trapped "blank" node</strike></li>
     </ol>
 
