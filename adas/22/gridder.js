@@ -186,6 +186,7 @@ function generate() {
                 direction: direction || null,
                 number: Number(number) === number ? number : null,
                 letter: data && data.letter,
+                complete: false,
                 startOrEnd: data && data.startOrEnd,
                 neighbors: [],
                 invalidReasons: null,
@@ -366,7 +367,7 @@ function validate(numColumns, numRows) {
         nodes.forEach(validateClue);
 
         function validateClue(node, i) {
-            if (!isClueAndMarkedAsTrue(node) || !isCorrectClueDirection(node)) { return; }
+            if (!isClue(node) || !isCorrectClueDirection(node)) { return; }
 
             var counts = nodeCountsByIndex[directions[node.direction]];
 
@@ -376,15 +377,21 @@ function validate(numColumns, numRows) {
             var underSaturateMarkFunction = underSaturated(node) ? addNodeInvalidReason : removeNodeInvalidReason;
             underSaturateMarkFunction(node, 'underSaturatedClue');
 
+            setNodeCompleteState(node, justRight(node));
+
             function overSaturated(node) {
                 return trueNode(node) && node.number < counts.filled[i];
+            }
+
+            function justRight(node) {
+                return trueNode(node) && node.number === counts.filled[i];
             }
 
             function underSaturated(node) {
                 return trueNode(node) && counts.filled[i] + counts.empty[i] < node.number;
             }
 
-            function isClueAndMarkedAsTrue(node) {
+            function isClue(node) {
                 return Number(node.number) === node.number;
             }
 
@@ -460,6 +467,10 @@ function validate(numColumns, numRows) {
 
         delete node.invalidReasons[reason];
         updateAlertCount(alerts, reason, -1);
+    }
+
+    function setNodeCompleteState(node, complete) {
+        node.complete = !!complete;
     }
 
     function updateAlertCount(alerts, alertType, updateAmount) {

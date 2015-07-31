@@ -78,6 +78,7 @@
         ng-class="[
           node.state,
           node.conjecture ? 'conjecture' : '',
+          node.complete ? 'complete' : '',
           node.invalidReasons.adjacentFilledNeighbors ? 'invalid-filled' : '',
           (node.invalidReasons.overSaturatedClue ||
             node.invalidReasons.underSaturatedClue ||
