@@ -565,6 +565,7 @@ function history() {
         doChanges: doChanges,
         clearConjectures: clearConjectures,
         // undoChanges(changes, grid),
+        markConjecturesAsTruth: markConjecturesAsTruth,
     };
 
     /**
