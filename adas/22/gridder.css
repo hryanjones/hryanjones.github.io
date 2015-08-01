@@ -134,13 +134,20 @@
 }
 
 .alert,
-.info-bubble {
+.info-bubble,
+.success-bubble {
   border-radius: 8px;
+}
+.info-bubble,
+.success-bubble {
+  padding: 10px;
+  margin: 2px 0px;
 }
 .info-bubble {
   border: 1px solid blue;
-  padding: 10px;
-  margin: 2px 0px;
+}
+.success-bubble {
+  border: 1px solid green;
 }
 .legend .info-bubble {
   padding: 2px;

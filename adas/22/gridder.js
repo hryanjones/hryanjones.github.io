@@ -295,6 +295,7 @@ function validate(numColumns, numRows) {
         row: validateRow,
         column: validateColumn,
         redo: redoValidation,
+        complete: checkPuzzleComplete,
     };
 
     /**
@@ -305,6 +306,10 @@ function validate(numColumns, numRows) {
         alerts.overSaturatedClue = 0;
         alerts.underSaturatedClue = 0;
         alerts.trappedSingleBlankNode = 0;
+
+        alerts.notAllSquaresFilled = 0;
+        alerts.notAllBlanksConnected = 0;
+        alerts.puzzleComplete = 0;
     }
 
     function validateNodes(nodes) {
@@ -486,7 +491,7 @@ function validate(numColumns, numRows) {
 
         if (alerts[alertType] === 0) { return; }
 
-        alerts[alertType] -= 1;
+        alerts[alertType] += updateAmount;
     }
 
 
@@ -512,6 +517,128 @@ function validate(numColumns, numRows) {
 
         function resetNodeInvalidState(node) {
             node.invalidReasons = null;
+        }
+    }
+
+    function checkPuzzleComplete(grid) {
+        redoValidation(grid);
+        // console.log('checking')
+        for (type in alerts) {
+            if (alerts[type]) { console.log(alerts); return; } // validation problem, can't be complete
+        }
+
+        var reason = 'notAllSquaresFilled';
+        var nodeWithoutState = findNodeWithoutState(grid.nodes);
+        if (nodeWithoutState) {
+            updateAlertCount(alerts, reason, -1); // so it never goes above one
+            updateAlertCount(alerts, reason, 1);
+            return;
+        }
+
+        reason = 'notAllBlanksConnected';
+        var numberRegions = numberOfConnectedBlankRegions(grid.nodes);
+        if (numberRegions > 1) {
+            updateAlertCount(alerts, reason, -100);
+            updateAlertCount(alerts, reason, numberRegions);
+            return;
+        }
+
+        updateAlertCount(alerts, 'puzzleComplete', -1);
+        updateAlertCount(alerts, 'puzzleComplete', 1);
+
+        function findNodeWithoutState(nodes) {
+            for (var i = 0; i < nodes.length; i++) {
+                var row = nodes[i];
+                for (var j = 0; j < row.length; j++) {
+                    var node = row[j];
+                    // console.log(i, j, node)
+                    if (!node.state) {return node;}
+                }
+            }
+        }
+
+        function numberOfConnectedBlankRegions(nodes) {
+            var regionTag = nodes.map(function(row) { return []; });
+            var regionToRegionId = {};
+            var currentTag = 0;
+
+            // TODO this loop is crazy big, break it up into some nice small functions
+            for (var i = 0; i < nodes.length; i++) {
+                var row = nodes[i];
+                for (var j = 0; j < row.length; j++) {
+                    var node = row[j];
+                    // console.log(i, j, node)
+                    if (node.state !== 'blank') { continue; }
+                    var thisTag = regionTag[i][j];
+                    if (!thisTag) {
+                        currentTag += 1;
+                        regionToRegionId[currentTag] = currentTag;
+                        thisTag = currentTag;
+                        regionTag[i][j] = thisTag;
+                    }
+                    var rightNeighbor = nodes[i][j+1];
+                    if (rightNeighbor && rightNeighbor.state === 'blank') {
+                        rightTag = regionTag[i][j+1];
+                        if (rightTag) {
+                            // point larger regions at smallest tag
+                            pointToSmallestRegion(rightTag, thisTag);
+                        }
+                        else {
+                            regionTag[i][j+1] = thisTag;
+                        }
+                    }
+                    var belowNeighbor = nodes[i+1] && nodes[i+1][j];
+                    if (belowNeighbor && belowNeighbor.state === 'blank') {
+                        regionTag[i+1][j] = thisTag;
+                    }
+
+                }
+            }
+
+            var numRegions = 0;
+            for (r in regionToRegionId) {
+                if (parseInt(r, 10) === regionToRegionId[r]) { numRegions += 1; }
+            }
+            console.log('regionToRegionId', regionToRegionId);
+            console.log('regionTag', regionTag)
+            console.log('numRegions', numRegions)
+            return numRegions;
+
+            // now count all the regions that are pointing to their same Id, they're the unique regions
+
+            function pointToSmallestRegion(region1, region2) {
+                var uniqueRegions = {};
+                uniqueRegions[region1] = true;
+                uniqueRegions[region2] = true;
+
+                // iterate down through region->regionIds until you arrive at one where they're equal
+                // do this for region1 and 2 and use a hash to keep the unique regions visited
+                var region = region1;
+                region_id = regionToRegionId[region1];
+                while (region_id !== region) {
+                    uniqueRegions[region_id] = true;
+                    region = region_id;
+                    region_id = regionToRegionId[region];
+                }
+
+                var region = region2;
+                region_id = regionToRegionId[region2];
+                while (region_id !== region) {
+                    uniqueRegions[region_id] = true;
+                    region = region_id;
+                    region_id = regionToRegionId[region];
+                }
+
+                // find the lowest region from those given
+                var uniqueRegions = Object.keys(uniqueRegions);
+                uniqueRegions.sort();
+                var lowestRegionId = parseInt(uniqueRegions[0], 10);
+
+                // set all the regions to be the same lowest regionId
+                uniqueRegions.forEach(function(region) {
+                    regionToRegionId[region] = lowestRegionId;
+                });
+            }
         }
     }
 

@@ -13,7 +13,7 @@
 
   <meta name="viewport" content="width=device-width, user-scalable=yes">
   <meta charset="utf-8">
-  <title>Ænigma #22</title>
+  <title>Ænigma #22 - hryanjones</title>
 </head>
 
 <body ng-app="app" ng-controller="gridder" class="well" ng-init="showLetters = false;">
@@ -177,6 +177,24 @@
     A square marked as "blank" must connect to other "blank" squares.
     ({{alerts.trappedSingleBlankNode}} square<span ng-show="alerts.trappedSingleBlankNode > 1">s</span> above)
   </div>
+  <div ng-show="alerts.notAllSquaresFilled" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    In order to verify you've solved the puzzle all squares must be marked as either "blank" or "filled".
+    <i class="btn glyphicon glyphicon-remove pull-right" ng-click="alerts.notAllSquaresFilled = 0;"></i>
+  </div>
+  <div ng-show="alerts.notAllBlanksConnected" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    All "blank" squares must be connected to all others in one single region, however, above you have {{alerts.notAllBlanksConnected}} regions.
+  </div>
+  <div ng-show="alerts.puzzleComplete && jsonUrl === './example.json'" class="success-bubble bg-success h4">
+    <i class="glyphicon glyphicon-ok text-success"></i>
+    Congratulations! You've solved the example puzzle. Click on the "Ænigma #22" tab to continue on to the larger puzzle and good luck!
+  </div>
+  <div ng-show="alerts.puzzleComplete && jsonUrl === './aenigma-22.json'" class="success-bubble bg-success h3">
+    <i class="glyphicon glyphicon-ok text-success"></i>
+    Congratulations! You've solved the analytical part of this Ænigma! (which is no mean feat) Please continue on to finding the final answer which will earn you one free non-alcoholic drink at Ada's technical bookshop.
+  </div>
+
 
   <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
     <button class="btn btn-primary" ng-click="
@@ -214,7 +232,13 @@
     Redo Validation
   </button> -->
   <div class="btn btn-danger" ng-click="clear();" ng-if="clear">
+    <i class="glyphicon glyphicon-trash"></i>
     Clear Puzzle Progress
+  </div>
+
+  <div class="btn btn-success" ng-click="validate.complete(grid);" ng-if="clear">
+    <i class="glyphicon glyphicon-question-sign"></i>
+    Check Puzzle Complete
   </div>
 
   <div ng-if="false">
