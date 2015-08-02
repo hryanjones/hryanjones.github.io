@@ -55,18 +55,18 @@
       ">
       Ænigma #22
     </label>
-<!--     <div class="checkbox inline-block no-margin">
+    <div class="checkbox inline-block no-margin">
       <label>
         <input type="checkbox" ng-model="showLetters"/>
         show letters
       </label>
     </div>
- -->
+
  </form>
 
   <!-- below image is for verifying that I entered the puzzle correctly -->
 <!--   <div style="position: relative">
-    <img style="position: absolute; left: 9px; top: 9px; width: 507px; opacity: 0.4; z-index: 10;" src="./puzzle.png"/>
+    <img style="position: absolute; left: 14px; top: 14px; width: 760px; opacity: 0.4; z-index: 10;" src="./puzzle.png"/>
   </div>
  -->
   <table id="puzzle-container">
@@ -103,6 +103,7 @@
           <div class="right-arrow" ng-show="node.direction === 'right'"></div>
           <div class="left-arrow" ng-show="node.direction === 'left'"></div>
           <!-- <sub ng-show="showLetters">{{node.letter}}</sub> -->
+          <span ng-show="showLetters" style="color: gray;">{{node.letter | uppercase}}</span>
         </div>
 
         <div ng-if="buildData" class="build-mode-inputs">
@@ -187,12 +188,21 @@
     All "blank" squares must be connected to all others in one single region, however, above you have {{alerts.notAllBlanksConnected}} regions.
   </div>
   <div ng-show="alerts.puzzleComplete && jsonUrl === './example.json'" class="success-bubble bg-success h4">
-    <i class="glyphicon glyphicon-ok text-success"></i>
-    Congratulations! You've solved the example puzzle. Click on the "Ænigma #22" tab to continue on to the larger puzzle and good luck!
+    <p>
+      <i class="glyphicon glyphicon-ok text-success"></i>
+      Congratulations! You've solved the analytical part of the example puzzle. Use the scratch area below to work on finding the final answer.
+    </p>
+    <p>
+    Click on the "Ænigma #22" tab to continue on to the larger puzzle and good luck!
+    </p>
+    <div>
+      <textarea class="form-control" placeholder="scratch area for finding the final clue"></textarea>
+    </div>
   </div>
   <div ng-show="alerts.puzzleComplete && jsonUrl === './aenigma-22.json'" class="success-bubble bg-success h3">
     <i class="glyphicon glyphicon-ok text-success"></i>
     Congratulations! You've solved the analytical part of this Ænigma! (which is no mean feat) Please continue on to finding the final answer which will earn you one free non-alcoholic drink at Ada's technical bookshop.
+    <textarea placeholder="scratch area for finding the final clue"></textarea>
   </div>
 
 
@@ -236,7 +246,10 @@
     Clear Puzzle Progress
   </div>
 
-  <div class="btn btn-success" ng-click="validate.complete(grid);" ng-if="clear">
+  <div class="btn btn-success" ng-click="
+      validate.complete(grid);
+      showLetters = !!alerts.puzzleComplete;
+    ">
     <i class="glyphicon glyphicon-question-sign"></i>
     Check Puzzle Complete
   </div>
@@ -296,7 +309,7 @@
     </div>
   </div>
 
-  <h3>Basic Instructions <small>will be replaced by puzzle flavor text</small></h3>
+  <h3>Basic Instructions </h3>
   <ul>
     <li>Fill some squares of the grid, possibly including some squares containing clues.</li>
     <li>"Blank" clues are "true" and specify exactly how many filled squares it can "see" in the same row or column, in the indicated direction.</li>
@@ -315,72 +328,39 @@ connected to one another, horizontally or vertically.</li>
       </span>
     </div>
   </div>
-
+ -->
   <div class="bg-info text-info info-bubble block" ng-show="jsonUrl === './example.json'">
       <i class="glyphicon glyphicon-info-sign"></i>
       See the <a href="http://www.pavelspuzzles.com/adas/22/puzzle.pdf">PDF</a> for a short walk-through on solving the example.
   </div>
 
-  <h3>Flavor Text
-    <small>from the <a href="http://www.pavelspuzzles.com/adas/22/">PDF (click puzzle image on this site)</a>,</small>
-    <small>rules are in <strong>bold</strong>
+  <h3>Also see the paper version:
+    <small><a href="http://www.pavelspuzzles.com/adas/22/">PDF (click puzzle image on this site)</a></small>
   </h3>
-  <p>
-    Gentle Patron,
-  </p>
-  <p>
-    It came to me recently, as it has done many times before, that Life presents itself to us like a particularly <em>devious</em> sort of maze: one wherein <em>not only</em> must we twist and turn on our ways, oft encountering blank endings and curs’d loopings back, but in which even the labyrinthine pathways themselves are <em>hidden</em> from us, such that we must feel out the walls blindly, stubbing our toes and bruising both body and soul.
-  </p>
-  <p>
-    These are the <em>cheery</em> musings that inspired the ænigma below.
-  </p>
-  <p>
-    <strong>
-    I should like you to draw the pathways of a single connected maze along the <em>lines</em> of the grid [above]. Each path must connect two of the circles I’ve laid out; the number in each circle indicates how many paths must connect to that circle. The two circles connected by each path must contain <em>different</em> numbers.
-    </strong>
-  </p>
-  <p>
-    <strong>
-    So as to prevent the individual paths themselves from being tedious, each path may bend by 90 degrees <em>at most once</em>. Paths may not touch or cross one another.
-    </strong>
-  </p>
-  <p>
-    Once you’ve completed your maze, you must walk it to find the final answer to my ænigma. Note that two of the circles have been <em>shaded</em>; walk the route from the upper such circle to the lower, never revisiting a circle. Whenever you come to a fork in that route, where more than one option would lead you to your goal, prefer to turn right or, failing that, to continue straight. At each circle, including the first, advance the letter written therein forward in the alphabet (wrapping around from Z to A if necessary) by the <em>final digit</em> in the sum of all of the numbers so far encountered. Those letters will reveal a clue to your final answer.
-  </p>
-  <p>
-    Good luck!
-  </p>
-  <p>
-    <img src="http://www.pavelspuzzles.com/adas/signature.jpg"/>
-  </p>
-  <p>
-    Fill in your answer and give to a cashier at <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> for your prize. This month’s prize: <strong><u>one free non-alcoholic drink!</u></strong>
-    <br/>(Limit one per solver. Offer available through 31st July 2015.)
-  </p>
 
   <hr/>
 
   <div>
     The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
   </div>
- -->
-<!--   <h4>
+
+  <h4>
     contact puzzle creators
     <a href="mailto:pavel@pavelspuzzles.com,hryanjones@gmail.com" class="btn btn-default">
       <small>
         <i class="glyphicon glyphicon-envelope"></i>
-        email mr. pavel curtis and mr. h. ryan jones
+        Email Pavel and Ryan
       </small>
-    </a> -->
+    </a>
 
     <!-- twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
-<!--     <a href="https://twitter.com/intent/tweet?screen_name=pavelcurtis" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
+    <a href="https://twitter.com/intent/tweet?screen_name=pavelcurtis" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
       <small>
       @pavelcurtis
       <script>!function(d,s,id){var js,fjs=d.getelementsbytagname(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getelementbyid(id)){js=d.createelement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentnode.insertbefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
       </small>
-    </a> -->
-<!--
+    </a>
+
     <a href="https://twitter.com/intent/tweet?screen_name=hryanjones" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
       <small>
       @hryanjones
@@ -388,14 +368,13 @@ connected to one another, horizontally or vertically.</li>
       </small>
     </a>
 
-  </h4> -->
-<!--   <h4>
+  </h4>
+  <h4>
     <a href="https://github.com/hryanjones/hryanjones.github.io">Code</a>
     <small>on Github</small>
-  </h4> -->
+  </h4>
 
-  <!-- <div ng-init="showTODO = false;"> -->
-  <div ng-init="showTODO = true;">
+  <div ng-init="showTODO = false;">
     <label class="btn btn-default h4">
       <input type="checkbox" ng-model="showTODO" ng-hide="true">
       {{showTODO ? 'Hide' : 'Show'}} TODO
@@ -410,9 +389,8 @@ connected to one another, horizontally or vertically.</li>
       <li><strike>validation for too many marked squares past a square that is "blank" (and therefore true)</strike></li>
       <li><strike>validation for not enough empty+marked squares past a square that is "blank"</strike></li>
       <li><strike>Legend</strike></li>
-      <li>Completed puzzle validation</li>
+      <li><strike>Completed puzzle validation</strike></li>
       <li>Letters</li>
-      <li>Flavor text</li>
       <li><strike>Make the puzzle bigger, have the body size be set and put some auto borders on the sides</strike></li>
       <li><strike>Add validation for a single trapped "blank" node</strike></li>
     </ol>
