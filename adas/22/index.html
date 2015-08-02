@@ -16,13 +16,14 @@
   <title>Ænigma #22 - hryanjones</title>
 </head>
 
-<body ng-app="app" ng-controller="gridder" class="well" ng-init="showLetters = false;">
+<body ng-app="app" ng-controller="gridder" class="well">
 
   <h1>
     Web Version of
     <a href="http://www.pavelspuzzles.com/adas/22/" target="_blank">
       Adalogical Ænigma #22
     </a>
+    <small class="pull-right text-info">share <share-buttons></share-buttons></small>
     <br/>
     <small>
       click on a box to mark it <em>blank</em>, click again (or right-click) to mark it <em>filled</em>
@@ -60,6 +61,9 @@
         <input type="checkbox" ng-model="showLetters"/>
         show letters
       </label>
+      <span class="info-bubble bg-info text-info" ng-show="showLetters && !alerts.puzzleComplete">
+        <strong>Note:</strong> showing letters is mostly only useful after you've solved the whole grid.
+        </span>
     </div>
 
  </form>
@@ -96,6 +100,7 @@
           validate.row(grid.nodes, rowIndex);
           validate.column(grid.nodes, colIndex);
         "
+        ng-disabled="showLetters && alerts.puzzleComplete"
         >
 
         <div class="node-label" ng-if="!buildData" ng-class="{'left-or-right': node.direction === 'left' || node.direction === 'right'}">
@@ -151,6 +156,7 @@
     </tr>
 
   </table>
+  <puzzle-legend class="pull-right"></puzzle-legend>
 
   <div ng-if="buildData" class="well">
     <h4>Copy/paste me into a new puzzle JSON file</h4>
@@ -158,258 +164,175 @@
   </div>
 
   <br/>
-  <div ng-show="alerts.adjacentFilledNeighbors" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    A filled square cannot be next to another filled square, vertically or horizontally.
-    ({{alerts.adjacentFilledNeighbors}} square<span ng-show="alerts.adjacentFilledNeighbors > 1">s</span> above)
-  </div>
-  <div ng-show="alerts.overSaturatedClue" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    A "true" clue square should not "see" more filled squares than its number in the indicated direction.
-    ({{alerts.overSaturatedClue}} clue<span ng-show="alerts.overSaturatedClue > 1">s</span> above)
-  </div>
-  <div ng-show="alerts.underSaturatedClue" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    A "true" clue square must "see" exactly the same number of filled squares as its number.
-    ({{alerts.underSaturatedClue}} clue<span ng-show="alerts.underSaturatedClue > 1">s</span> above)
-  </div>
-  <div ng-show="alerts.trappedSingleBlankNode" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    A square marked as "blank" must connect to other "blank" squares.
-    ({{alerts.trappedSingleBlankNode}} square<span ng-show="alerts.trappedSingleBlankNode > 1">s</span> above)
-  </div>
-  <div ng-show="alerts.notAllSquaresFilled" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    In order to verify you've solved the puzzle all squares must be marked as either "blank" or "filled".
-    <i class="btn glyphicon glyphicon-remove pull-right" ng-click="alerts.notAllSquaresFilled = 0;"></i>
-  </div>
-  <div ng-show="alerts.notAllBlanksConnected" class="alert bg-danger h4">
-    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
-    All "blank" squares must be connected to all others in one single region, however, above you have {{alerts.notAllBlanksConnected}} regions.
-  </div>
-  <div ng-show="alerts.puzzleComplete && jsonUrl === './example.json'" class="success-bubble bg-success h4">
-    <p>
-      <i class="glyphicon glyphicon-ok text-success"></i>
-      Congratulations! You've solved the analytical part of the example puzzle. Use the scratch area below to work on finding the final answer.
-    </p>
-    <p>
-    Click on the "Ænigma #22" tab to continue on to the larger puzzle and good luck!
-    </p>
-    <div>
-      <textarea class="form-control" placeholder="scratch area for finding the final clue"></textarea>
-    </div>
-  </div>
-  <div ng-show="alerts.puzzleComplete && jsonUrl === './aenigma-22.json'" class="success-bubble bg-success h3">
-    <i class="glyphicon glyphicon-ok text-success"></i>
-    Congratulations! You've solved the analytical part of this Ænigma! (which is no mean feat) Please continue on to finding the final answer which will earn you one free non-alcoholic drink at Ada's technical bookshop.
-    <textarea placeholder="scratch area for finding the final clue"></textarea>
-  </div>
+  <alerts></alerts>
 
+  <!-- Buttons -->
+  <div ng-hide="alerts.puzzleComplete && showLetters">
+    <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
+      <button class="btn btn-primary" ng-click="
+          conjectures.enabled && conjectures.clear(grid.nodes);
+          conjectures.enabled && history.clearConjectures(history.data);
+          conjectures.enabled && validate.redo(grid);
 
-  <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
-    <button class="btn btn-primary" ng-click="
-        conjectures.enabled && conjectures.clear(grid.nodes);
-        conjectures.enabled && history.clearConjectures(history.data);
-        conjectures.enabled && validate.redo(grid);
-
-        conjectures.enabled = !conjectures.enabled;
-      ">
-      <input type="checkbox" ng-checked="conjectures.enabled"/>
-      Conjecture Mode
-      <span ng-show="conjectures.enabled">-- Clear Conjectures</span>
-    </button>
-    <span ng-show="conjectures.enabled" ng-click="conjectures.enabled = false;">
-    -or-
-      <button class="btn btn-sm btn-default" ng-click="
-          conjectures.accept(grid.nodes);
-          history.markConjecturesAsTruth(history.data);
+          conjectures.enabled = !conjectures.enabled;
         ">
-        Accept Conjectures as Truth
+        <input type="checkbox" ng-checked="conjectures.enabled"/>
+        Conjecture Mode
+        <span ng-show="conjectures.enabled">-- Clear Conjectures</span>
       </button>
-    </span>
-    <p ng-show="conjectures.enabled">
-      <br/>
-      <i class="glyphicon glyphicon-info-sign"></i>
-      In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can make temporary assumptions. <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em> when you're done.
-    </p>
-  </span>
-
-<!--   <button ng-click="
-      validate.redo(grid, alerts);
-    "
-    class="btn btn-default"
-    >
-    Redo Validation
-  </button> -->
-  <div class="btn btn-danger" ng-click="clear();" ng-if="clear">
-    <i class="glyphicon glyphicon-trash"></i>
-    Clear Puzzle Progress
-  </div>
-
-  <div class="btn btn-success" ng-click="
-      validate.complete(grid);
-      showLetters = !!alerts.puzzleComplete;
-    ">
-    <i class="glyphicon glyphicon-question-sign"></i>
-    Check Puzzle Complete
-  </div>
-
-  <div ng-if="false">
-    <h3>History</h3>
-    <pre>{{history.data|json}}</pre>
-  </div>
-
-  <br/>
-  <br/>
-  <div class="bg-info info-bubble text-info legend">
-    <h3>Legend</h3>
-
-    <div class="badge" title="This clue means that there are exactly 3 squares filled to the left. If a clue square is filled, then you can ignore the clue.">
-      <label>clue<br/>square</label>
-        <div class="node inline-block">
-          <div class="node-label left-or-right">
-          3
-          <div class="left-arrow"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="badge" title="Squares that are filled must connect to all others.">
-      <label>square marked<br/> as "blank"</label>
-      <div class="node inline-block blank"><div class="node-label"></div></div>
-    </div>
-
-    <div class="badge" title="Filled squares cannot be next to each other.">
-      <label>square marked<br/> as "filled"</label>
-      <div class="node inline-block filled"><div class="node-label"></div></div>
-    </div>
-
-    <div class="badge">
-      <label>"blank"<br/>conjecture</label>
-      <div class="node inline-block blank conjecture"><div class="node-label"></div></div>
-    </div>
-
-    <div class="badge">
-      <label>"filled"<br/>conjecture</label>
-      <div class="node inline-block filled conjecture"><div class="node-label"></div></div>
-    </div>
-
-    <div class="badge">
-      <label>"filled" squares<br/>cannot touch</label>
-      <div class="node inline-block filled invalid-filled"><div class="node-label"></div></div>
-    </div>
-
-    <div class="badge" title="If a clue square is marked as 'blank' this forces it to be true, however, if there's too many filled squares or too many open squares left, there's a problem.">
-      <label>clue marked as true<br/>with a problem</label>
-        <div class="node inline-block blank invalid-clue">
-          <div class="node-label left-or-right">
-          2<span class="up-arrow"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h3>Basic Instructions </h3>
-  <ul>
-    <li>Fill some squares of the grid, possibly including some squares containing clues.</li>
-    <li>"Blank" clues are "true" and specify exactly how many filled squares it can "see" in the same row or column, in the indicated direction.</li>
-    <li>Filled clues should be ignored.</li>
-    <li>Filled squares may not be horizontally or vertically</li>
-adjacent.
-    <li>All "blank" squares, as a group, must be
-connected to one another, horizontally or vertically.</li>
-  </ul>
-
-<!--   <div class="info-bubble answer bg-primary inline-block">
-    <h3 class="inline-block no-margin">Final Answer for <strong>{{jsonUrl | puzzleNameFormat}}</strong>:</h3>
-    <div class="inline-block nowrap">
-      <span ng-repeat="letter in answer track by $index">
-        <input maxlength="1" ng-model="answer[$index]"/>
+      <span ng-show="conjectures.enabled" ng-click="conjectures.enabled = false;">
+      -or-
+        <button class="btn btn-sm btn-default" ng-click="
+            conjectures.accept(grid.nodes);
+            history.markConjecturesAsTruth(history.data);
+          ">
+          Accept Conjectures as Truth
+        </button>
       </span>
+      <p ng-show="conjectures.enabled">
+        <br/>
+        <i class="glyphicon glyphicon-info-sign"></i>
+        In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can make temporary assumptions. <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em> when you're done.
+      </p>
+    </span>
+
+    <div class="btn btn-danger" ng-click="clear();" ng-if="clear">
+      <i class="glyphicon glyphicon-trash"></i>
+      Clear Puzzle Progress
+    </div>
+
+    <div class="btn btn-info" ng-click="
+        validate.complete(grid);
+        showLetters = !!alerts.puzzleComplete;
+      ">
+      <i class="glyphicon glyphicon-question-sign"></i>
+      Check Puzzle Complete
     </div>
   </div>
- -->
-  <div class="bg-info text-info info-bubble block" ng-show="jsonUrl === './example.json'">
-      <i class="glyphicon glyphicon-info-sign"></i>
-      See the <a href="http://www.pavelspuzzles.com/adas/22/puzzle.pdf">PDF</a> for a short walk-through on solving the example.
+
+  <div ng-if="alerts.puzzleComplete" class="success-bubble bg-success h4" ng-init="scratch = '';">
+    <div>
+      <textarea class="form-control" placeholder="scratch area" ng-model="scratch"></textarea>
+      a b c d e f g h i j k l m n o p q r s t u v w x y z (a b)
+    </div>
+
+    <div ng-show="jsonUrl === './example.json'">
+      <p>
+        <h4>
+          <i class="glyphicon glyphicon-ok text-success"></i>
+          Well done!
+        </h4>
+        You've solved the analytical part of the example puzzle. Use the scratch area above to work on finding the final answer.
+      </p>
+      <p>
+      <strong>Click on the "Ænigma #22" tab to continue on to the larger puzzle and good luck!</strong>
+      </p>
+    </div>
+
+    <div ng-hide="jsonUrl === './example.json'">
+      <h2 class="inline-block">Congratulations!</h2>
+      You've solved the analytical part of this Ænigma! (which is no mean feat) Please use the scratch area above and instructions below to continue on to finding the final answer, which will earn you one free non-alcoholic drink at <a href="http://www.seattletechnicalbooks.com/">Ada's technical bookshop</a> in Seattle.
+    </div>
+
+
+    <h3><em>Final Clue Instructions</em></h3>
+
+    In order to find the final answer, you must walk a path through the completed puzzle:
+    <ol>
+      <li>Start at the top <em>blank</em> square on the right edge and begin travelling left.</li>
+      <li>Walking only on <em>blank</em> squares take the <u>shortest</u> route to the <u>fourth</u> topmost <em>blank</em> square on the same right edge.
+        <ul><li>Where there are multiple shortest routes, prefer the one that postpones turning as long as possible.</li></ul>
+      </li>
+      <li>For each letter you encounter advance it forward in the alphabet by the number of adjacent <em>filled</em> squares.</li>
+      <li>Reading the resulting letters in order will reveal a clue to your final answer.</li>
+    </ul>
+
   </div>
 
-  <h3>Also see the paper version:
-    <small><a href="http://www.pavelspuzzles.com/adas/22/">PDF (click puzzle image on this site)</a></small>
-  </h3>
 
-  <hr/>
+  <div ng-hide="alerts.puzzleComplete">
+    <h3>Instructions</h3>
 
-  <div>
-    The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
+    <ul>
+      <li ng-class="{'text-danger': alerts.notAllSquaresFilled}">Mark all squares, including squares with a clue, as <em>filled</em> (dark) or <em>blank</em> (circle).</li>
+      <li ng-class="{'text-danger': alerts.overSaturatedClue || alerts.underSaturatedClue}"><em>Blank</em> clues are true and specify exactly how many filled squares it can "see" in the same row or column, in the indicated direction.</li>
+      <li><em>Filled</em> clues should be ignored.</li>
+      <li ng-class="{'text-danger': alerts.adjacentFilledNeighbors}"><em>Filled</em> squares may not be horizontally or vertically adjacent.</li>
+      <li ng-class="{'text-danger': alerts.trappedSingleBlankNode || alerts.notAllBlanksConnected}">All "blank" squares, as a group, must be
+        connected to one another, horizontally or vertically.</li>
+    </ul>
   </div>
 
-  <h4>
-    contact puzzle creators
-    <a href="mailto:pavel@pavelspuzzles.com,hryanjones@gmail.com" class="btn btn-default">
-      <small>
-        <i class="glyphicon glyphicon-envelope"></i>
-        Email Pavel and Ryan
-      </small>
-    </a>
+  <div class="info-bubble answer bg-primary row" ng-show="alerts.puzzleComplete">
+    <form name="answerBox" ng-class="{
+      'has-error': answer.length > answerLength,
+      'has-warning': answer.length < answerLength,
+    }">
+    <h3 class="inline-block no-margin col-sm-5">
+      Final Answer for <strong>{{jsonUrl | puzzleNameFormat}}</strong>:
+    </h3>
+    <div class="col-sm-5">
+      <input
+      placeholder="answer is {{answerLength}} letters"
+      class="form-control col-sm-5"
+      ng-model="answer"
+      name="actualAnswer"
+      />
+    </div>
+    <span ng-class="{'text-danger': answer.length > answerLength}" class="col-sm-2">
+      {{answerLength - answer.length}}
+    </span>
+  </form>
+</div>
 
-    <!-- twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
-    <a href="https://twitter.com/intent/tweet?screen_name=pavelcurtis" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
-      <small>
+<div class="bg-info text-info info-bubble block" ng-show="jsonUrl === './example.json'">
+  <i class="glyphicon glyphicon-info-sign"></i>
+  See the <a href="http://www.pavelspuzzles.com/adas/22/puzzle.pdf">PDF</a> for a short walk-through on solving the example.
+</div>
+
+<hr/>
+
+<h3>Also see the paper version:
+  <small><a href="http://www.pavelspuzzles.com/adas/22/">PDF (click puzzle image on this site)</a></small>
+</h3>
+
+<hr/>
+
+<div>
+  The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
+</div>
+
+<h4>
+  contact puzzle creators
+  <a href="mailto:pavel@pavelspuzzles.com,hryanjones@gmail.com" class="btn btn-default">
+    <small>
+      <i class="glyphicon glyphicon-envelope"></i>
+      Email Pavel and Ryan
+    </small>
+  </a>
+
+  <!-- twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
+  <a href="https://twitter.com/intent/tweet?screen_name=pavelcurtis" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
+    <small>
       @pavelcurtis
       <script>!function(d,s,id){var js,fjs=d.getelementsbytagname(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getelementbyid(id)){js=d.createelement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentnode.insertbefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-      </small>
-    </a>
+    </small>
+  </a>
 
-    <a href="https://twitter.com/intent/tweet?screen_name=hryanjones" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
-      <small>
+  <a href="https://twitter.com/intent/tweet?screen_name=hryanjones" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
+    <small>
       @hryanjones
       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-      </small>
-    </a>
+    </small>
+  </a>
 
-  </h4>
-  <h4>
-    <a href="https://github.com/hryanjones/hryanjones.github.io">Code</a>
-    <small>on Github</small>
-  </h4>
+</h4>
+<h4>
+  <a href="https://github.com/hryanjones/hryanjones.github.io">Code</a>
+  <small>on Github</small>
+</h4>
 
-  <div ng-init="showTODO = false;">
-    <label class="btn btn-default h4">
-      <input type="checkbox" ng-model="showTODO" ng-hide="true">
-      {{showTODO ? 'Hide' : 'Show'}} TODO
-    </label>
-  <div ng-show="showTODO">
-    <h3>TODO <small>in rough priority order</small></h3>
-
-    <h4>For Release</h4>
-
-    <ol>
-      <li><strike>alerts for validation</strike></li>
-      <li><strike>validation for too many marked squares past a square that is "blank" (and therefore true)</strike></li>
-      <li><strike>validation for not enough empty+marked squares past a square that is "blank"</strike></li>
-      <li><strike>Legend</strike></li>
-      <li><strike>Completed puzzle validation</strike></li>
-      <li>Letters</li>
-      <li><strike>Make the puzzle bigger, have the body size be set and put some auto borders on the sides</strike></li>
-      <li><strike>Add validation for a single trapped "blank" node</strike></li>
-    </ol>
-
-    <h4>Nice-to-haves</h4>
-
-    <ol>
-      <li><strike>right-click to mark as filled</strike></li>
-      <li>History back-and-forth and maybe slider</li>
-      <li>change colors</li>
-      <li>click-and-drag (with either left or right mouse) to select multiple in a direction</li>
-    </ol>
-
-<!--     <h4>Report issues beyond what's above</h4>
-    <p>
-      Please send an email to <a href="mailto:hryanjones@gmail.com">hryanjones@gmail.com</a> about any issues, bugs, or feature requests that come up.
-    </p>
- -->  </div>
-
+<todo></todo>
 
 </body>
 </html>

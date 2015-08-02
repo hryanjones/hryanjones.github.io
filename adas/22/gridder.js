@@ -29,7 +29,7 @@ angular
             var confirmed = window.confirm('Clear all of the progress on the current puzzle?');
 
             if (confirmed) {
-                $localStorage.history[$scope.jsonUrl] = [];
+                $localStorage.ada[22].history[$scope.jsonUrl] = [];
                 loadPuzzle($scope.jsonUrl);
             }
         }
@@ -74,8 +74,10 @@ angular
             $scope.puzzleLoadRequest = $http
             .get(jsonUrl, {cache: true})
             .success(function(data) {
-                $scope.answer = loadAnswer(jsonUrl, data.answerLength);
                 setUpBoard(data, loadHistory(jsonUrl));
+                $scope.answer = loadAnswer(jsonUrl, data.answerLength);
+                $scope.showLetters = false;
+                $scope.answerLength = data.answerLength;
                 delete $scope.puzzleLoadRequest;
             })
             .error(function(err) {
@@ -87,15 +89,17 @@ angular
              * Loads history from browser local storage. Failing that returns a new history array linked to storage.
              */
             function loadHistory(namespace) {
-                $localStorage.history = $localStorage.history || {};
-                $localStorage.history[namespace] = $localStorage.history[namespace] || [];
-                return $localStorage.history[namespace];
+                $localStorage.ada = $localStorage.ada || {};
+                $localStorage.ada[22] = $localStorage.ada[22] || {};
+                $localStorage.ada[22].history = $localStorage.ada[22].history || {};
+                $localStorage.ada[22].history[namespace] = $localStorage.ada[22].history[namespace] || [];
+                return $localStorage.ada[22].history[namespace];
             }
 
             function loadAnswer(namespace, length) {
-                $localStorage.answer = $localStorage.answer || {};
-                $localStorage.answer[namespace] = $localStorage.answer[namespace] || new Array(length).join('.').split('.');
-                return $localStorage.answer[namespace];
+                $localStorage.ada[22].answer = $localStorage.ada[22].answer || {};
+                $localStorage.ada[22].answer[namespace] = $localStorage.ada[22].answer[namespace] || '';
+                return $localStorage.ada[22].answer[namespace];
             }
 
             function enterBuildMode() {
@@ -135,7 +139,11 @@ angular
             });
         });
     };
-});
+})
+.directive('puzzleLegend', function() {return {restrict: 'E', templateUrl: './legend.html'};})
+.directive('todo', function() {return {restrict: 'E', templateUrl: './todo.html'};})
+.directive('alerts', function() {return {restrict: 'E', templateUrl: './alerts.html'};})
+.directive('shareButtons', function() {return {restrict: 'E', templateUrl: './share-buttons.html'};})
 
 function puzzleNameFormat(jsonUrl) {
     return jsonUrl
@@ -532,7 +540,6 @@ function validate(numColumns, numRows) {
         if (nodeWithoutState) {
             updateAlertCount(alerts, reason, -1); // so it never goes above one
             updateAlertCount(alerts, reason, 1);
-            return;
         }
 
         reason = 'notAllBlanksConnected';

@@ -1,6 +1,7 @@
 {
     "numRows": 7,
     "numColumns": 7,
+    "answerLength": 12,
     "nodeData": {
         "0": {
             "0": {"letter": "f"},

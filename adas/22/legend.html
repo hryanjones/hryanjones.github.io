@@ -1,0 +1,59 @@
+  <div class="bg-info info-bubble text-info puzzle-legend"
+    ng-style="{width: jsonUrl === './example.json' ? '650px': '178px'}">
+    <h3>Legend</h3>
+
+    <div class="badge" title="This clue says that there are exactly 3 squares filled to its left. If a clue is blank, it must be true, if it's filled you can ignore it.">
+      <div class="node inline-block">
+        <div class="node-label left-or-right">
+          3
+          <div class="left-arrow"></div>
+        </div>
+      </div>
+      <label>clue<br/>square</label>
+    </div>
+
+    <div class="badge" title="This clue says that there are exactly 3 squares filled to its left. If a clue is blank, it must be true, if it's filled you can ignore it.">
+      <div class="node blank inline-block">
+        <div class="node-label left-or-right">
+          4
+          <div class="right-arrow"></div>
+        </div>
+      </div>
+      <label>clue square<br/>marked as "true"</label>
+    </div>
+
+    <div class="badge" title="Squares that are filled must connect to all others.">
+      <div class="node inline-block blank"><div class="node-label"></div></div>
+      <label>square marked<br/> as "blank"</label>
+    </div>
+
+    <div class="badge" title="Filled squares cannot be next to each other.">
+      <div class="node inline-block filled"><div class="node-label"></div></div>
+      <label>square marked<br/> as "filled"</label>
+    </div>
+
+    <div class="badge">
+      <div class="node inline-block blank conjecture"><div class="node-label"></div></div>
+      <label>"blank"<br/>conjecture</label>
+    </div>
+
+    <div class="badge">
+      <div class="node inline-block filled conjecture"><div class="node-label"></div></div>
+      <label>"filled"<br/>conjecture</label>
+    </div>
+
+    <div class="badge">
+      <div class="node inline-block filled invalid-filled"><div class="node-label"></div></div>
+      <label>"filled" squares<br/>cannot touch</label>
+    </div>
+
+    <div class="badge" title="If a clue square is marked as 'blank' this forces it to be true, however, if there's too many filled squares or too many open squares left, there's a problem.">
+      <div class="node inline-block blank invalid-clue">
+        <div class="node-label left-or-right">
+          2<span class="up-arrow"></span>
+        </div>
+      </div>
+      <label>"true" clue<br/>with a problem</label>
+    </div>
+
+  </div>

@@ -1,0 +1,31 @@
+  <div ng-show="alerts.adjacentFilledNeighbors" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    A filled square cannot be next to another filled square, vertically or horizontally.
+    ({{alerts.adjacentFilledNeighbors}} square<span ng-show="alerts.adjacentFilledNeighbors > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.overSaturatedClue" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    A "true" clue square should not "see" more filled squares than its number in the indicated direction.
+    ({{alerts.overSaturatedClue}} clue<span ng-show="alerts.overSaturatedClue > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.underSaturatedClue" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    A "true" clue square must "see" exactly the same number of filled squares as its number.
+    ({{alerts.underSaturatedClue}} clue<span ng-show="alerts.underSaturatedClue > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.trappedSingleBlankNode" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    A square marked as <em>blank</em> must connect to other <em>blank</em> squares.
+    ({{alerts.trappedSingleBlankNode}} square<span ng-show="alerts.trappedSingleBlankNode > 1">s</span> above)
+  </div>
+  <div ng-show="alerts.notAllSquaresFilled" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    All squares must be marked as either <em>blank</em> or <em>filled</em>.
+    <i class="btn glyphicon glyphicon-remove pull-right" ng-click="alerts.notAllSquaresFilled = 0;"></i>
+  </div>
+  <div ng-show="alerts.notAllBlanksConnected" class="alert bg-danger h4">
+    <i class="glyphicon glyphicon-warning-sign text-danger"></i>
+    All <em>blank</em> squares must be connected to all others in one single region, however, above you have {{alerts.notAllBlanksConnected}} regions.
+    <i class="btn glyphicon glyphicon-remove pull-right" ng-click="alerts.notAllBlanksConnected = 0;"></i>
+  </div>
+

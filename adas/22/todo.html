@@ -1,0 +1,41 @@
+  <div ng-init="showTODO = false;">
+    <h3 ng-class="inline-block">
+      <label class="btn btn-default">
+        <input type="checkbox" ng-model="showTODO" ng-hide="true">
+        {{showTODO ? 'hide' : 'show'}}
+      </label>
+      TODO
+      <small ng-show="showTODO">in rough priority order</small></h3>
+  </div>
+  <div ng-show="showTODO">
+
+    <div ng-hide="true">
+      <h4>For Release</h4>
+
+      <ol>
+        <li><strike>alerts for validation</strike></li>
+        <li><strike>validation for too many marked squares past a square that is "blank" (and therefore true)</strike></li>
+        <li><strike>validation for not enough empty+marked squares past a square that is "blank"</strike></li>
+        <li><strike>Legend</strike></li>
+        <li><strike>Completed puzzle validation</strike></li>
+        <li><strike>Letters</strike></li>
+        <li><strike>Make the puzzle bigger, have the body size be set and put some auto borders on the sides</strike></li>
+        <li><strike>Add validation for a single trapped "blank" node</strike></li>
+      </ol>
+
+      <h4>Nice-to-haves</h4>
+    </div>
+
+    <ol>
+      <li><strike>right-click to mark as filled</strike></li>
+      <li>History back-and-forth and maybe slider</li>
+      <li>user can customize solving colors</li>
+      <li>server-side validation for the answer (with appropriate measures to prevent a brute-force)</li>
+      <li>click-and-drag to select multiple in a direction</li>
+    </ol>
+
+    <h4>Report issues beyond what's above</h4>
+    <p>
+      Please send an email to <a href="mailto:hryanjones@gmail.com">hryanjones@gmail.com</a> about any issues, bugs, or feature requests that come up.
+    </p>
+  </div>

@@ -1,6 +1,7 @@
 {
     "numRows": 12,
     "numColumns": 21,
+    "answerLength": 4,
     "nodeData": {
         "0": {
             "0": { "letter": "t"},
