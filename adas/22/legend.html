@@ -12,7 +12,7 @@
       <label>clue<br/>square</label>
     </div>
 
-    <div class="badge" title="This clue says that there are exactly 3 squares filled to its left. If a clue is blank, it must be true, if it's filled you can ignore it.">
+    <div class="badge" title="This true clue must have exactly 4 squares filled to its right within the same row.">
       <div class="node blank inline-block">
         <div class="node-label left-or-right">
           4
@@ -47,7 +47,7 @@
       <label>"filled" squares<br/>cannot touch</label>
     </div>
 
-    <div class="badge" title="If a clue square is marked as 'blank' this forces it to be true, however, if there's too many filled squares or too many open squares left, there's a problem.">
+    <div class="badge" title="If a clue square is marked as 'blank' this forces it to be true, however, if there's too many filled squares or too few open squares left, there's a problem.">
       <div class="node inline-block blank invalid-clue">
         <div class="node-label left-or-right">
           2<span class="up-arrow"></span>

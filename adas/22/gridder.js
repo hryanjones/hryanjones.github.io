@@ -144,6 +144,7 @@ angular
 .directive('todo', function() {return {restrict: 'E', templateUrl: './todo.html'};})
 .directive('alerts', function() {return {restrict: 'E', templateUrl: './alerts.html'};})
 .directive('shareButtons', function() {return {restrict: 'E', templateUrl: './share-buttons.html'};})
+.directive('twitterIcon', function() {return {restrict: 'E', templateUrl: './twitter-icon.html'};})
 
 function puzzleNameFormat(jsonUrl) {
     return jsonUrl

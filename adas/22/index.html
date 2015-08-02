@@ -5,11 +5,8 @@
   <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="/assets/css/bootstrap-solarized-light.css" rel="stylesheet" type="text/css" />
   <link href="./gridder.css" rel="stylesheet" type="text/css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
-  <script src="http://hryanjones.com/js/ngStorage.min.js"></script>
-  <script src="./gridder.js"></script>
 
-  <script src="http://localhost:35729/livereload.js?snipver=2"></script>
+  <!--  <script src="http://localhost:35729/livereload.js?snipver=2"></script> -->
 
   <meta name="viewport" content="width=device-width, user-scalable=yes">
   <meta charset="utf-8">
@@ -30,7 +27,7 @@
     </small>
   </h1>
 
-  <div ng-if="buildData">
+<!--   <div ng-if="buildData">
     <label>
       Rows:
       <input type="number" ng-model="buildData.numRows" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
@@ -40,7 +37,7 @@
       <input type="number" ng-model="buildData.numColumns" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
     </label>
   </div>
-
+ -->
   <form id="tabs">
     <label class="tab h4" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
         setQueryString('example');
@@ -61,7 +58,7 @@
         <input type="checkbox" ng-model="showLetters"/>
         show letters
       </label>
-      <span class="info-bubble bg-info text-info" ng-show="showLetters && !alerts.puzzleComplete">
+      <span class="info-bubble bg-info text-info" ng-show="showLetters && !alerts.puzzleComplete" ng-cloak>
         <strong>Note:</strong> showing letters is mostly only useful after you've solved the whole grid.
         </span>
     </div>
@@ -73,7 +70,8 @@
     <img style="position: absolute; left: 14px; top: 14px; width: 760px; opacity: 0.4; z-index: 10;" src="./puzzle.png"/>
   </div>
  -->
-  <table id="puzzle-container">
+  <h1 ng-show="!grid || !grid.nodes">loading puzzle...</h1>
+  <table id="puzzle-container" ng-show="grid && grid.nodes" ng-cloak>
 
     <tr ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row nowrap">
       <td ng-repeat="node in row track by $index"
@@ -107,11 +105,10 @@
           {{node.number}}<span class="down-arrow" ng-show="node.direction === 'down'"></span><span class="up-arrow" ng-show="node.direction === 'up'"></span>
           <div class="right-arrow" ng-show="node.direction === 'right'"></div>
           <div class="left-arrow" ng-show="node.direction === 'left'"></div>
-          <!-- <sub ng-show="showLetters">{{node.letter}}</sub> -->
           <span ng-show="showLetters" style="color: gray;">{{node.letter | uppercase}}</span>
         </div>
 
-        <div ng-if="buildData" class="build-mode-inputs">
+<!--         <div ng-if="buildData" class="build-mode-inputs">
           <button
             ng-show="node.number !== null"
             class="btn btn-xs no-padding up-arrow"
@@ -150,19 +147,19 @@
             ng-change="addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'number', node.number)"
           />
         </div>
-
+ -->
       </td>
 
     </tr>
 
   </table>
-  <puzzle-legend class="pull-right"></puzzle-legend>
+  <puzzle-legend class="pull-right" ng-cloak></puzzle-legend>
 
-  <div ng-if="buildData" class="well">
+<!--   <div ng-if="buildData" class="well">
     <h4>Copy/paste me into a new puzzle JSON file</h4>
     <div>{{buildData}}</div>
   </div>
-
+ -->
   <br/>
   <alerts></alerts>
 
@@ -210,7 +207,7 @@
     </div>
   </div>
 
-  <div ng-if="alerts.puzzleComplete" class="success-bubble bg-success h4" ng-init="scratch = '';">
+  <div ng-if="alerts.puzzleComplete" class="success-bubble bg-success h4" ng-init="scratch = '';" ng-cloak>
     <div>
       <textarea class="form-control" placeholder="scratch area" ng-model="scratch"></textarea>
       a b c d e f g h i j k l m n o p q r s t u v w x y z (a b)
@@ -263,7 +260,7 @@
     </ul>
   </div>
 
-  <div class="info-bubble answer bg-primary row" ng-show="alerts.puzzleComplete">
+  <div class="info-bubble answer bg-primary row" ng-show="alerts.puzzleComplete" ng-cloak>
     <form name="answerBox" ng-class="{
       'has-error': answer.length > answerLength,
       'has-warning': answer.length < answerLength,
@@ -305,25 +302,19 @@
 <h4>
   contact puzzle creators
   <a href="mailto:pavel@pavelspuzzles.com,hryanjones@gmail.com" class="btn btn-default">
-    <small>
       <i class="glyphicon glyphicon-envelope"></i>
       Email Pavel and Ryan
-    </small>
   </a>
 
   <!-- twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
-  <a href="https://twitter.com/intent/tweet?screen_name=pavelcurtis" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
-    <small>
+  <a href="https://twitter.com/intent/tweet?screen_name=pavelcurtis" class="btn btn-default">
+      <twitter-icon></twitter-icon>
       @pavelcurtis
-      <script>!function(d,s,id){var js,fjs=d.getelementsbytagname(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getelementbyid(id)){js=d.createelement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentnode.insertbefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-    </small>
   </a>
 
-  <a href="https://twitter.com/intent/tweet?screen_name=hryanjones" class="twitter-mention-button" data-size="large" data-related="hryanjones" data-dnt="true">
-    <small>
+  <a href="https://twitter.com/intent/tweet?screen_name=hryanjones" class="btn btn-default">
+      <twitter-icon></twitter-icon>
       @hryanjones
-      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-    </small>
   </a>
 
 </h4>
@@ -333,6 +324,10 @@
 </h4>
 
 <todo></todo>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+<script src="http://hryanjones.com/js/ngStorage.min.js"></script>
+<script src="./gridder.js"></script>
 
 </body>
 </html>
