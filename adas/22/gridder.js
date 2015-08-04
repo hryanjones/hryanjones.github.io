@@ -257,6 +257,9 @@ function generate() {
 function setNextStateAndGetChanges(node, conjecturesEnabled, onlyFilled) {
     // console.log(node);
 
+    if (node.state && conjecturesEnabled && !node.conjecture) {
+      return; // don't trounce a real state with conjecture
+    }
     var newState = nextState(node.state, onlyFilled);
 
     // a change is a part of a history chain
