@@ -6,7 +6,7 @@
 }
 
 .node {
-  border: 2px solid black;
+  border: 2px inset black;
   height: 36px;
   width: 36px;
   text-align: center;
@@ -109,6 +109,10 @@
     hsla(0, 100%, 20%, 1),
     hsla(0, 100%, 70%, 1) 5px
   );
+}
+.node.conjecture.first-conjecture {
+  border-color: yellow;
+  border-style: solid;
 }
 .blank .node-label.left-or-right {
   padding-top: 7px;

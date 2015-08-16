@@ -13,7 +13,7 @@
   <title>Ænigma #22 - hryanjones</title>
 </head>
 
-<body ng-app="app" ng-controller="gridder" class="well">
+<body ng-app="app" ng-controller="gridder" class="well" ng-init="firstConjecture">
 
   <h1>
     Web Version of
@@ -24,6 +24,7 @@
     <br/>
     <small>
       click on a box to mark it <em>blank</em>, click again (or right-click) to mark it <em>filled</em>
+      <br/>(<em>your work is saved in the browser</em>)
     </small>
   </h1>
 
@@ -80,6 +81,7 @@
         ng-class="[
           node.state,
           node.conjecture ? 'conjecture' : '',
+          node.firstConjecture ? 'first-conjecture' : '',
           node.complete ? 'complete' : '',
           node.invalidReasons.adjacentFilledNeighbors ? 'invalid-filled' : '',
           (node.invalidReasons.overSaturatedClue ||
@@ -87,16 +89,22 @@
             node.invalidReasons.trappedSingleBlankNode) ? 'invalid-clue' : '',
         ]"
         ng-right-click="
-          history.data.push(setNextStateAndGetChanges(node, conjectures.enabled, 'onlyFilled'));
-          validate.node(node, grid.nodes);
-          validate.row(grid.nodes, rowIndex);
-          validate.column(grid.nodes, colIndex);
+          change = setNextStateAndGetChanges(node, conjectures.enabled, firstConjecture, 'onlyFilled');
+
+          change && history.data.push(change);
+          change && validate.node(node, grid.nodes);
+          change && validate.row(grid.nodes, rowIndex);
+          change && validate.column(grid.nodes, colIndex);
+          change && setFirstConjecture(false);
         "
         ng-click="
-          history.data.push(setNextStateAndGetChanges(node, conjectures.enabled));
-          validate.node(node, grid.nodes);
-          validate.row(grid.nodes, rowIndex);
-          validate.column(grid.nodes, colIndex);
+          change = setNextStateAndGetChanges(node, conjectures.enabled, firstConjecture);
+
+          change && history.data.push(change);
+          change && validate.node(node, grid.nodes);
+          change && validate.row(grid.nodes, rowIndex);
+          change && validate.column(grid.nodes, colIndex);
+          change && setFirstConjecture(false);
         "
         ng-disabled="showLetters && alerts.puzzleComplete"
         >
@@ -106,6 +114,7 @@
           <div class="right-arrow" ng-show="node.direction === 'right'"></div>
           <div class="left-arrow" ng-show="node.direction === 'left'"></div>
           <span ng-show="showLetters" style="color: gray;">{{node.letter | uppercase}}</span>
+
         </div>
 
 <!--         <div ng-if="buildData" class="build-mode-inputs">
@@ -153,6 +162,7 @@
     </tr>
 
   </table>
+  {{firstConjecture}}
   <puzzle-legend class="pull-right" ng-cloak></puzzle-legend>
 
 <!--   <div ng-if="buildData" class="well">
@@ -172,6 +182,7 @@
           conjectures.enabled && validate.redo(grid);
 
           conjectures.enabled = !conjectures.enabled;
+          firstConjecture = true;
         ">
         <input type="checkbox" ng-checked="conjectures.enabled"/>
         Conjecture Mode

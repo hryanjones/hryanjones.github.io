@@ -9,6 +9,7 @@ angular
 
         $scope.clear = clear;
         $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
+        $scope.setFirstConjecture = setFirstConjecture;
         $scope.conjectures = conjectures();
 
         var puzzleName = $location.search().puzzle;
@@ -120,7 +121,11 @@ angular
             $location.search({puzzle: str});
         }
 
+        function setFirstConjecture(setTo) {
+            $scope.firstConjecture = setTo;
+        }
     }
+
 ])
 .filter('puzzleNameFormat', function() {
     return puzzleNameFormat;
@@ -254,7 +259,7 @@ function generate() {
  * TODO break change part into a history function (in history() space) that takes appropriate parameters?
  * @warning mutates the node state and conjecture state
  */
-function setNextStateAndGetChanges(node, conjecturesEnabled, onlyFilled) {
+function setNextStateAndGetChanges(node, conjecturesEnabled, firstConjecture, onlyFilled) {
     // console.log(node);
 
     if (node.state && conjecturesEnabled && !node.conjecture) {
@@ -276,6 +281,10 @@ function setNextStateAndGetChanges(node, conjecturesEnabled, onlyFilled) {
     // MUTATE!
     node.state = newState;
     node.conjecture = conjecturesEnabled;
+    if (conjecturesEnabled && firstConjecture) {
+      node.firstConjecture = true;
+      change.firstConjecture = true;
+    }
 
     return {changes: [change]};
 
@@ -684,6 +693,7 @@ function conjectures() {
 
     function removeConjectureFlag(node) {
         node.conjecture = false;
+        delete node.firstConjecture;
     }
 
     function lastChangeHasConjecture(history) {
