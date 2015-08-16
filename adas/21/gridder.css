@@ -5,6 +5,9 @@
 #puzzle-container {
   background: white;
   display: inline-block;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .node-row { /* It's not clear to me why I need to force the height to be correct */

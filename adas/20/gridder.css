@@ -3,6 +3,9 @@ div {
 }
 #puzzle-container {
   position: relative;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 #puzzle-background {
