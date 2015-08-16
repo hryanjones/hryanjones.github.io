@@ -186,7 +186,7 @@
         ">
         <input type="checkbox" ng-checked="conjectures.enabled"/>
         Conjecture Mode
-        <span ng-show="conjectures.enabled">-- Clear Conjectures</span>
+        <br/><span ng-show="conjectures.enabled">Clear Conjectures</span>
       </button>
       <span ng-show="conjectures.enabled" ng-click="conjectures.enabled = false;">
       -or-
@@ -210,7 +210,7 @@
     </div>
 
     <div class="btn btn-info" ng-click="
-        validate.complete(grid);
+        validate.complete(grid, conjectures.enabled);
         showLetters = !!alerts.puzzleComplete;
       ">
       <i class="glyphicon glyphicon-question-sign"></i>

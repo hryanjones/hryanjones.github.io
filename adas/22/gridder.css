@@ -20,6 +20,8 @@
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
+
+  touch-action: manipulation; /* to try and work around 300ms delay in Android */
 }
 .node.complete {
   color: gray;

@@ -541,7 +541,11 @@ function validate(numColumns, numRows) {
         }
     }
 
-    function checkPuzzleComplete(grid) {
+    function checkPuzzleComplete(grid, conjecturesEnabled) {
+        if (conjecturesEnabled) {
+            alert('You must exit Conjecture Mode by clearing or accepting conjectures before checking puzzle completeness.')
+            return;
+        }
         redoValidation(grid);
         // console.log('checking')
         for (type in alerts) {
