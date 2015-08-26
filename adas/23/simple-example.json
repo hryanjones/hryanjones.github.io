@@ -1,0 +1,76 @@
+{
+  "numRows": 7,
+  "numColumns": 7,
+  "nodeData": {
+    "0": {
+      "0": {
+        "number": 1,
+        "direction": "down"
+      }
+    },
+    "1": {
+      "1": {
+        "number": 3,
+        "direction": "down"
+      },
+      "2": {
+        "number": 2,
+        "direction": "up"
+      },
+      "3": {
+        "number": 1,
+        "direction": "up"
+      }
+    },
+    "2": {
+      "1": {
+        "number": 2,
+        "direction": "down"
+      }
+    },
+    "3": {
+      "1": {
+        "number": 0,
+        "direction": "right"
+      },
+      "3": {
+        "number": 2,
+        "direction": "up"
+      },
+      "5": {
+        "number": 2,
+        "direction": "up"
+      }
+    },
+    "4": {
+      "5": {
+        "number": 3,
+        "direction": "left"
+      }
+    },
+    "5": {
+      "3": {
+        "number": 2,
+        "direction": "right"
+      },
+      "4": {
+        "number": 0,
+        "direction": "right"
+      },
+      "5": {
+        "number": 2,
+        "direction": "left"
+      }
+    },
+    "6": {
+      "0": {
+        "number": 1,
+        "direction": "right"
+      },
+      "6": {
+        "number": 1,
+        "direction": "left"
+      }
+    }
+  }
+}

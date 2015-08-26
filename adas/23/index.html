@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="/assets/css/bootstrap-solarized-light.css" rel="stylesheet" type="text/css" />
+  <link href="./gridder.css" rel="stylesheet" type="text/css" />
+
+  <meta name="viewport" content="width=device-width, user-scalable=yes">
+  <meta charset="utf-8">
+  <title>Ænigma #23 - hryanjones</title>
+</head>
+
+<body ng-app="app" ng-controller="gridder" class="well" ng-init="firstConjecture">
+
+  <h1>
+    Web Version of
+    <a href="http://www.pavelspuzzles.com/adas/23/" target="_blank">
+      Adalogical Ænigma #23
+    </a>
+    <small class="pull-right text-info">share <share-buttons></share-buttons></small>
+    <br/>
+    <small>
+      click on a box to mark it <em>blank</em>, click again (or right-click) to mark it <em>filled</em>
+      <br/>(<em>your work is saved in the browser</em>)
+    </small>
+  </h1>
+
+  <div ng-if="buildData">
+    <label>
+      Rows:
+      <input type="number" ng-model="buildData.numRows" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
+    </label>
+    <label>
+      Columns:
+      <input type="number" ng-model="buildData.numColumns" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
+    </label>
+  </div>
+
+  <form id="tabs">
+    <label class="tab h4" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
+        setQueryString('example');
+        jsonUrl = './example.json';
+        loadPuzzle(jsonUrl);
+      ">
+      example
+    </label>
+    <label class="tab h4" ng-class="{selected: jsonUrl === './aenigma-23.json'}" ng-click="
+        setQueryString('aenigma-23');
+        jsonUrl = './aenigma-23.json';
+        loadPuzzle(jsonUrl);
+      ">
+      Ænigma #23
+    </label>
+    <div class="checkbox inline-block no-margin">
+      <label>
+        <input type="checkbox" ng-model="showLetters"/>
+        show letters
+      </label>
+      <span class="info-bubble bg-info text-info" ng-show="showLetters && !alerts.puzzleComplete" ng-cloak>
+        <strong>Note:</strong> showing letters is mostly only useful after you've solved the whole grid.
+        </span>
+    </div>
+
+ </form>
+
+  <!-- below image is for verifying that I entered the puzzle correctly -->
+<!--   <div style="position: relative">
+    <img style="position: absolute; left: 14px; top: 14px; width: 760px; opacity: 0.4; z-index: 10;" src="./puzzle.png"/>
+  </div>
+ -->
+  <h1 ng-show="!grid || !grid.nodes">loading puzzle...</h1>
+  <table id="puzzle-container" ng-show="grid && grid.nodes" ng-cloak>
+
+    <tr ng-repeat="row in grid.nodes" ng-init="rowIndex = $index;" class="node-row nowrap">
+      <td ng-repeat="node in row track by $index"
+        class="node"
+        ng-init="colIndex = $index;"
+        ng-class="[
+          node.type,
+          node.conjecture ? 'conjecture' : '',
+          node.firstConjecture ? 'first-conjecture' : '',
+          node.complete ? 'complete' : '',
+          node.invalidReasons.adjacentFilledNeighbors ? 'invalid-filled' : '',
+          (node.invalidReasons.overSaturatedClue ||
+            node.invalidReasons.underSaturatedClue ||
+            node.invalidReasons.trappedSingleBlankNode) ? 'invalid-clue' : '',
+        ]"
+        ng-right-click=""
+        ng-click=""
+        ng-disabled="showLetters && alerts.puzzleComplete"
+        >
+
+        <div class="node-label" ng-if="!buildData" ng-class="{'left-or-right': node.direction === 'left' || node.direction === 'right'}">
+          {{node.number}}<span class="down-arrow" ng-show="node.direction === 'down'"></span><span class="up-arrow" ng-show="node.direction === 'up'"></span>
+          <div class="right-arrow" ng-show="node.direction === 'right'"></div>
+          <div class="left-arrow" ng-show="node.direction === 'left'"></div>
+          <span ng-show="showLetters" style="color: gray;">{{node.letter | uppercase}}</span>
+
+        </div>
+
+        <div ng-if="buildData" class="build-mode-inputs">
+
+          <button
+            class="btn btn-xs no-padding"
+            ng-repeat="type in ['tee', 'hole', 'water']"
+            ng-show="!node.type || node.type === type"
+            ng-class="{'btn-primary': node.type === type}"
+            ng-click="
+              node.type = !node.type ? type : null;
+              addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'type', node.type);
+            ">
+            {{type}}
+          </button>
+          <br/>
+          <input type="number" min="0" max="4" class="build-input"
+            ng-show="node.type === 'tee'"
+            ng-model="node.number"
+            ng-change="addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'number', node.number)"
+          />
+        </div>
+
+      </td>
+
+    </tr>
+
+  </table>
+  <puzzle-legend class="pull-right" ng-cloak></puzzle-legend>
+
+  <div ng-if="buildData" class="well">
+    <h4>Copy/paste me into a new puzzle JSON file</h4>
+    <div>{{buildData}}</div>
+  </div>
+
+  <br/>
+  <alerts></alerts>
+
+  <!-- Buttons -->
+  <div ng-hide="alerts.puzzleComplete && showLetters">
+    <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
+      <button class="btn btn-primary" /ng-click="
+          conjectures.enabled && conjectures.clear(grid.nodes);
+          conjectures.enabled && history.clearConjectures(history.data);
+          conjectures.enabled && validate.redo(grid);
+
+          conjectures.enabled = !conjectures.enabled;
+          firstConjecture = true;
+        ">
+        <input type="checkbox" ng-checked="conjectures.enabled"/>
+        Conjecture Mode
+        <br/><span ng-show="conjectures.enabled">Clear Conjectures</span>
+      </button>
+      <span ng-show="conjectures.enabled" ng-click="conjectures.enabled = false;">
+      -or-
+        <button class="btn btn-sm btn-default" ng-click="
+            conjectures.accept(grid.nodes);
+            history.markConjecturesAsTruth(history.data);
+          ">
+          Accept Conjectures as Truth
+        </button>
+      </span>
+      <p ng-show="conjectures.enabled">
+        <br/>
+        <i class="glyphicon glyphicon-info-sign"></i>
+        In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can make temporary assumptions. <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em> when you're done.
+      </p>
+    </span>
+
+    <div class="btn btn-danger" ng-click="clear();" ng-if="clear">
+      <i class="glyphicon glyphicon-trash"></i>
+      Clear Puzzle Progress
+    </div>
+
+    <div class="btn btn-info" ng-click="
+        validate.complete(grid, conjectures.enabled);
+        showLetters = !!alerts.puzzleComplete;
+      ">
+      <i class="glyphicon glyphicon-question-sign"></i>
+      Check Puzzle Complete
+    </div>
+  </div>
+
+  <div ng-if="alerts.puzzleComplete" class="success-bubble bg-success h4" ng-init="scratch = '';" ng-cloak>
+    <div>
+      <textarea class="form-control" placeholder="scratch area" ng-model="scratch"></textarea>
+      a b c d e f g h i j k l m n o p q r s t u v w x y z (a b)
+    </div>
+
+    <div ng-show="jsonUrl === './example.json'">
+      <p>
+        <h4>
+          <i class="glyphicon glyphicon-ok text-success"></i>
+          Well done!
+        </h4>
+        You've solved the analytical part of the example puzzle. Use the scratch area above to work on finding the final answer.
+      </p>
+      <p>
+      <strong>Click on the "Ænigma #23" tab to continue on to the larger puzzle and good luck!</strong>
+      </p>
+    </div>
+
+    <div ng-hide="jsonUrl === './example.json'">
+      <h2 class="inline-block">Congratulations!</h2>
+      You've solved the analytical part of this Ænigma! (which is no mean feat) Please use the scratch area above and instructions below to continue on to finding the final answer, which will earn you one free non-alcoholic drink at <a href="http://www.seattletechnicalbooks.com/">Ada's technical bookshop</a> in Seattle.
+    </div>
+
+
+    <h3><em>Final Clue Instructions</em></h3>
+
+    In order to find the final answer, you must walk a path through the completed puzzle:
+    <ol>
+      <li>Start at the top <em>blank</em> square on the right edge and begin travelling left.</li>
+      <li>Walking only on <em>blank</em> squares take the <u>shortest</u> route to the <u>fourth</u> topmost <em>blank</em> square on the same right edge.
+        <ul><li>Where there are multiple shortest routes, prefer the one that postpones turning as long as possible.</li></ul>
+      </li>
+      <li>For each letter you encounter advance it forward in the alphabet by the number of adjacent <em>filled</em> squares.</li>
+      <li>Reading the resulting letters in order will reveal a clue to your final answer.</li>
+    </ul>
+
+  </div>
+
+
+  <div ng-hide="alerts.puzzleComplete">
+    <h3>Instructions</h3>
+
+    <ul>
+      <li ng-class="{'text-danger': alerts.notAllSquaresFilled}">Mark all squares, including squares with a clue, as <em>filled</em> (dark) or <em>blank</em> (circle).</li>
+      <li ng-class="{'text-danger': alerts.overSaturatedClue || alerts.underSaturatedClue}"><em>Blank</em> clues are true and specify exactly how many filled squares it can "see" in the same row or column, in the indicated direction.</li>
+      <li><em>Filled</em> clues should be ignored.</li>
+      <li ng-class="{'text-danger': alerts.adjacentFilledNeighbors}"><em>Filled</em> squares may not be horizontally or vertically adjacent.</li>
+      <li ng-class="{'text-danger': alerts.trappedSingleBlankNode || alerts.notAllBlanksConnected}">All "blank" squares, as a group, must be
+        connected to one another, horizontally or vertically.</li>
+    </ul>
+  </div>
+
+  <div class="info-bubble answer bg-primary row" ng-show="alerts.puzzleComplete" ng-cloak>
+    <form name="answerBox" ng-class="{
+      'has-error': answer.length > answerLength,
+      'has-warning': answer.length < answerLength,
+    }">
+    <h3 class="inline-block no-margin col-sm-5">
+      Final Answer for <strong>{{jsonUrl | puzzleNameFormat}}</strong>:
+    </h3>
+    <div class="col-sm-5">
+      <input
+      placeholder="answer is {{answerLength}} letters"
+      class="form-control col-sm-5"
+      ng-model="answer"
+      name="actualAnswer"
+      />
+    </div>
+    <span ng-class="{'text-danger': answer.length > answerLength}" class="col-sm-2">
+      {{answerLength - answer.length}}
+    </span>
+  </form>
+</div>
+
+<div class="bg-info text-info info-bubble block" ng-show="jsonUrl === './example.json'">
+  <i class="glyphicon glyphicon-info-sign"></i>
+  See the <a href="http://www.pavelspuzzles.com/adas/23/puzzle.pdf">PDF</a> for a short walk-through on solving the example.
+</div>
+
+<hr/>
+
+<h3>Also see the paper version:
+  <small><a href="http://www.pavelspuzzles.com/adas/23/">PDF (click puzzle image on this site)</a></small>
+</h3>
+
+<hr/>
+
+<div>
+  The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
+</div>
+
+<h4>
+  contact puzzle creators
+  <a href="mailto:pavel@pavelspuzzles.com,hryanjones@gmail.com" class="btn btn-default">
+      <i class="glyphicon glyphicon-envelope"></i>
+      Email Pavel and Ryan
+  </a>
+
+  <!-- twitter link slightly modified from https://about.twitter.com/resources/buttons#mention -->
+  <a href="https://twitter.com/intent/tweet?screen_name=pavelcurtis" class="btn btn-default">
+      <twitter-icon></twitter-icon>
+      @pavelcurtis
+  </a>
+
+  <a href="https://twitter.com/intent/tweet?screen_name=hryanjones" class="btn btn-default">
+      <twitter-icon></twitter-icon>
+      @hryanjones
+  </a>
+
+</h4>
+<h4>
+  <a href="https://github.com/hryanjones/hryanjones.github.io">Code</a>
+  <small>on Github</small>
+</h4>
+
+<todo></todo>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+<script src="http://hryanjones.com/js/ngStorage.min.js"></script>
+<script src="./gridder.js"></script>
+
+</body>
+</html>

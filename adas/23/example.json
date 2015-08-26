@@ -1,0 +1,70 @@
+{
+    "numRows": 7,
+    "numColumns": 7,
+    "answerLength": 12,
+    "nodeData": {
+        "0": {
+            "0": {"letter": "f"},
+            "1": {"letter": "j"},
+            "2": {"number": 2, "direction": "right"},
+            "3": {"number": 2, "direction": "left"},
+            "4": {"number": 2, "direction": "left"},
+            "5": {"letter": "n"},
+            "6": {"letter": "a"}
+        },
+        "1": {
+            "0": {"number": 1, "direction": "up"},
+            "1": {"letter": "r"},
+            "2": {"letter": "z"},
+            "3": {"number": 1, "direction": "right"},
+            "4": {"number": 2, "direction": "down"},
+            "5": {"number": 2, "direction": "down"},
+            "6": {"letter": "o"}
+        },
+        "2": {
+            "0": {"letter": "p"},
+            "1": {"letter": "h"},
+            "2": {"number": 2, "direction": "left"},
+            "3": {"letter": "t"},
+            "4": {"letter": "d"},
+            "5": {"letter": "q"},
+            "6": {"letter": "t"}
+        },
+        "3": {
+            "0": {"letter": "l"},
+            "1": {"letter": "b"},
+            "2": {"number": 2, "direction": "down"},
+            "3": {"letter": "s"},
+            "4": {"letter": "s"},
+            "5": {"number": 2, "direction": "down"},
+            "6": {"number": 3, "direction": "left"}
+        },
+        "4": {
+            "0": {"letter": "e"},
+            "1": {"number": 3, "direction": "right"},
+            "2": {"letter": "e"},
+            "3": {"letter": "r"},
+            "4": {"letter": "h"},
+            "5": {"letter": "o"},
+            "6": {"letter": "o"}
+        },
+        "5": {
+            "0": {"letter": "o"},
+            "1": {"letter": "z"},
+            "2": {"letter": "r"},
+            "3": {"number": 2, "direction": "up"},
+            "4": {"letter": "d"},
+            "5": {"number": 1, "direction": "left"},
+            "6": {"letter": "c"}
+        },
+        "6": {
+            "0": {"letter": "r"},
+            "1": {"letter": "u"},
+            "2": {"letter": "d"},
+            "3": {"number": 1, "direction": "right"},
+            "4": {"number": 1, "direction": "right"},
+            "5": {"number": 1, "direction": "right"},
+            "6": {"number": 2, "direction": "left"}
+        }
+    }
+}
