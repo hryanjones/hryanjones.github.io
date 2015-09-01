@@ -21,12 +21,11 @@
     <small class="pull-right text-info">share <share-buttons></share-buttons></small>
     <br/>
     <small>
-      click on a box to mark it <em>blank</em>, click again (or right-click) to mark it <em>filled</em>
-      <br/>(<em>your work is saved in the browser</em>)
+      Golf from the number tees to a hole, avoiding traps, and other golf paths.
     </small>
   </h1>
 
-  <div ng-if="buildData">
+<!--   <div ng-if="buildData">
     <label>
       Rows:
       <input type="number" ng-model="buildData.numRows" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
@@ -36,7 +35,7 @@
       <input type="number" ng-model="buildData.numColumns" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
     </label>
   </div>
-
+ -->
   <form id="tabs">
     <label class="tab h4" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
         setQueryString('example');
@@ -52,7 +51,7 @@
       ">
       Ænigma #23
     </label>
-    <div class="checkbox inline-block no-margin">
+<!--     <div class="checkbox inline-block no-margin">
       <label>
         <input type="checkbox" ng-model="showLetters"/>
         show letters
@@ -60,13 +59,13 @@
       <span class="info-bubble bg-info text-info" ng-show="showLetters && !alerts.puzzleComplete" ng-cloak>
         <strong>Note:</strong> showing letters is mostly only useful after you've solved the whole grid.
         </span>
-    </div>
+    </div> -->
 
  </form>
 
   <!-- below image is for verifying that I entered the puzzle correctly -->
 <!--   <div style="position: relative">
-    <img style="position: absolute; left: 14px; top: 14px; width: 760px; opacity: 0.4; z-index: 10;" src="./puzzle.png"/>
+    <img style="position: absolute; left: 14px; top: 14px; width: 798px; opacity: 0.4; z-index: 10;" src="./23.png"/>
   </div>
  -->
   <h1 ng-show="!grid || !grid.nodes">loading puzzle...</h1>
@@ -78,46 +77,183 @@
         ng-init="colIndex = $index;"
         ng-class="[
           node.type,
+          (node.type === 'hole' && node.number === 0) ? 'fulfilled' : '',
+          node.number ? 'clickable' : '',
+          node === selectedNode ? 'selected': '',
           node.conjecture ? 'conjecture' : '',
           node.firstConjecture ? 'first-conjecture' : '',
-          node.complete ? 'complete' : '',
           node.invalidReasons.adjacentFilledNeighbors ? 'invalid-filled' : '',
-          (node.invalidReasons.overSaturatedClue ||
-            node.invalidReasons.underSaturatedClue ||
-            node.invalidReasons.trappedSingleBlankNode) ? 'invalid-clue' : '',
         ]"
-        ng-right-click=""
-        ng-click=""
+        ng-click="selectNode(node, true);"
+        ng-mouseenter="selectNode(node);"
         ng-disabled="showLetters && alerts.puzzleComplete"
         >
+        <!-- ng-right-click="" -->
 
-        <div class="node-label" ng-if="!buildData" ng-class="{'left-or-right': node.direction === 'left' || node.direction === 'right'}">
-          {{node.number}}<span class="down-arrow" ng-show="node.direction === 'down'"></span><span class="up-arrow" ng-show="node.direction === 'up'"></span>
-          <div class="right-arrow" ng-show="node.direction === 'right'"></div>
-          <div class="left-arrow" ng-show="node.direction === 'left'"></div>
-          <span ng-show="showLetters" style="color: gray;">{{node.letter | uppercase}}</span>
-
+        <!-- DOWN -->
+        <div
+          style="top: 27px;"
+          ng-show="
+            node.state['down'] ||
+              node === selectedNode && node.direction !== 'down' &&
+              grid.nodes[rowIndex + node.number][colIndex] && node.number !== 1
+          "
+          class="floating-button up-down glyphicon glyphicon-remove text-danger"
+          ng-click="
+            history.data.push(
+              setNextStateAndGetChanges('state', 'down', node, grid.nodes, conjecturesEnabled)
+            );
+            $event.stopPropagation();
+          "
+          ng-class="[node.state['down'] ? 'active' : '']"
+        >
+        </div>
+        <div
+          style="top: 100%;"
+          ng-show="grid.nodes[rowIndex + node.number][colIndex] && (!node.direction && node === selectedNode && !node.state['down']) || node.direction === 'down'"
+          class="floating-button up-down"
+          ng-class="[node.direction === 'down' ? 'active' : '']"
+          ng-click="history.data.push(
+            setNextStateAndGetChanges('direction', 'down', node, grid.nodes, conjecturesEnabled)
+          );"
+          >
+          <div class="arrow down" ng-style="{height: (arrowUnit * node.number - offset) + 'px'}">
+            <div class="shaft" ng-style="{height: (arrowUnit * node.number - offset -5) + 'px'}"></div>
+            <div class="head"></div>
+          </div>
         </div>
 
-        <div ng-if="buildData" class="build-mode-inputs">
+        <!-- UP -->
+        <div
+          style="top: -12px;"
+          ng-show="
+            node.state['up'] ||
+              node === selectedNode && node.direction !== 'up' &&
+              grid.nodes[rowIndex - node.number][colIndex] && node.number !== 1
+          "
+          class="floating-button up-down glyphicon glyphicon-remove text-danger"
+          ng-click="
+            history.data.push(
+              setNextStateAndGetChanges('state', 'up', node, grid.nodes, conjecturesEnabled)
+            );
+            $event.stopPropagation();
+          "
+          ng-class="[node.state['up'] ? 'active' : '']"
+        >
+        </div>
+        <div
+          style="bottom: 100%;"
+          ng-show="grid.nodes[rowIndex - node.number][colIndex] && (!node.direction && node === selectedNode && !node.state['up']) || node.direction === 'up'"
+          class="floating-button up-down"
+          ng-class="[node.direction === 'up' ? 'active' : '']"
+          ng-click="history.data.push(
+            setNextStateAndGetChanges('direction', 'up', node, grid.nodes, conjecturesEnabled)
+          );"
+          >
+          <div class="arrow up" ng-style="{height: (arrowUnit * node.number - offset) + 'px'}">
+            <div class="shaft" ng-style="{height: (arrowUnit * node.number - offset -5) + 'px'}"></div>
+            <div class="head"></div>
+          </div>
+        </div>
 
-          <button
-            class="btn btn-xs no-padding"
-            ng-repeat="type in ['tee', 'hole', 'water']"
-            ng-show="!node.type || node.type === type"
-            ng-class="{'btn-primary': node.type === type}"
-            ng-click="
-              node.type = !node.type ? type : null;
-              addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'type', node.type);
-            ">
-            {{type}}
-          </button>
-          <br/>
-          <input type="number" min="0" max="4" class="build-input"
-            ng-show="node.type === 'tee'"
-            ng-model="node.number"
-            ng-change="addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'number', node.number)"
-          />
+        <!-- RIGHT -->
+        <div
+          style="left: 27px;"
+          ng-show="
+            node.state['right'] ||
+              node === selectedNode && node.direction !== 'right' &&
+              grid.nodes[rowIndex][colIndex + node.number] && node.number !== 1
+          "
+          class="floating-button left-right glyphicon glyphicon-remove text-danger"
+          ng-click="
+            history.data.push(
+              setNextStateAndGetChanges('state', 'right', node, grid.nodes, conjecturesEnabled)
+            );
+            $event.stopPropagation();
+          "
+          ng-class="[node.state['right'] ? 'active' : '']"
+        >
+        </div>
+        <div
+          style="left: 100%;"
+          ng-show="grid.nodes[rowIndex][colIndex + node.number] && (!node.direction && node === selectedNode && !node.state['right']) || node.direction === 'right'"
+          class="floating-button left-right"
+          ng-class="[node.direction === 'right' ? 'active' : '']"
+          ng-click="history.data.push(
+            setNextStateAndGetChanges('direction', 'right', node, grid.nodes, conjecturesEnabled)
+          );"
+          >
+          <div class="arrow right" ng-style="{width: (arrowUnit * node.number - offset) + 'px'}">
+            <div class="shaft" ng-style="{width: (arrowUnit * node.number - offset -5) + 'px'}"></div>
+            <div class="head"></div>
+          </div>
+        </div>
+
+        <!-- LEFT -->
+        <div
+          style="left: -12px;"
+          ng-show="
+            node.state['left'] ||
+              node === selectedNode && node.direction !== 'left' &&
+              grid.nodes[rowIndex][colIndex - node.number] && node.number !== 1
+          "
+          class="floating-button left-right glyphicon glyphicon-remove text-danger"
+          ng-click="
+            history.data.push(
+              setNextStateAndGetChanges('state', 'left', node, grid.nodes, conjecturesEnabled)
+            );
+            $event.stopPropagation();
+          "
+          ng-class="[node.state['left'] ? 'active' : '']"
+        >
+        </div>
+        <div
+          style="right: 100%;"
+          ng-show="grid.nodes[rowIndex][colIndex - node.number] && (!node.direction && node === selectedNode && !node.state['left']) || node.direction === 'left'"
+          class="floating-button left-right"
+          ng-class="[node.direction === 'left' ? 'active' : '']"
+          ng-click="history.data.push(
+            setNextStateAndGetChanges('direction', 'left', node, grid.nodes, conjecturesEnabled)
+          );"
+          >
+          <div class="arrow left" ng-style="{width: (arrowUnit * node.number - offset) + 'px'}">
+            <div class="shaft" ng-style="{width: (arrowUnit * node.number - offset -5) + 'px'}"></div>
+            <div class="head"></div>
+          </div>
+        </div>
+
+
+        <div class="node-label">
+          <span ng-if="!buildData">{{node.number}}</span>
+
+<!--           <span ng-if="buildData" class="build-mode-inputs">
+            <input class="build-input"
+              ng-show="['tee', 'hole', 'trap'].indexOf(node.type) === -1"
+              ng-model="node.letter"
+              ng-change="addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'letter', node.letter)"
+            />
+            <input type="number" min="0" max="6" class="build-input"
+              ng-show="node.type === 'tee'"
+              ng-model="node.number"
+              ng-change="addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'number', node.number)"
+            />
+            <br/>
+            <button
+              class="btn btn-xs no-padding pull-right"
+              ng-repeat="type in ['tee', 'hole', 'trap']"
+              ng-show="!node.type || node.type === type"
+              ng-class="{'btn-primary': node.type === type}"
+              ng-click="
+                node.type = !node.type ? type : null;
+                addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'type', node.type);
+              ">
+              {{type}}
+            </button>
+          </span>
+ -->
+          <span ng-show="showLetters" style="color: gray;">
+            {{node.letter | uppercase}}
+          </span>
         </div>
 
       </td>
@@ -127,17 +263,17 @@
   </table>
   <puzzle-legend class="pull-right" ng-cloak></puzzle-legend>
 
-  <div ng-if="buildData" class="well">
+<!--   <div ng-if="buildData" class="well">
     <h4>Copy/paste me into a new puzzle JSON file</h4>
     <div>{{buildData}}</div>
   </div>
-
+ -->
   <br/>
   <alerts></alerts>
 
   <!-- Buttons -->
   <div ng-hide="alerts.puzzleComplete && showLetters">
-    <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
+<!--     <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
       <button class="btn btn-primary" /ng-click="
           conjectures.enabled && conjectures.clear(grid.nodes);
           conjectures.enabled && history.clearConjectures(history.data);
@@ -165,19 +301,19 @@
         In <em>conjecture mode</em> all of your actions will be marked in light/thin gray so that you can make temporary assumptions. <em>Clear all conjectures</em>, or <em>Accept conjectures as truth</em> when you're done.
       </p>
     </span>
-
+ -->
     <div class="btn btn-danger" ng-click="clear();" ng-if="clear">
       <i class="glyphicon glyphicon-trash"></i>
       Clear Puzzle Progress
     </div>
 
-    <div class="btn btn-info" ng-click="
+<!--     <div class="btn btn-info" ng-click="
         validate.complete(grid, conjectures.enabled);
         showLetters = !!alerts.puzzleComplete;
       ">
       <i class="glyphicon glyphicon-question-sign"></i>
       Check Puzzle Complete
-    </div>
+    </div> -->
   </div>
 
   <div ng-if="alerts.puzzleComplete" class="success-bubble bg-success h4" ng-init="scratch = '';" ng-cloak>
@@ -222,14 +358,17 @@
 
   <div ng-hide="alerts.puzzleComplete">
     <h3>Instructions</h3>
-
     <ul>
-      <li ng-class="{'text-danger': alerts.notAllSquaresFilled}">Mark all squares, including squares with a clue, as <em>filled</em> (dark) or <em>blank</em> (circle).</li>
-      <li ng-class="{'text-danger': alerts.overSaturatedClue || alerts.underSaturatedClue}"><em>Blank</em> clues are true and specify exactly how many filled squares it can "see" in the same row or column, in the indicated direction.</li>
-      <li><em>Filled</em> clues should be ignored.</li>
-      <li ng-class="{'text-danger': alerts.adjacentFilledNeighbors}"><em>Filled</em> squares may not be horizontally or vertically adjacent.</li>
-      <li ng-class="{'text-danger': alerts.trappedSingleBlankNode || alerts.notAllBlanksConnected}">All "blank" squares, as a group, must be
-        connected to one another, horizontally or vertically.</li>
+      <li>A <strong>golf tee</strong>, represented by a circled number, represents the starting point for a <em>single</em> ball.</li>
+      <li>Each ball must travel in a sequence of horizontal or vertical <strong>shots</strong>, eventually arriving at <em>its own</em> <strong>hole</strong>, represented by a dark circle.</li>
+      <li>The first shot must travel <em>exactly</em> the distance given by the number at its tee.</li>
+      <li>
+        <ul>
+          <li>Each subsequent shot must travel one space less than the one before.</li>
+        </ul>
+      </li>
+      <li>The path taken by a ball may <em>not</em> touch or cross either itself or that of any other ball.</li>
+      <li>Shots may fly over <strong>traps</strong>, represented as shaded squares, but must never land in them.</li>
     </ul>
   </div>
 
@@ -269,7 +408,7 @@
 <hr/>
 
 <div>
-  The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
+  The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved). This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
 </div>
 
 <h4>

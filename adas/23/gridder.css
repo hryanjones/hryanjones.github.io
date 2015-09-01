@@ -12,8 +12,7 @@
   text-align: center;
 
   position: relative;
-  color: black;
-  cursor: pointer;
+  color: gray;
   font-size: 20px;
 
   /* so that users don't accidentally select part of the board */
@@ -23,9 +22,138 @@
 
   touch-action: manipulation; /* to try and work around 300ms delay in Android */
 }
-.node.complete {
-  color: gray;
+.clickable {
+  cursor: pointer;
 }
+
+.floating-button {
+  position: absolute;
+  z-index: 1;
+  border-color: hsla(260, 100%, 20%, 1); /* purple */
+}
+.floating-button.up-down {
+  width: 20px;
+  margin-left: -10px;
+  left: 50%;
+}
+.floating-button.glyphicon {
+  padding: 2px;
+  font-size: 15px;
+  z-index: 2;
+  border-radius: 10px;
+}
+.floating-button.glyphicon.active {
+  color: white;
+  background-color: red;
+}
+.selected .floating-button.glyphicon:not(.active) {
+  background-color: white;
+  border: 1px solid black;
+}
+.floating-button.left-right {
+  height: 20px;
+  margin-top: -10px;
+  top: 50%;
+}
+
+/* arrows - technique borrowed from https://css-tricks.com/snippets/css/css-triangle/ */
+
+.arrow {
+  position: relative;
+  border-color: hsla(260, 100%, 70%, 1); /* purple */
+}
+.active .arrow {
+  border-color: hsla(260, 100%, 20%, 1); /* purple */
+}
+.shaft {
+  border-width: 2px;
+  border-style: solid;
+  border-color: inherit;
+  position: absolute;
+}
+.right .shaft,
+.left .shaft {
+  top: 8px;
+}
+.up .shaft,
+.down .shaft {
+  left: 8px;
+}
+
+.up .shaft {
+  top: 5px;
+}
+.head {
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: inherit;
+}
+.arrow.up .head {
+  border-top-width: 0px;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.arrow.down .head {
+  border-bottom-width: 0px;
+  border-left-color: transparent;
+  border-right-color: transparent;
+
+  position: absolute;
+  bottom: 0px;
+}
+.left .shaft {
+  right: 0px;
+}
+.arrow.left .head {
+  border-left-width: 0px;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+
+  float: left;
+}
+.arrow.right .head {
+  border-right-width: 0px;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+
+  float: right;
+}
+
+.tee .node-label {
+  color: black;
+}
+.tee .node-label,
+.hole .node-label {
+  border-color: gray;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+}
+.hole .node-label {
+  border-color: white;
+  background-color: black;
+}
+.hole.fulfilled .node-label {
+  background-color: gray;
+}
+div.node.trap, td.node.trap {
+  background-color: hsla(200, 100%, 70%, 1);
+}
+.selected.node {
+  border-color: yellow;
+  border-style: solid;
+}
+
+
+
+
+
+
+
+
+
 .conjecture.blank .node-label::after,
 .conjecture.filled .node-label::after {
   content: "?";
@@ -45,12 +173,6 @@
   line-height: 1.1;
   padding-top: 4px;
 }
-.blank .node-label {
-  padding-top: 4px;
-}
-.node-label.left-or-right {
-  padding-top: 7px;
-}
 .blank,
 .puzzle-legend .node.blank {
   background-color: hsla(200, 100%, 89%, 1);
@@ -59,19 +181,13 @@
 .puzzle-legend .blank.conjecture {
   background-color: hsla(200, 1%, 89%, 1);
 }
-.blank .node-label {
-  border-color: hsla(200, 100%, 64%, .7);
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 50%;
-  background-color: white;
-}
+
 .blank.conjecture .node-label {
   border-color: hsla(200, 1%, 64%, .7);
 }
 .node.filled,
 .puzzle-legend .node.filled {
-  background-color: hsla(260, 100%, 20%, 1);
+  background-color: hsla(260, 100%, 20%, 1); /* purple */
 }
 .node.filled.invalid-filled {
   background-color: red;
@@ -112,16 +228,11 @@
     hsla(0, 100%, 70%, 1) 5px
   );
 }
-.node.conjecture.first-conjecture {
-  border-color: yellow;
-  border-style: solid;
-}
-.blank .node-label.left-or-right {
-  padding-top: 7px;
-}
 .invalid .node-label {
   color: red;
 }
+
+/* NON PUZZLE SPECIFIC */
 
 .puzzle-legend .badge {
   margin-bottom: 4px;
@@ -169,12 +280,6 @@
 .build-mode-inputs input {
   width: 26px;
 }
-.node-label.left-or-right,
-.build-mode-inputs button.right-arrow,
-.build-mode-inputs button.left-arrow
-{
-  line-height: 0.6;
-}
 
 .tab {
   background: hsla(0, 1%, 80%, 1);
@@ -219,3 +324,9 @@ body {
   fill: currentColor;
 }
 
+input.build-input::-webkit-outer-spin-button,
+input.build-input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}

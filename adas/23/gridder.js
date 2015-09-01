@@ -1,3 +1,16 @@
+/*
+So I think the way this is going to work is:
+1. Click to select a tee position
+2. This will highligh possible paths
+3. Click the box in the direction to select that path
+4. There will also be a red X in that direction to mark it as non-possible
+
+NOTE: this means that most boxes won't allow you to click on them
+
+I think I'll also want neighbors to be specifiable in each direction
+*/
+
+
 var PUZZLE_NUM = 23;
 
 angular
@@ -9,16 +22,31 @@ angular
     '$location',
     function($scope, $localStorage, $http, $location) {
 
+        // $scope.$watch('selectedNode', function(newNode) { // TEMP
+        //     if (!newNode) { return; }
+        //     console.log('selectedNode', newNode)
+        // })
+
         $scope.clear = clear;
         $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
         $scope.setFirstConjecture = setFirstConjecture;
         $scope.conjectures = conjectures();
+        $scope.selectNode = selectNode;
+
+        $scope.selectedNode = null;
+        $scope.arrowUnit = 36; //px
+        $scope.offset = 22; //px
+
+        // TEMP
+        $scope.log = function(thing) {
+            console.log(thing);
+        }
 
         var puzzleName = $location.search().puzzle;
 
         $scope.setQueryString = setQueryString;
         $scope.jsonUrl = puzzleName ? './' + puzzleName + '.json' : './example.json';
-        $scope.jsonUrl = './nope.json';
+        // $scope.jsonUrl = './nope.json';
         loadPuzzle($scope.jsonUrl);
 
         $scope.loadPuzzle = loadPuzzle; // for switching to a different puzzle
@@ -65,6 +93,9 @@ angular
             $scope.conjectures.enabled = conjectures().lastChangeHasConjecture($scope.history.data);
 
             // TODO should have a loading variable so we can prevent user from changing things before this point?
+
+            // $scope.selectedNode = $scope.grid.nodes[2][4]; // TEMP
+            // $scope.selectedNode.number = 5;
         }
 
         /**
@@ -126,16 +157,21 @@ angular
         function setFirstConjecture(setTo) {
             $scope.firstConjecture = setTo;
         }
+
+        /**
+         * Select the node passed in if it has a number.
+         */
+        function selectNode(node, toggle) {
+            if (!node.number || node.type === 'hole') { return; }
+            var nodeIsSelected = $scope.selectedNode === node;
+            $scope.selectedNode = nodeIsSelected && toggle ? null : node;
+        }
     }
 
 ])
 .filter('puzzleNameFormat', function() {
     return puzzleNameFormat;
 })
-.directive('leftArrow', function() {return {restrict: 'C', template: '&#8592;'} })
-.directive('upArrow', function() {return {restrict: 'C', template: '&#8593;'} })
-.directive('rightArrow', function() {return {restrict: 'C', template: '&#8594;'} })
-.directive('downArrow', function() {return {restrict: 'C', template: '&#8595;'} })
 .directive('ngRightClick', function($parse) { // stolen from http://stackoverflow.com/questions/15731634/how-do-i-handle-right-click-events-in-angular-js
     return function(scope, element, attrs) {
         var fn = $parse(attrs.ngRightClick);
@@ -195,22 +231,26 @@ function generate() {
 
         function newNode(i, j, data) {
             var number = data && data.number;
-            var direction = data && data.direction;
 
             return {
                 row: i,
                 column: j,
-                state: null,
-                direction: direction || null,
+                state: {
+                    up: null,
+                    down: null,
+                    left: null,
+                    right: null,
+                },
+                type: data && data.type,
+                childNode: null, // child nodes are downstream golf shots
+                parentNode: null, // tee nodes are the parents of all below
+                direction: null, // FIXME don't need this any longer
                 number: Number(number) === number ? number : null,
                 letter: data && data.letter,
-                complete: false,
-                startOrEnd: data && data.startOrEnd,
                 neighbors: [],
                 invalidReasons: null,
             };
         }
-
 
         /**
          * Cycle through all the nodes and add pointers to all its neighbors.
@@ -230,7 +270,7 @@ function generate() {
                         getNodeAt(node.row + 1, node.column),
                         getNodeAt(node.row, node.column - 1),
                         getNodeAt(node.row, node.column + 1),
-                    ].filter(truthy);
+                    ];
 
                     function getNodeAt(i, j) {
                         return nodes[i] && nodes[i][j];
@@ -250,6 +290,15 @@ function generate() {
      * an object (double-nested of course)
      */
     function addNodeAttribute(nodeData, row, column, attr, value) {
+        if (!nodeData || !attr) {
+            console.error('no inputs can be empty, you gave:',
+               'nodeData = ', nodeData,
+               'row = ', row,
+               'column = ', column,
+               'attr = ', attr,
+               'value = ', value
+            );
+        }
         nodeData[row] = nodeData[row] || {};
         nodeData[row][column] = nodeData[row][column] || {};
         nodeData[row][column][attr] = value;
@@ -263,45 +312,94 @@ function generate() {
  * TODO break change part into a history function (in history() space) that takes appropriate parameters?
  * @warning mutates the node state and conjecture state
  */
-function setNextStateAndGetChanges(node, conjecturesEnabled, firstConjecture, onlyFilled) {
+function setNextStateAndGetChanges(type, direction, node, nodes, conjecturesEnabled) {
     // console.log(node);
 
-    if (node.state && conjecturesEnabled && !node.conjecture) {
+    if (type !== 'direction' && type !== 'state') {
+        throw new Error('unknown change type');
+    }
+
+    if (type === 'state') {
+        var newState = !node.state[direction];
+        var stateChange = {
+            row: node.row,
+            column: node.column,
+            type: type,
+            state: {},
+            conjecture: conjecturesEnabled,
+        };
+        stateChange.state[direction] = {
+            from: node.state[direction],
+            to: newState,
+        };
+
+        // MUTATE
+        node.state[direction] = newState;
+        return {changes: [stateChange]};
+    }
+
+    if (node.direction && conjecturesEnabled && !node.conjecture) {
       return; // don't trounce a real state with conjecture
     }
-    var newState = nextState(node.state, onlyFilled);
+    var newDirection = node.direction ? null : direction;
 
     // a change is a part of a history chain
-    var change = {
+    var directionChange = {
         row: node.row,
         column: node.column,
-        state: {
-            from: node.state,
-            to: newState
+        type: type,
+        direction: {
+            from: node.direction,
+            to: newDirection
         },
         conjecture: conjecturesEnabled,
     };
 
+    var childNode = getNodeInDirection(direction, node, nodes);
+    var newNumber = newDirection ? node.number - 1 : null;
+    var numberChange = {
+        row: childNode.row,
+        column: childNode.column,
+        type: 'number',
+        number: {
+            from: node.number,
+            to: newNumber,
+        },
+    };
+
     // MUTATE!
-    node.state = newState;
+    node.direction = newDirection;
     node.conjecture = conjecturesEnabled;
-    if (conjecturesEnabled && firstConjecture) {
-      node.firstConjecture = true;
-      change.firstConjecture = true;
-    }
 
-    return {changes: [change]};
+    childNode.number = newNumber;
+    // if (conjecturesEnabled && firstConjecture) {
+    //   node.firstConjecture = true;
+    //   change.firstConjecture = true;
+    // }
 
-    /**
-     * cycle to the nextState given state
-     * null -> 'blank' -> 'filled' -> null (etc.)
-     * if onlyFilled is true, then null -> 'filled' -> null (and 'blank' -> 'filled')
-     */
-    function nextState(state, onlyFilled) {
-        return (onlyFilled ?
-            {'null': 'filled', 'blank': 'filled'}[state] :
-            {'null': 'blank', 'blank': 'filled', }[state]
-        ) || null;
+    return {changes: [directionChange, numberChange]};
+
+    function getNodeInDirection(direction, node, nodes) {
+        if (Number(node.number) !== node.number) { return; }
+        return nodes[getRow(direction, node)][getColumn(direction, node)];
+
+        function getColumn(direction, node) {
+            return {
+                up: 0,
+                down: 0,
+                left: -1,
+                right: 1,
+            }[direction] * node.number + node.column;
+        }
+
+        function getRow(direction, node) {
+            return {
+                up: -1,
+                down: 1,
+                left: 0,
+                right: 0,
+            }[direction] * node.number + node.row;
+        }
     }
 }
 
@@ -328,9 +426,6 @@ function validate(numColumns, numRows) {
      */
     function resetAlerts() {
         alerts.adjacentFilledNeighbors = 0;
-        alerts.overSaturatedClue = 0;
-        alerts.underSaturatedClue = 0;
-        alerts.trappedSingleBlankNode = 0;
 
         alerts.notAllSquaresFilled = 0;
         alerts.notAllBlanksConnected = 0;
@@ -346,8 +441,6 @@ function validate(numColumns, numRows) {
     function validateNode(node, nodes) {
         adjacentFilledNeighborsTest(node);
         node.neighbors.forEach(adjacentFilledNeighborsTest)
-        trappedSingleBlankNodeTest(node);
-        node.neighbors.forEach(trappedSingleBlankNodeTest);
     }
 
     function adjacentFilledNeighborsTest(node) {
@@ -358,18 +451,6 @@ function validate(numColumns, numRows) {
         else {
             removeNodeInvalidReason(node, invalidReason);
         }
-    }
-
-    function trappedSingleBlankNodeTest(node) {
-        var invalidReason = 'trappedSingleBlankNode';
-
-        if (node.state === 'blank' && node.neighbors.every(nodeIsFilled)) {
-            addNodeInvalidReason(node, invalidReason);
-        }
-        else {
-            removeNodeInvalidReason(node, invalidReason);
-        }
-
     }
 
     function nodeIsFilled(node) {
@@ -489,7 +570,7 @@ function validate(numColumns, numRows) {
     }
 
     function removeNodeInvalidReason(node, reason) {
-        if (!node.invalidReasons || !node.invalidReasons[reason]) {
+        if (!node || !node.invalidReasons || !node.invalidReasons[reason]) {
             // can't remove a value when no invalidReasons set
             // and can't remove a specific one if it wasn't there in the first place
             return;
@@ -736,23 +817,33 @@ function history() {
         forEachChange(changes, updateNodeBasedOnChange);
 
         function updateNodeBasedOnChange(change) {
+            console.log('change', change)
             var nodeToUpdate = grid.nodes[change.row][change.column];
-            verifyNodeStateBeforeChange(nodeToUpdate, change);
-            nodeToUpdate.state = change.state.to;
+            // verifyNodeStateBeforeChange(nodeToUpdate, change);
+            if (change.direction !== undefined) {
+                nodeToUpdate.direction = change.direction.to;
+            }
+            if (change.number !== undefined) {
+                nodeToUpdate.number = change.number.to;
+            }
+            if (change.state !== undefined) {
+                var direction = Object.keys(change.state)[0];
+                nodeToUpdate.state[direction] = change.state[direction].to;
+            }
             if (change.conjecture) {
                 nodeToUpdate.conjecture = true;
             }
         }
 
-        function verifyNodeStateBeforeChange(node, change) {
-            if (node.state !== change.state.from) {
-                var msg = 'node state differs from expected.'
-                console.error(msg + ' node', node, 'change', change);
-                // This does appear to happen in the wild so I messed something up somewhere, seems better for users
-                // to continue on rather than throwing an error
-                // throw new Error(msg);
-            }
-        }
+        // function verifyNodeStateBeforeChange(node, change) {
+        //     if (node.direction !== change.direction.from) {
+        //         var msg = 'node direction differs from expected.'
+        //         console.error(msg + ' node', node, 'change', change);
+        //         // This does appear to happen in the wild so I messed something up somewhere, seems better for users
+        //         // to continue on rather than throwing an error
+        //         // throw new Error(msg);
+        //     }
+        // }
     }
 
     function forEachChange(changes, callback) {

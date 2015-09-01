@@ -1,0 +1,844 @@
+{
+    "numRows": 12,
+    "numColumns": 22,
+    "nodeData": {
+        "0": {
+            "0": {
+                "type": "trap"
+            },
+            "1": {
+                "letter": "G"
+            },
+            "2": {
+                "letter": "L"
+            },
+            "3": {
+                "letter": "O"
+            },
+            "4": {
+                "type": "trap"
+            },
+            "5": {
+                "letter": "G"
+            },
+            "6": {
+                "type": "tee",
+                "number": 5
+            },
+            "7": {
+                "letter": "O"
+            },
+            "8": {
+                "type": "trap"
+            },
+            "9": {
+                "letter": "L"
+            },
+            "10": {
+                "letter": "U"
+            },
+            "11": {
+                "letter": "L"
+            },
+            "12": {
+                "type": "trap"
+            },
+            "13": {
+                "letter": "P"
+            },
+            "14": {
+                "letter": "O"
+            },
+            "15": {
+                "letter": "P"
+            },
+            "16": {
+                "type": "tee",
+                "number": 5
+            },
+            "17": {
+                "letter": "S"
+            },
+            "18": {
+                "type": "trap"
+            },
+            "19": {
+                "type": "trap"
+            },
+            "20": {
+                "letter": "I"
+            },
+            "21": {
+                "letter": "L"
+            }
+        },
+        "1": {
+            "0": {
+                "type": "trap"
+            },
+            "1": {
+                "type": "trap"
+            },
+            "2": {
+                "letter": "L"
+            },
+            "3": {
+                "letter": "Y"
+            },
+            "4": {
+                "letter": "S"
+            },
+            "5": {
+                "type": "trap"
+            },
+            "6": {
+                "letter": "O"
+            },
+            "7": {
+                "letter": "A"
+            },
+            "8": {
+                "type": "trap"
+            },
+            "9": {
+                "letter": "F"
+            },
+            "10": {
+                "letter": "L"
+            },
+            "11": {
+                "letter": "A"
+            },
+            "12": {
+                "letter": "P"
+            },
+            "13": {
+                "type": "trap"
+            },
+            "14": {
+                "letter": "P"
+            },
+            "15": {
+                "letter": "M"
+            },
+            "16": {
+                "letter": "I"
+            },
+            "17": {
+                "type": "trap"
+            },
+            "18": {
+                "type": "tee",
+                "number": 4
+            },
+            "19": {
+                "type": "hole"
+            },
+            "20": {
+                "type": "trap"
+            },
+            "21": {
+                "letter": "U"
+            }
+        },
+        "2": {
+            "0": {
+                "letter": "N"
+            },
+            "1": {
+                "letter": "F"
+            },
+            "2": {
+                "letter": "D"
+            },
+            "3": {
+                "letter": "I"
+            },
+            "4": {
+                "type": "trap"
+            },
+            "5": {
+                "letter": "N"
+            },
+            "6": {
+                "letter": "G"
+            },
+            "7": {
+                "letter": "R"
+            },
+            "8": {
+                "type": "trap"
+            },
+            "9": {
+                "type": "hole"
+            },
+            "10": {
+                "letter": "N"
+            },
+            "11": {
+                "letter": "A"
+            },
+            "12": {
+                "letter": "M"
+            },
+            "13": {
+                "type": "tee",
+                "number": 2
+            },
+            "14": {
+                "letter": "E"
+            },
+            "15": {
+                "letter": "F"
+            },
+            "16": {
+                "letter": "O"
+            },
+            "17": {
+                "type": "tee",
+                "number": 2
+            },
+            "18": {
+                "letter": "B"
+            },
+            "19": {
+                "letter": "P"
+            },
+            "20": {
+                "type": "trap"
+            },
+            "21": {
+                "letter": "R"
+            }
+        },
+        "3": {
+            "0": {
+                "letter": "T"
+            },
+            "1": {
+                "letter": "I"
+            },
+            "2": {
+                "letter": "E"
+            },
+            "3": {
+                "letter": "A"
+            },
+            "4": {
+                "letter": "A"
+            },
+            "5": {
+                "letter": "H"
+            },
+            "6": {
+                "letter": "E"
+            },
+            "7": {
+                "letter": "L"
+            },
+            "8": {
+                "letter": "S"
+            },
+            "9": {
+                "letter": "S"
+            },
+            "10": {
+                "type": "hole"
+            },
+            "11": {
+                "type": "hole"
+            },
+            "12": {
+                "letter": "G"
+            },
+            "13": {
+                "letter": "Y"
+            },
+            "14": {
+                "letter": "O"
+            },
+            "15": {
+                "letter": "L"
+            },
+            "16": {
+                "letter": "F"
+            },
+            "17": {
+                "type": "tee",
+                "number": 4
+            },
+            "18": {
+                "letter": "E"
+            },
+            "19": {
+                "type": "trap"
+            },
+            "20": {
+                "letter": "C"
+            },
+            "21": {
+                "letter": "T"
+            }
+        },
+        "4": {
+            "0": {
+                "letter": "C"
+            },
+            "1": {
+                "letter": "O"
+            },
+            "2": {
+                "letter": "G"
+            },
+            "3": {
+                "type": "trap"
+            },
+            "4": {
+                "type": "hole"
+            },
+            "5": {
+                "letter": "L"
+            },
+            "6": {
+                "type": "tee",
+                "number": 3
+            },
+            "7": {
+                "type": "trap"
+            },
+            "8": {
+                "type": "trap"
+            },
+            "9": {
+                "letter": "T"
+            },
+            "10": {
+                "letter": "E"
+            },
+            "11": {
+                "letter": "H"
+            },
+            "12": {
+                "letter": "U"
+            },
+            "13": {
+                "letter": "E"
+            },
+            "14": {
+                "type": "hole"
+            },
+            "15": {
+                "letter": "B"
+            },
+            "16": {
+                "letter": "F"
+            },
+            "17": {
+                "letter": "R"
+            },
+            "18": {
+                "letter": "O"
+            },
+            "19": {
+                "type": "trap"
+            },
+            "20": {
+                "letter": "M"
+            },
+            "21": {
+                "letter": "A"
+            }
+        },
+        "5": {
+            "0": {
+                "letter": "O"
+            },
+            "1": {
+                "letter": "S"
+            },
+            "2": {
+                "type": "trap"
+            },
+            "3": {
+                "letter": "L"
+            },
+            "4": {
+                "letter": "D"
+            },
+            "5": {
+                "type": "tee",
+                "number": 5
+            },
+            "6": {
+                "letter": "I"
+            },
+            "7": {
+                "letter": "T"
+            },
+            "8": {
+                "type": "trap"
+            },
+            "9": {
+                "letter": "I"
+            },
+            "10": {
+                "letter": "I"
+            },
+            "11": {
+                "letter": "S"
+            },
+            "12": {
+                "letter": "T"
+            },
+            "13": {
+                "letter": "H"
+            },
+            "14": {
+                "letter": "D"
+            },
+            "15": {
+                "letter": "I"
+            },
+            "16": {
+                "letter": "T"
+            },
+            "17": {
+                "letter": "O"
+            },
+            "18": {
+                "letter": "S"
+            },
+            "19": {
+                "letter": "E"
+            },
+            "20": {
+                "type": "tee",
+                "number": 3
+            },
+            "21": {
+                "letter": "U"
+            }
+        },
+        "6": {
+            "0": {
+                "letter": "E"
+            },
+            "1": {
+                "letter": "S"
+            },
+            "2": {
+                "type": "tee",
+                "number": 3
+            },
+            "3": {
+                "letter": "N"
+            },
+            "4": {
+                "letter": "D"
+            },
+            "5": {
+                "type": "tee",
+                "number": 3
+            },
+            "6": {
+                "letter": "T"
+            },
+            "7": {
+                "type": "trap"
+            },
+            "8": {
+                "letter": "W"
+            },
+            "9": {
+                "letter": "I"
+            },
+            "10": {
+                "type": "tee",
+                "number": 4
+            },
+            "11": {
+                "type": "hole"
+            },
+            "12": {
+                "letter": "L"
+            },
+            "13": {
+                "letter": "N"
+            },
+            "14": {
+                "letter": "E"
+            },
+            "15": {
+                "type": "hole"
+            },
+            "16": {
+                "letter": "A"
+            },
+            "17": {
+                "letter": "Y"
+            },
+            "18": {
+                "letter": "S"
+            },
+            "19": {
+                "type": "hole"
+            },
+            "20": {
+                "letter": "S"
+            },
+            "21": {
+                "letter": "U"
+            }
+        },
+        "7": {
+            "0": {
+                "letter": "T"
+            },
+            "1": {
+                "letter": "S"
+            },
+            "2": {
+                "letter": "H"
+            },
+            "3": {
+                "letter": "A"
+            },
+            "4": {
+                "letter": "T"
+            },
+            "5": {
+                "letter": "M"
+            },
+            "6": {
+                "letter": "T"
+            },
+            "7": {
+                "letter": "M"
+            },
+            "8": {
+                "letter": "O"
+            },
+            "9": {
+                "letter": "H"
+            },
+            "10": {
+                "letter": "I"
+            },
+            "11": {
+                "letter": "S"
+            },
+            "12": {
+                "letter": "T"
+            },
+            "13": {
+                "letter": "R"
+            },
+            "14": {
+                "letter": "B"
+            },
+            "15": {
+                "letter": "C"
+            },
+            "16": {
+                "type": "hole"
+            },
+            "17": {
+                "letter": "O"
+            },
+            "18": {
+                "letter": "A"
+            },
+            "19": {
+                "type": "trap"
+            },
+            "20": {
+                "letter": "L"
+            },
+            "21": {
+                "letter": "O"
+            }
+        },
+        "8": {
+            "0": {
+                "letter": "S"
+            },
+            "1": {
+                "letter": "O"
+            },
+            "2": {
+                "letter": "N"
+            },
+            "3": {
+                "letter": "I"
+            },
+            "4": {
+                "letter": "D"
+            },
+            "5": {
+                "letter": "E"
+            },
+            "6": {
+                "letter": "A"
+            },
+            "7": {
+                "type": "hole"
+            },
+            "8": {
+                "type": "hole"
+            },
+            "9": {
+                "letter": "T"
+            },
+            "10": {
+                "letter": "N"
+            },
+            "11": {
+                "letter": "E"
+            },
+            "12": {
+                "type": "hole"
+            },
+            "13": {
+                "letter": "O"
+            },
+            "14": {
+                "type": "hole"
+            },
+            "15": {
+                "letter": "L"
+            },
+            "16": {
+                "letter": "Y"
+            },
+            "17": {
+                "letter": "R"
+            },
+            "18": {
+                "letter": "T"
+            },
+            "19": {
+                "letter": "H"
+            },
+            "20": {
+                "type": "hole"
+            },
+            "21": {
+                "letter": "E"
+            }
+        },
+        "9": {
+            "0": {
+                "letter": "S"
+            },
+            "1": {
+                "letter": "E"
+            },
+            "2": {
+                "type": "hole"
+            },
+            "3": {
+                "letter": "E"
+            },
+            "4": {
+                "letter": "M"
+            },
+            "5": {
+                "type": "hole"
+            },
+            "6": {
+                "letter": "D"
+            },
+            "7": {
+                "type": "trap"
+            },
+            "8": {
+                "letter": "M"
+            },
+            "9": {
+                "letter": "B"
+            },
+            "10": {
+                "letter": "T"
+            },
+            "11": {
+                "type": "trap"
+            },
+            "12": {
+                "type": "trap"
+            },
+            "13": {
+                "letter": "C"
+            },
+            "14": {
+                "letter": "W"
+            },
+            "15": {
+                "type": "trap"
+            },
+            "16": {
+                "letter": "E"
+            },
+            "17": {
+                "type": "tee",
+                "number": 4
+            },
+            "18": {
+                "letter": "H"
+            },
+            "19": {
+                "letter": "B"
+            },
+            "20": {
+                "letter": "L"
+            },
+            "21": {
+                "letter": "E"
+            }
+        },
+        "10": {
+            "0": {
+                "letter": "S"
+            },
+            "1": {
+                "type": "hole"
+            },
+            "2": {
+                "letter": "T"
+            },
+            "3": {
+                "letter": "O"
+            },
+            "4": {
+                "letter": "D"
+            },
+            "5": {
+                "letter": "D"
+            },
+            "6": {
+                "type": "tee",
+                "number": 4
+            },
+            "7": {
+                "letter": "H"
+            },
+            "8": {
+                "type": "trap"
+            },
+            "9": {
+                "letter": "H"
+            },
+            "10": {
+                "letter": "I"
+            },
+            "11": {
+                "letter": "A"
+            },
+            "12": {
+                "type": "trap"
+            },
+            "13": {
+                "type": null,
+                "letter": "Y"
+            },
+            "14": {
+                "letter": "",
+                "type": "tee",
+                "number": 4
+            },
+            "15": {
+                "letter": "I"
+            },
+            "16": {
+                "type": "trap"
+            },
+            "17": {
+                "letter": "C"
+            },
+            "18": {
+                "letter": "L"
+            },
+            "19": {
+                "type": "tee",
+                "number": 2
+            },
+            "20": {
+                "letter": "S"
+            },
+            "21": {
+                "letter": "N"
+            }
+        },
+        "11": {
+            "0": {
+                "type": "tee",
+                "number": 4
+            },
+            "1": {
+                "letter": "E"
+            },
+            "2": {
+                "letter": "B"
+            },
+            "3": {
+                "letter": "A"
+            },
+            "4": {
+                "letter": "D"
+            },
+            "5": {
+                "letter": "I"
+            },
+            "6": {
+                "type": "tee",
+                "number": 3
+            },
+            "7": {
+                "type": "trap"
+            },
+            "8": {
+                "letter": "L"
+            },
+            "9": {
+                "type": "hole"
+            },
+            "10": {
+                "letter": "N"
+            },
+            "11": {
+                "type": "trap"
+            },
+            "12": {
+                "type": "tee",
+                "number": 3
+            },
+            "13": {
+                "letter": "E"
+            },
+            "14": {
+                "letter": "I"
+            },
+            "15": {
+                "letter": "R"
+            },
+            "16": {
+                "letter": "O"
+            },
+            "17": {
+                "type": "hole"
+            },
+            "18": {
+                "letter": "E"
+            },
+            "19": {
+                "letter": "N"
+            },
+            "20": {
+                "type": "tee",
+                "number": 3
+            },
+            "21": {
+                "letter": "N"
+            }
+        }
+    }
+}

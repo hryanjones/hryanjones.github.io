@@ -9,26 +9,31 @@
   </div>
   <div ng-show="showTODO">
 
-    <div ng-hide="true">
-      <h4>For Release</h4>
-
-      <ol>
-        <li><strike>alerts for validation</strike></li>
-        <li><strike>validation for too many marked squares past a square that is "blank" (and therefore true)</strike></li>
-        <li><strike>validation for not enough empty+marked squares past a square that is "blank"</strike></li>
-        <li><strike>Legend</strike></li>
-        <li><strike>Completed puzzle validation</strike></li>
-        <li><strike>Letters</strike></li>
-        <li><strike>Make the puzzle bigger, have the body size be set and put some auto borders on the sides</strike></li>
-        <li><strike>Add validation for a single trapped "blank" node</strike></li>
-      </ol>
-
-      <h4>Nice-to-haves</h4>
+    <div class="info-bubble bg-info">
+      Apologies for the low number of features on this one. Please let me know if you'd like me to prioritize any of the following higher.
     </div>
 
+    <!-- <h4>For Release</h4> -->
+
+    <ol>
+      <li>show letters (easy)</li>
+      <li><strong>Conjecture Mode</strong></li>
+      <li>validation</li>
+      <li>
+        <ul>
+          <li>shots crossing: other shots, a whole, a tee</li>
+          <li>shots ending on trap</li>
+          <li>more than one shot ending on a hole</li>
+          <li>completed puzzle validation: make sure all paths reach a hole (and none of above is invalid)</li>
+        </ul>
+      </li>
+      <li>more complete legend</li>
+    </ol>
+
+    <h4>Nice-to-haves</h4>
     <ol>
       <li>Enter multiple alternative conjectures and switch between them to (1) see common implications, and (2) accept the successful one (which might not be the last one).</li>
-      <li><strike>right-click to mark as filled</strike></li>
+      <li>right-click to mark as filled</li>
       <li>History back-and-forth and maybe slider</li>
       <li>user can customize solving colors</li>
       <li>server-side validation for the answer (with appropriate measures to prevent a brute-force)</li>
@@ -37,6 +42,6 @@
 
     <h4>Report issues beyond what's above</h4>
     <p>
-      Please send an email to <a href="mailto:hryanjones@gmail.com">hryanjones@gmail.com</a> about any issues, bugs, or feature requests that come up.
+      Please send an email to <a href="mailto:hryanjones@gmail.com">hryanjones@gmail.com</a> (or tweeet to @hryanjones) about any issues, bugs, or feature requests that come up.
     </p>
   </div>
