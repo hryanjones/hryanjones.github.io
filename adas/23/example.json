@@ -1,36 +1,174 @@
 {
-    "answerLength": null,
     "numRows": 7,
     "numColumns": 7,
     "nodeData": {
         "0": {
-            "0": {"type": "tee", "number": 3 },
-            "3": {"type": "trap"},
-            "5": {"type": "hole"}
+            "0": {
+                "type": "tee",
+                "number": 4
+            },
+            "1": {
+                "letter": "N"
+            },
+            "2": {
+                "letter": "I"
+            },
+            "3": {
+                "letter": "A"
+            },
+            "4": {
+                "letter": "W"
+            },
+            "5": {
+                "type": "hole"
+            },
+            "6": {
+                "letter": "P"
+            }
         },
         "1": {
-            "1": {"type": "tee", "number": 3 },
-            "3": {"type": "trap"},
-            "4": {"type": "trap"}
+            "0": {
+                "letter": "T"
+            },
+            "1": {
+                "letter": "D"
+            },
+            "2": {
+                "letter": "E"
+            },
+            "3": {
+                "type": "tee",
+                "number": 3
+            },
+            "4": {
+                "letter": "L"
+            },
+            "5": {
+                "letter": "I"
+            },
+            "6": {
+                "letter": "U"
+            }
         },
         "2": {
-            "2": {"type": "hole"},
-            "4": {"type": "tee", "number": 2 },
-            "5": {"type": "tee", "number": 3 }
+            "0": {
+                "letter": "O"
+            },
+            "1": {
+                "letter": "T"
+            },
+            "2": {
+                "letter": "T"
+            },
+            "3": {
+                "letter": "I"
+            },
+            "4": {
+                "letter": "P"
+            },
+            "5": {
+                "letter": "S"
+            },
+            "6": {
+                "type": "tee",
+                "number": 2
+            }
         },
         "3": {
-            "6": {"type": "tee", "number": 2 }
+            "0": {
+                "letter": "K"
+            },
+            "1": {
+                "type": "hole"
+            },
+            "2": {
+                "letter": "L"
+            },
+            "3": {
+                "type": "tee",
+                "number": 3
+            },
+            "4": {
+                "letter": "A"
+            },
+            "5": {
+                "letter": "W"
+            },
+            "6": {
+                "type": "trap"
+            }
         },
         "4": {
-            "3": {"type": "hole"}
+            "0": {
+                "type": "hole"
+            },
+            "1": {
+                "type": "tee",
+                "number": 2
+            },
+            "2": {
+                "letter": "D"
+            },
+            "3": {
+                "letter": "O"
+            },
+            "4": {
+                "letter": "O"
+            },
+            "5": {
+                "letter": "G"
+            },
+            "6": {
+                "letter": "A"
+            }
         },
         "5": {
-            "0": {"type": "hole"},
-            "5": {"type": "hole"}
+            "0": {
+                "letter": "N"
+            },
+            "1": {
+                "letter": "S"
+            },
+            "2": {
+                "type": "tee",
+                "number": 2
+            },
+            "3": {
+                "letter": "I"
+            },
+            "4": {
+                "type": "hole"
+            },
+            "5": {
+                "type": "tee",
+                "number": 3
+            },
+            "6": {
+                "type": "hole"
+            }
         },
         "6": {
-            "0": {"type": "tee", "number": 4 },
-            "6": {"type": "hole"}
+            "0": {
+                "type": "hole"
+            },
+            "1": {
+                "letter": "F"
+            },
+            "2": {
+                "letter": "G"
+            },
+            "3": {
+                "letter": "L"
+            },
+            "4": {
+                "letter": "O"
+            },
+            "5": {
+                "letter": "G"
+            },
+            "6": {
+                "type": "hole"
+            }
         }
     }
 }
