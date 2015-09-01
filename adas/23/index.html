@@ -77,7 +77,7 @@
         ng-init="colIndex = $index;"
         ng-class="[
           node.type,
-          (node.type === 'hole' && node.number === 0) ? 'fulfilled' : '',
+          (node.type === 'hole' && node.number >= 0) ? 'fulfilled' : '',
           node.number ? 'clickable' : '',
           node === selectedNode ? 'selected': '',
           node.conjecture ? 'conjecture' : '',
