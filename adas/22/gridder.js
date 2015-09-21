@@ -557,6 +557,7 @@ function validate(numColumns, numRows) {
         if (nodeWithoutState) {
             updateAlertCount(alerts, reason, -1); // so it never goes above one
             updateAlertCount(alerts, reason, 1);
+            return;
         }
 
         reason = 'notAllBlanksConnected';
