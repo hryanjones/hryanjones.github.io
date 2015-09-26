@@ -5,22 +5,21 @@ angular
     '$localStorage',
     '$http',
     '$location',
-    function($scope, $localStorage, $http, $location) {
+    '$rootScope',
+    function($scope, $localStorage, $http, $location, $rootScope) {
 
         $scope.clear = clear;
         $scope.setNextStateAndGetChanges = setNextStateAndGetChanges;
         $scope.setFirstConjecture = setFirstConjecture;
         $scope.conjectures = conjectures();
-
-        var puzzleName = $location.search().puzzle;
-
-        $scope.setQueryString = setQueryString;
-        $scope.jsonUrl = puzzleName ? './' + puzzleName + '.json' : './example.json';
-        // $scope.jsonUrl = './nope.json';
-        loadPuzzle($scope.jsonUrl);
-
-        $scope.loadPuzzle = loadPuzzle; // for switching to a different puzzle
         $scope.history = history();
+
+        $rootScope.$on('$locationChangeSuccess', function(event){
+            loadPuzzle($location.search().puzzle);
+        });
+
+        // $scope.puzzleName = 'nope'; // for entering build mode
+        loadPuzzle($location.search().puzzle);
 
         return;
 
@@ -30,8 +29,8 @@ angular
             var confirmed = window.confirm('Clear all of the progress on the current puzzle?');
 
             if (confirmed) {
-                $localStorage.ada[22].history[$scope.jsonUrl] = [];
-                loadPuzzle($scope.jsonUrl);
+                $localStorage.ada[22].history[puzzleNameToUrl($scope.puzzleName)] = [];
+                loadPuzzle($scope.puzzleName);
             }
         }
 
@@ -68,7 +67,15 @@ angular
         /**
          * function to load static puzzle size and nodeData
          */
-        function loadPuzzle(jsonUrl) {
+        function loadPuzzle(puzzleName) {
+            puzzleName = puzzleName || 'example';
+            $scope.puzzleName = puzzleName
+
+            $scope.ruleNumber = $scope.puzzleName.indexOf('rules') === 0 ?
+                Number($scope.puzzleName.split('-')[1]) :
+                null;
+
+            var jsonUrl = './' + puzzleName + '.json';
             delete $scope.buildData;
             delete $scope.grid;
 
@@ -117,10 +124,6 @@ angular
             }
         }
 
-        function setQueryString(str) {
-            $location.search({puzzle: str});
-        }
-
         function setFirstConjecture(setTo) {
             $scope.firstConjecture = setTo;
         }
@@ -150,6 +153,10 @@ angular
 .directive('alerts', function() {return {restrict: 'E', templateUrl: './alerts.html'};})
 .directive('shareButtons', function() {return {restrict: 'E', templateUrl: './share-buttons.html'};})
 .directive('twitterIcon', function() {return {restrict: 'E', templateUrl: './twitter-icon.html'};})
+
+function puzzleNameToUrl(puzzleName) {
+    return './' + puzzleName + '.json';
+}
 
 function puzzleNameFormat(jsonUrl) {
     return jsonUrl

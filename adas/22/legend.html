@@ -1,8 +1,10 @@
   <div class="bg-info info-bubble text-info puzzle-legend"
-    ng-style="{width: jsonUrl === './example.json' ? '650px': '178px'}">
-    <h3>Legend</h3>
+    ng-style="{width: puzzleName !== 'aenigma-22' ? '650px': '178px'}">
+    <h3 ng-class="ruleNumber ? 'inline-block' : ''">Legend</h3>
 
-    <div class="badge" title="This clue says that there are exactly 3 squares filled to its left. If a clue is blank, it must be true, if it's filled you can ignore it.">
+    <div class="badge" title="This clue says that there are exactly 3 squares filled to its left. If a clue is blank, it must be true, if it's filled you can ignore it."
+      ng-hide="ruleNumber && ruleNumber <= 2"
+      >
       <div class="node inline-block">
         <div class="node-label left-or-right">
           3
@@ -12,7 +14,9 @@
       <label>clue<br/>square</label>
     </div>
 
-    <div class="badge" title="This true clue must have exactly 4 squares filled to its right within the same row.">
+    <div class="badge" title="This true clue must have exactly 4 squares filled to its right within the same row."
+      ng-hide="ruleNumber && ruleNumber <= 2"
+      >
       <div class="node blank inline-block">
         <div class="node-label left-or-right">
           4
@@ -22,7 +26,7 @@
       <label>clue square<br/>marked as "true"</label>
     </div>
 
-    <div class="badge" title="Squares that are filled must connect to all others.">
+    <div class="badge" title="Squares that are blank must connect to all blanks.">
       <div class="node inline-block blank"><div class="node-label"></div></div>
       <label>square marked<br/> as "blank"</label>
     </div>
@@ -32,22 +36,22 @@
       <label>square marked<br/> as "filled"</label>
     </div>
 
-    <div class="badge">
+    <div class="badge" ng-hide="ruleNumber">
       <div class="node inline-block blank conjecture"><div class="node-label"></div></div>
       <label>"blank"<br/>conjecture</label>
     </div>
 
-    <div class="badge">
+    <div class="badge" ng-hide="ruleNumber">
       <div class="node inline-block filled conjecture"><div class="node-label"></div></div>
       <label>"filled"<br/>conjecture</label>
     </div>
 
-    <div class="badge">
+    <div class="badge" ng-hide="ruleNumber && ruleNumber <= 1">
       <div class="node inline-block filled invalid-filled"><div class="node-label"></div></div>
       <label>"filled" squares<br/>cannot touch</label>
     </div>
 
-    <div class="badge" title="If a clue square is marked as 'blank' this forces it to be true, however, if there's too many filled squares or too few open squares left, there's a problem.">
+    <div class="badge" title="If a clue square is marked as 'blank' this forces it to be true, however, if there's too many filled squares or too few open squares left, there's a problem." ng-hide="ruleNumber && ruleNumber <= 2">
       <div class="node inline-block blank invalid-clue">
         <div class="node-label left-or-right">
           2<span class="up-arrow"></span>

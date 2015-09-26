@@ -15,7 +15,7 @@
 
 <body ng-app="app" ng-controller="gridder" class="well" ng-init="firstConjecture">
 
-  <h1>
+  <h1 ng-hide="ruleNumber">
     Web Version of
     <a href="http://www.pavelspuzzles.com/adas/22/" target="_blank">
       Adalogical Ænigma #22
@@ -28,7 +28,7 @@
     </small>
   </h1>
 
-<!--   <div ng-if="buildData">
+  <div ng-if="buildData">
     <label>
       Rows:
       <input type="number" ng-model="buildData.numRows" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
@@ -38,22 +38,14 @@
       <input type="number" ng-model="buildData.numColumns" ng-change="grid = setUpBoard(buildData)" min="1" max="99"/>
     </label>
   </div>
- -->
-  <form id="tabs">
-    <label class="tab h4" ng-class="{selected: jsonUrl === './example.json'}" ng-click="
-        setQueryString('example');
-        jsonUrl = './example.json';
-        loadPuzzle(jsonUrl);
-      ">
+
+  <form id="tabs" ng-hide="ruleNumber">
+    <a class="tab h4" ng-class="{selected: puzzleName === 'example'}" href="#?puzzle=example">
       example
-    </label>
-    <label class="tab h4" ng-class="{selected: jsonUrl === './aenigma-22.json'}" ng-click="
-        setQueryString('aenigma-22');
-        jsonUrl = './aenigma-22.json';
-        loadPuzzle(jsonUrl);
-      ">
+    </a>
+    <a class="tab h4" ng-class="{selected: puzzleName === 'aenigma-22'}" href="#?puzzle=aenigma-22">
       Ænigma #22
-    </label>
+    </a>
     <div class="checkbox inline-block no-margin">
       <label>
         <input type="checkbox" ng-model="showLetters"/>
@@ -117,7 +109,7 @@
 
         </div>
 
-<!--         <div ng-if="buildData" class="build-mode-inputs">
+        <div ng-if="buildData" class="build-mode-inputs">
           <button
             ng-show="node.number !== null"
             class="btn btn-xs no-padding up-arrow"
@@ -156,7 +148,7 @@
             ng-change="addNodeAttribute(buildData.nodeData, rowIndex, colIndex, 'number', node.number)"
           />
         </div>
- -->
+
       </td>
 
     </tr>
@@ -164,16 +156,16 @@
   </table>
   <puzzle-legend class="pull-right" ng-cloak></puzzle-legend>
 
-<!--   <div ng-if="buildData" class="well">
+  <div ng-if="buildData" class="well">
     <h4>Copy/paste me into a new puzzle JSON file</h4>
     <div>{{buildData}}</div>
   </div>
- -->
+
   <br/>
   <alerts></alerts>
 
   <!-- Buttons -->
-  <div ng-hide="alerts.puzzleComplete && showLetters">
+  <div ng-hide="ruleNumber || alerts.puzzleComplete && showLetters">
     <span class="conjecture-container" ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}">
       <button class="btn btn-primary" ng-click="
           conjectures.enabled && conjectures.clear(grid.nodes);
@@ -258,16 +250,37 @@
 
 
   <div ng-hide="alerts.puzzleComplete">
-    <h3>Instructions</h3>
+    <h2>Instructions</h3>
 
     <ul>
-      <li ng-class="{'text-danger': alerts.notAllSquaresFilled}">Mark all squares, including squares with a clue, as <em>filled</em> (dark) or <em>blank</em> (circle).</li>
-      <li ng-class="{'text-danger': alerts.overSaturatedClue || alerts.underSaturatedClue}"><em>Blank</em> clues are true and specify exactly how many filled squares it can "see" in the same row or column, in the indicated direction.</li>
-      <li><em>Filled</em> clues should be ignored.</li>
-      <li ng-class="{'text-danger': alerts.adjacentFilledNeighbors}"><em>Filled</em> squares may not be horizontally or vertically adjacent.</li>
-      <li ng-class="{'text-danger': alerts.trappedSingleBlankNode || alerts.notAllBlanksConnected}">All "blank" squares, as a group, must be
+      <li class="h3 no-margin" ng-class="{'text-danger': alerts.notAllSquaresFilled}"
+        ng-hide="ruleNumber && ruleNumber !==1"
+        >
+        Mark all squares<span ng-hide="ruleNumber === 1">, including squares with a clue,</span> as <em>filled</em> (dark) or <em>blank</em> (circle).</li>
+      <li class="h3 no-margin" ng-class="{'text-danger': alerts.trappedSingleBlankNode || alerts.notAllBlanksConnected}"
+        ng-hide="ruleNumber && ruleNumber !== 1"
+        >
+        All "blank" squares, as a group, must be
         connected to one another, horizontally or vertically.</li>
+      <li class="h3 no-margin" ng-class="{'text-danger': alerts.adjacentFilledNeighbors}"
+        ng-hide="ruleNumber && ruleNumber !==2"
+        >
+        <em>Filled</em> squares may not be horizontally or vertically adjacent.</li>
+      <li class="h3 no-margin" ng-class="{'text-danger': alerts.overSaturatedClue || alerts.underSaturatedClue}"
+        ng-hide="ruleNumber && ruleNumber !== 3"
+        >
+        <em>Blank</em> clues are true and specify exactly how many filled squares it can "see" in the same row or column, in the indicated direction.</li>
+      <li class="h3 no-margin"
+        ng-hide="ruleNumber && ruleNumber !== 3"
+        >
+        <em>Filled</em> clues should be ignored.</li>
     </ul>
+    <h1 ng-show="ruleNumber">
+      <a class="pull-right btn btn-primary" ng-href="#?puzzle={{ruleNumber < 3 ? 'rules-' + (ruleNumber + 1) : 'example'}}">
+        {{ruleNumber < 3 ? 'next rule' : 'return to example puzzle'}}
+      </a>
+    </h1>
+
   </div>
 
   <div class="info-bubble answer bg-primary row" ng-show="alerts.puzzleComplete" ng-cloak>
@@ -276,7 +289,7 @@
       'has-warning': answer.length < answerLength,
     }">
     <h3 class="inline-block no-margin col-sm-5">
-      Final Answer for <strong>{{jsonUrl | puzzleNameFormat}}</strong>:
+      Final Answer for <strong>{{puzzleName | puzzleNameFormat}}</strong>:
     </h3>
     <div class="col-sm-5">
       <input
@@ -299,17 +312,17 @@
 
 <hr/>
 
-<h3>Also see the paper version:
+<h3 ng-hide="ruleNumber">Also see the paper version:
   <small><a href="http://www.pavelspuzzles.com/adas/22/">PDF (click puzzle image on this site)</a></small>
 </h3>
 
 <hr/>
 
-<div>
+<div ng-hide="ruleNumber">
   The puzzle above was created by <a href="http://www.pavelspuzzles.com/">Pavel Curtis</a> (all rights reserved) for <a href="http://www.seattletechnicalbooks.com/">Ada's Technical bookshop</a> in Seattle. This web version was created by <a href="https://twitter.com/hryanjones">@hryanjones</a>.
 </div>
 
-<h4>
+<h4 ng-hide="ruleNumber">
   contact puzzle creators
   <a href="mailto:pavel@pavelspuzzles.com,hryanjones@gmail.com" class="btn btn-default">
       <i class="glyphicon glyphicon-envelope"></i>
@@ -328,12 +341,12 @@
   </a>
 
 </h4>
-<h4>
+<h4 ng-hide="ruleNumber">
   <a href="https://github.com/hryanjones/hryanjones.github.io">Code</a>
   <small>on Github</small>
 </h4>
 
-<todo></todo>
+<todo ng-hide="ruleNumber"></todo>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
 <script src="http://hryanjones.com/js/ngStorage.min.js"></script>
