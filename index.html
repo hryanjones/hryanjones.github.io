@@ -11,19 +11,9 @@
     <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
-        $( "#tabs" ).tabs({
-          beforeLoad: function( event, ui ) {
-            ui.jqXHR.error(function() {
-              ui.panel.html(
-                "Couldn't load this tab. I must've derped it."
-              );
-            });
-          },
-          load: function( event, ui) {
-            console.log(event);
-            console.log(ui);
-          }
-        });
+        $( "#tabs" ).tabs();
+
+        // select the right tab if the location hash is there
         var tabId = window.location.hash;
         $(tabId).click();
 
@@ -62,12 +52,18 @@
     </table>
     <div id="tabs">
       <ul>
+        <li><a href="#home">Home</a></li>
         <li><a id="wiki-feeback" href="/wiki-feedback/">Wiki Parser</a>
         <li><a id="resume" href="/resume/">Resume</a></li>
         <li><a id="jobs" href="/html/jobs_etc.html">Jobs & Stuff</a></li>
         <li><a id="calendar" href="/html/calendar.html">Calendar</a></li>
         <li><a id="projects" href="/science/">Small Projects</a></li>
       </ul>
+      <div id="home">
+        <p>Hi,</p>
+        <p>I'm a Web Developer in Seattle. You may want to check out the above tabs or my most recent fun project:</p>
+        <a href="/adas/"><h2>Web Versions of Adalogical Ænigma's</h2></a>
+      </div>
     </div>
 </body>
 </html>
