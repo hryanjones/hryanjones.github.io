@@ -1,10 +1,20 @@
 [
   {
+    "title": "Amazon Web Developer",
+    "type": "job",
+    "periods": [
+      {
+        "start": "Sep 16 2014",
+        "end": "Feb 05 2016"
+      }
+    ]
+  },
+  {
     "title": "AWS Tech. Support",
     "type": "job",
     "periods": [
       {
-        "end": "Feb 09 2014",
+        "end": "Sep 13 2014",
         "start": "Mar 07 2011"
       }
     ]
