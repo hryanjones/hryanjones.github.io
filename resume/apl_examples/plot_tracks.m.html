@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>/media/SEA_DISC/jones_stuff/backup_from_DVD/2006 (Job) - APL/code/plot_tracks.m.html</title>
+<meta name="Generator" content="Vim/7.2">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body bgcolor="#000000" text="#ffffff"><font face="monospace">
+<font color="#8080ff">%&nbsp;&nbsp;Matlab script to: help the user make some nice plots of storm tracks and AMSR data</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE:&nbsp;&nbsp;tracks come from ASCII files from Jerome (created by way of Simmonds)</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; which have been run through sep_tracks.sh and reform_tracks.m</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;Author:&nbsp;&nbsp;H. Ryan Jones</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;Created:&nbsp;&nbsp;June 28, 2006</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;Last Modified: June 29,2006</font><br>
+<br>
+ld=<font color="#ff6060">0</font><font color="#ff40ff">;</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#8080ff">% set this to 1 to load everything the first time</font><br>
+range=<font color="#00ffff">[</font><font color="#ff6060">278.1250</font>&nbsp;<font color="#ff6060">330</font>&nbsp;&nbsp;<font color="#ff6060">20</font>&nbsp;<font color="#ff6060">55</font><font color="#00ffff">]</font><font color="#ff40ff">;</font>&nbsp;&nbsp;<font color="#8080ff">% specify a range ([lonmin lonmax latmin latmax])</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#8080ff">% for the total track plot - empty=use AMSR range (please don't</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#8080ff">% go outside amsr range [278.1250&nbsp;&nbsp;359.8750&nbsp;&nbsp; 10.1250&nbsp;&nbsp; 62.8750])</font><br>
+<br>
+pathdat=<font color="#ff6060">'/export/circ/hrj/storm_tracking/tracks/2002'</font>&nbsp;&nbsp;<font color="#8080ff">%%%%%DATDIR</font><br>
+pathpic=<font color="#ff6060">'/export/circ/hrj/storm_tracking/pictures/2002'</font><br>
+<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'cd '</font>&nbsp;pathdat<font color="#00ffff">]</font>)<br>
+<br>
+<br>
+<font color="#8080ff">%%%%%%%%%%%%%%%&nbsp;&nbsp;&nbsp;&nbsp;LOAD STUFF&nbsp;&nbsp;&nbsp;&nbsp;%%%%%%%%%%%%%%%</font><br>
+<br>
+<font color="#8080ff">%LOAD IN TRACKS AND MAKE LIST OF TRACK NAMES (TRKS)</font><br>
+<br>
+<font color="#ffff00">if</font>&nbsp;ld<br>
+&nbsp;&nbsp;disp(<font color="#ff6060">'Loading Tracks'</font>)<br>
+&nbsp;&nbsp;d=dir(<font color="#ff6060">'trk*mat'</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;trks=<font color="#00ffff">[]</font><font color="#ff40ff">;</font><br>
+<br>
+&nbsp;&nbsp;<font color="#ffff00">for</font>&nbsp;x=<font color="#ff6060">1</font>:length(d)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trk=d(x).name<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'load '</font>&nbsp;trk<font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trks=strvcat(trks,trk(<font color="#ff6060">1</font>:<font color="#ffff00">end</font><font color="#ffff00">-</font><font color="#ff6060">4</font>))<font color="#ff40ff">;</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;disp(trk)</font><br>
+&nbsp;&nbsp;<font color="#ffff00">end</font><font color="#ff40ff">;</font>&nbsp;<font color="#ffff00">clear</font>&nbsp;x trk<br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#8080ff">%FIND THE MIN/MAX date of Track data</font><br>
+<br>
+<font color="#ffff00">if</font>&nbsp;<font color="#ffff00">~</font>exist(<font color="#ff6060">'trks'</font>)<br>
+&nbsp;&nbsp;<font color="#00ffff">error</font>(<font color="#ff6060">'Need to make initial load - change ld=1'</font>)<br>
+<font color="#ffff00">end</font><br>
+<br>
+date=<font color="#00ffff">[]</font><font color="#ff40ff">;</font><br>
+<font color="#ffff00">for</font>&nbsp;x=<font color="#ff6060">1</font>:length(trks)<br>
+&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'date=[date;'</font>&nbsp;deblank(trks(x,:)) <font color="#ff6060">'(:,1)];'</font><font color="#00ffff">]</font>)<br>
+<font color="#ffff00">end</font><br>
+<br>
+mndate=<font color="#ffff00">min</font>(date)<br>
+mxdate=<font color="#ffff00">max</font>(date)<br>
+disp(<font color="#00ffff">[</font><font color="#ff6060">'Tracks run from '</font>&nbsp;datestr(mndate,<font color="#ff6060">0</font>) <font color="#ff6060">' to '</font>&nbsp;datestr(mxdate,<font color="#ff6060">0</font>)<font color="#00ffff">]</font>)<br>
+<br>
+<br>
+<font color="#8080ff">%LOAD AMSR DATA AND CUT IT TO RELEVENT DATES AND/OR RANGE</font><br>
+<br>
+<font color="#ffff00">if</font>&nbsp;ld<br>
+&nbsp;&nbsp;disp(<font color="#ff6060">'Loading AMSR data - this may take a sec'</font>)<br>
+&nbsp;&nbsp;load <font color="#ffff00">/</font>export<font color="#ffff00">/</font>alt2<font color="#ffff00">/</font>archive<font color="#ffff00">/</font>sst<font color="#ffff00">/</font>amsr_tmi_fused<font color="#ffff00">/</font>fused_gulfstream.mat<br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#8080ff">%reset names to prevent carple tunnel :)</font><br>
+<font color="#ffff00">if</font>&nbsp;exist(<font color="#ff6060">'sst_fused'</font>)<br>
+&nbsp;&nbsp;sst=sst_fused<font color="#ff40ff">;</font>&nbsp;lon=lon_fused<font color="#ff40ff">;</font>&nbsp;lat=lat_fused<font color="#ff40ff">;</font>&nbsp;time=time_fused<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#ffff00">clear</font>&nbsp;<font color="#ffff00">*</font>_fused<br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#8080ff">%see if the tracks and the AMSR data overlap (very simple right now </font><br>
+<font color="#8080ff">%might need to be made more robust - e.g. for end of tracks too)</font><br>
+matchtime=<font color="#00ffff">eval</font>(<font color="#00ffff">[</font>&nbsp;deblank(trks(<font color="#ff6060">1</font>,:)) <font color="#ff6060">'(1,1)&gt;min(time)'</font><font color="#00ffff">]</font>)<font color="#ff40ff">;</font><br>
+<font color="#ffff00">if</font>&nbsp;<font color="#ffff00">~</font>matchtime<br>
+&nbsp;&nbsp;disp(<font color="#ff6060">'Dates of Track Data don''t match AMSR'</font>)<br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#ffff00">if</font>&nbsp;matchtime&nbsp;&nbsp;<br>
+&nbsp;&nbsp;i=find(time<font color="#ffff00">&gt;=</font>mndate <font color="#ffff00">&amp;</font>&nbsp;time<font color="#ffff00">&lt;=</font>mxdate)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;sst=sst(:,:,i)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;time=time(i)<font color="#ff40ff">;</font><br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#ffff00">if</font>&nbsp;<font color="#ffff00">~</font>isempty(range)<br>
+&nbsp;&nbsp;j=find(lon<font color="#ffff00">&gt;=</font>range(<font color="#ff6060">1</font>) <font color="#ffff00">&amp;</font>&nbsp;lon<font color="#ffff00">&lt;=</font>range(<font color="#ff6060">2</font>))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;i=find(lat<font color="#ffff00">&gt;=</font>range(<font color="#ff6060">3</font>) <font color="#ffff00">&amp;</font>&nbsp;lat<font color="#ffff00">&lt;=</font>range(<font color="#ff6060">4</font>))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;lon=lon(j)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;lat=lat(i)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;sst=sst(i,j,:)<font color="#ff40ff">;</font><br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#8080ff">%check that everything still matches and is non-zero</font><br>
+<font color="#ffff00">if</font>&nbsp;(isempty(lat) <font color="#ffff00">|</font>&nbsp;isempty (lon) <font color="#ffff00">|</font>&nbsp;isempty(time))<br>
+&nbsp;&nbsp;whos lat lon time<br>
+&nbsp;&nbsp;<font color="#00ffff">error</font>(<font color="#ff6060">'lat, lon, or time got lost'</font>)<br>
+<font color="#ffff00">end</font><br>
+<font color="#00ffff">[</font>x y t<font color="#00ffff">]</font>=<font color="#ffff00">size</font>(sst)<font color="#ff40ff">;</font><br>
+<font color="#ffff00">if</font>&nbsp;(length(lat)<font color="#ffff00">~</font>=x <font color="#ffff00">|</font>&nbsp;length(lon)<font color="#ffff00">~</font>=y <font color="#ffff00">|</font>&nbsp;length(time)<font color="#ffff00">~</font>=t)<br>
+&nbsp;&nbsp;whos lat lon timea<br>
+&nbsp;&nbsp;<font color="#00ffff">error</font>(<font color="#ff6060">'AMSR sst array no longer matches lon &amp;/| lat &amp;/ time'</font>)<br>
+<font color="#ffff00">end</font><font color="#ff40ff">;</font>&nbsp;<font color="#ffff00">clear</font>&nbsp;x y t<br>
+<br>
+<br>
+<font color="#8080ff">%%%%%%%%%%%%&nbsp;&nbsp;&nbsp;&nbsp;MAKE SOME &quot;LOVELY&quot; PLOTS&nbsp;&nbsp;&nbsp;&nbsp;%%%%%%%%%%%%%</font><br>
+<br>
+<font color="#8080ff">%FIRST PLOT ALL THE TRACKS ON TOP OF AVERAGED AMSR</font><br>
+<br>
+clf<br>
+<font color="#ffff00">if</font>&nbsp;isempty(range)<br>
+&nbsp;&nbsp;range=<font color="#00ffff">[</font><font color="#ffff00">min</font>(lon) <font color="#ffff00">max</font>(lon) <font color="#ffff00">min</font>(lat) <font color="#ffff00">max</font>(lat)<font color="#00ffff">]</font><font color="#ff40ff">;</font>&nbsp;<font color="#8080ff">% range of mapping</font><br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#ffff00">if</font>&nbsp;matchtime<br>
+&nbsp;&nbsp;t=find(time<font color="#ffff00">&gt;=</font>mndate <font color="#ffff00">&amp;</font>&nbsp;time<font color="#ffff00">&lt;=</font>mxdate)<font color="#ff40ff">;</font><br>
+<font color="#ffff00">else</font><br>
+&nbsp;&nbsp;t=<font color="#ffff00">round</font>(yrday(mndate))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;i=find(yrday(time)<font color="#ffff00">==</font>t)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;t=time(i)<font color="#ff40ff">;</font>t=t(<font color="#ff6060">1</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;t=find(time<font color="#ffff00">&gt;=</font>t <font color="#ffff00">&amp;</font>&nbsp;time<font color="#ffff00">&lt;=</font>(t<font color="#ffff00">+</font><font color="#ffff00">floor</font>(mxdate<font color="#ffff00">-</font>mndate)))<font color="#ff40ff">;</font><br>
+<font color="#ffff00">end</font><br>
+tmp=squeeze(<font color="#ffff00">mean</font>(sst(:,:,t),<font color="#ff6060">3</font>))<font color="#ff40ff">;</font><br>
+figure(<font color="#ff6060">1</font>)<br>
+imagesc(lon,lat,tmp)<font color="#ff40ff">;</font>colorbar<font color="#ff40ff">;</font>axis xy<br>
+colorbar<font color="#ff40ff">;</font>axis xy<font color="#ff40ff">;</font>hold on<font color="#ff40ff">;</font><br>
+title(<font color="#00ffff">[</font><font color="#ff6060">'Storm Tracks: '</font>&nbsp;datestr(mndate,<font color="#ff6060">28</font>) <font color="#ff6060">'-'</font>&nbsp;datestr(mxdate,<font color="#ff6060">28</font>) <font color="#ff6060">' (Averaged AMSR SST)'</font><font color="#00ffff">]</font>)<br>
+<br>
+worldmap(range)<font color="#ff40ff">;</font><br>
+<br>
+<font color="#ffff00">for</font>&nbsp;x=<font color="#ff6060">1</font>:<font color="#ffff00">size</font>(trks,<font color="#ff6060">1</font>) <font color="#8080ff">%[1 45 55 9 15 3 4 58 73] </font><br>
+&nbsp;&nbsp;var=deblank(trks(x,:))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'lngth=size('</font>&nbsp;var <font color="#ff6060">',1);'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(:,2),'</font>&nbsp;var <font color="#ff6060">'(:,3),''k.-'')'</font><font color="#00ffff">]</font>)<br>
+<font color="#8080ff">%&nbsp;&nbsp;eval(['plot(' var '(:,2),' var '(:,3),''m.-'')'])</font><br>
+<font color="#ffff00">end</font><br>
+<br>
+disp(<font color="#00ffff">[</font><font color="#ff6060">'saving to '</font>&nbsp;pathpic <font color="#ff6060">'/all_tracks (careful of overwrite)'</font><font color="#00ffff">]</font>)<br>
+pause<br>
+<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'print -djpeg '</font>&nbsp;pathpic <font color="#ff6060">'/all_tracks'</font><font color="#00ffff">]</font>)<font color="#ff40ff">;</font><br>
+<br>
+<br>
+<font color="#8080ff">%HELP PICKOUT INTERESTING TRACKS</font><br>
+<br>
+<font color="#00ffff">[</font>gx gy<font color="#00ffff">]</font>=gradient(tmp)<font color="#ff40ff">;</font><br>
+g=gx<font color="#ffff00">.^</font><font color="#ff6060">2</font><font color="#ffff00">+</font>gy<font color="#ffff00">.^</font><font color="#ff6060">2</font><font color="#ff40ff">;</font><br>
+figure(<font color="#ff6060">2</font>)<br>
+imagesc(lon,lat,g,<font color="#00ffff">[</font><font color="#ff6060">0</font>&nbsp;<font color="#ff6060">.5</font><font color="#00ffff">]</font>)<font color="#ff40ff">;</font>colorbar<font color="#ff40ff">;</font>axis xy<font color="#ff40ff">;</font>&nbsp;hold on<br>
+worldmap(range)<font color="#ff40ff">;</font><br>
+<br>
+<br>
+<font color="#8080ff">%LOOK FOR GOOD TRACKS</font><br>
+<br>
+look=<font color="#00ffff">[]</font><font color="#ff40ff">;</font><br>
+<font color="#ffff00">for</font>&nbsp;x=<font color="#ff6060">1</font>:<font color="#ffff00">size</font>(trks,<font color="#ff6060">1</font>)<br>
+&nbsp;&nbsp;var=deblank(trks(x,:))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'lngth=size('</font>&nbsp;var <font color="#ff6060">',1);'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;gsrange=<font color="#00ffff">[</font><font color="#ff6060">285</font>&nbsp;<font color="#ff6060">320</font>&nbsp;<font color="#ff6060">35</font>&nbsp;<font color="#ff6060">50</font><font color="#00ffff">]</font><font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'and(find(sum('</font>&nbsp;var <font color="#ff6060">'(:,2)&gt;=gsrange(1) &amp; '</font>&nbsp;var <font color="#ff6060">'(:,2)&lt;=gsrange(2))),sum(find('</font>&nbsp;var <font color="#ff6060">'(:,3)&gt;=gsrange(3) &amp; '</font>&nbsp;var <font color="#ff6060">'(:,3)&lt;=gsrange(4))))'</font><font color="#00ffff">]</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;look=<font color="#00ffff">[</font>look x<font color="#00ffff">]</font><font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+<font color="#ffff00">end</font><br>
+disp(<font color="#00ffff">[</font><font color="#ff6060">'There are '</font>&nbsp;num2str(length(look)) <font color="#ff6060">' tracks to look through'</font><font color="#00ffff">]</font>)<br>
+<br>
+Q=<font color="#00ffff">[]</font><font color="#ff40ff">;</font><br>
+<br>
+<font color="#ffff00">if</font>&nbsp;exist(<font color="#ff6060">'lookcloser'</font>)<br>
+&nbsp;&nbsp;Q=input(<font color="#ff6060">'Do you want to look at tracks again? (1/0)'</font>)<font color="#ff40ff">;</font><br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#ffff00">if</font>&nbsp;(<font color="#ffff00">~</font>exist(<font color="#ff6060">'lookcloser'</font>) <font color="#ffff00">|</font>&nbsp;Q)<br>
+&nbsp;&nbsp;lookcloser=<font color="#00ffff">[]</font><font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#ffff00">for</font>&nbsp;x=<font color="#ff6060">1</font>:length(look)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var=deblank(trks(look(x),:))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;disp(var)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hold off<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clf<br>
+&nbsp;&nbsp;&nbsp;&nbsp;imagesc(lon,lat,g,<font color="#00ffff">[</font><font color="#ff6060">0</font>&nbsp;<font color="#ff6060">.5</font><font color="#00ffff">]</font>)<font color="#ff40ff">;</font>colorbar<font color="#ff40ff">;</font>axis xy<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hold on<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(:,2),'</font>&nbsp;var <font color="#ff6060">'(:,3),''m.-'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Q=input(<font color="#ff6060">'Enter 1 to look at more detailed plots related to this track (0 not)'</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;Q<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lookcloser=<font color="#00ffff">[</font>lookcloser look(x)<font color="#00ffff">]</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#8080ff">%MAKE 4-PANE PLOTS OF PICKED OUT TRACKS</font><br>
+<br>
+figure(<font color="#ff6060">3</font>)<br>
+<font color="#ffff00">for</font>&nbsp;x=<font color="#ff6060">1</font>:length(lookcloser)<br>
+&nbsp;&nbsp;var=deblank(trks(lookcloser(x),:))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;disp(var)<br>
+&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'mint=round(min('</font>&nbsp;var <font color="#ff6060">'(:,1)));maxt=round(max('</font>&nbsp;var <font color="#ff6060">'(:,1)));'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;matchtime<br>
+&nbsp;&nbsp;&nbsp;&nbsp;t=find(time<font color="#ffff00">&gt;=</font>mint <font color="#ffff00">&amp;</font>&nbsp;time<font color="#ffff00">&lt;=</font>maxt)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#ffff00">else</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;t=yrday(mint)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;i=find(yrday(time)<font color="#ffff00">==</font>t)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;t=time(i)<font color="#ff40ff">;</font>t=t(<font color="#ff6060">1</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;t=find(time<font color="#ffff00">&gt;=</font>t <font color="#ffff00">&amp;</font>&nbsp;time<font color="#ffff00">&lt;=</font>(t<font color="#ffff00">+</font><font color="#ffff00">floor</font>(maxt<font color="#ffff00">-</font>mint)))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+&nbsp;&nbsp;tmp=squeeze(<font color="#ffff00">mean</font>(sst(:,:,t),<font color="#ff6060">3</font>))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#00ffff">[</font>gx gy<font color="#00ffff">]</font>=gradient(tmp)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;g=gx<font color="#ffff00">.^</font><font color="#ff6060">2</font><font color="#ffff00">+</font>gy<font color="#ffff00">.^</font><font color="#ff6060">2</font><font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;subplot(<font color="#ff6060">2</font>,<font color="#ff6060">2</font>,<font color="#ff6060">1</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;imagesc(lon,lat,g,<font color="#00ffff">[</font><font color="#ff6060">0</font>&nbsp;<font color="#ff6060">5</font><font color="#00ffff">]</font>)<font color="#ff40ff">;</font>axis xy<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hold on<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(:,2),'</font>&nbsp;var <font color="#ff6060">'(:,3),''m.-'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(1,2),'</font>&nbsp;var <font color="#ff6060">'(1,3),''mo'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(end,2),'</font>&nbsp;var <font color="#ff6060">'(end,3),''mx'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;worldmap(range)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;title(<font color="#00ffff">[</font><font color="#ff6060">''</font>&nbsp;datestr(mint,<font color="#ff6060">10</font>) <font color="#ff6060">' Storm Track: '</font>&nbsp;datestr(mint,<font color="#ff6060">6</font>) <font color="#ff6060">'-'</font>&nbsp;datestr(maxt,<font color="#ff6060">6</font>) <font color="#ff6060">' (del^2 of AMSR)'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;subplot(<font color="#ff6060">2</font>,<font color="#ff6060">2</font>,<font color="#ff6060">2</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(:,4),''g.-'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;title(<font color="#ff6060">'Intensity (Central Pressure) vs Time'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;xlabel(<font color="#ff6060">'Time (6 hour increments)'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ylabel(<font color="#ff6060">'Intensity (Central Pressure - mbar)'</font>)<br>
+&nbsp;&nbsp;subplot(<font color="#ff6060">2</font>,<font color="#ff6060">2</font>,<font color="#ff6060">3</font>)<font color="#ff40ff">;</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;eval(['plot(' var '(:,7),' var '(:,4),''bo'')'])</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;title('Intensity (Central Pressure) vs. Sensible Heat Flux')</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;xlabel('Sensible Heat Flux') %%%%%%%%%%%%%%% UNITS!?</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;ylabel('Intensity (Central Pressure - mbar)')</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(:,7),''bo--'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;title(<font color="#ff6060">'Sensible Heat Flux vs. Time'</font>)<br>
+&nbsp;&nbsp;subplot(<font color="#ff6060">2</font>,<font color="#ff6060">2</font>,<font color="#ff6060">4</font>)<font color="#ff40ff">;</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;eval(['plot(' var '(:,8),' var '(:,4),''bo'')'])</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;title('Intensity (Central Pressure) vs. Latent Heat Flux')</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;xlabel('Latent Heat Flux') %%%%%%%%%%%%%%% UNITS?!</font><br>
+<font color="#8080ff">%&nbsp;&nbsp;&nbsp;&nbsp;ylabel('Intensity (Central Pressure - mbar)')</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(:,8),''bo--'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;title(<font color="#ff6060">'Latent Heat Flux vs. Time'</font>)<br>
+&nbsp;&nbsp;Q=input(<font color="#ff6060">'Would you like to save the displayed plots? (1/0)'</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;Q<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'print -dpsc '</font>&nbsp;pathpic <font color="#ff6060">'/'</font>&nbsp;var <font color="#ff6060">'_plot'</font><font color="#00ffff">]</font>)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;disp(<font color="#00ffff">[</font><font color="#ff6060">'saving to path '</font>&nbsp;pathpic <font color="#ff6060">'/'</font>&nbsp;var <font color="#ff6060">'_plot'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+<font color="#ffff00">end</font><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<font color="#8080ff">%Bad extra Code</font><br>
+<font color="#ffff00">if</font>&nbsp;<font color="#ff6060">0</font><br>
+<font color="#ffff00">if</font>&nbsp;(<font color="#ffff00">~</font>exist(<font color="#ff6060">'gooduns'</font>) <font color="#ffff00">|</font>&nbsp;isempty(gooduns))<br>
+<br>
+<font color="#8080ff">%pause</font><br>
+<br>
+<font color="#00ffff">[</font>i j<font color="#00ffff">]</font>=find(g(:,:)<font color="#ffff00">&gt;</font><font color="#ff6060">.3</font>)<font color="#ff40ff">;</font><br>
+lati=<font color="#ffff00">round</font>(<font color="#ff6060">2</font><font color="#ffff00">*</font>(lat(i)<font color="#ffff00">'</font>))<font color="#ffff00">/</font><font color="#ff6060">2</font><font color="#ff40ff">;</font><br>
+lonj=<font color="#ffff00">round</font>(<font color="#ff6060">2</font><font color="#ffff00">*</font>(lon(j)<font color="#ffff00">'</font>))<font color="#ffff00">/</font><font color="#ff6060">2</font><font color="#ff40ff">;</font><br>
+gooduns=<font color="#00ffff">[]</font><font color="#ff40ff">;</font>&nbsp;incr=<font color="#ff6060">1</font><font color="#ff40ff">;</font>&nbsp;q=<font color="#00ffff">[]</font><font color="#ff40ff">;</font><br>
+<font color="#ffff00">for</font>&nbsp;x=<font color="#ff6060">1</font>:<font color="#ffff00">size</font>(trks,<font color="#ff6060">1</font>)<br>
+&nbsp;&nbsp;var=deblank(trks(x,:))<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'lngth=size('</font>&nbsp;var <font color="#ff6060">',1);'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;<font color="#ffff00">for</font>&nbsp;y=<font color="#ff6060">1</font>:lngth<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r=<font color="#00ffff">[]</font><font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'q=find('</font>&nbsp;var <font color="#ff6060">'(y,3)==lati);'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">for</font>&nbsp;z=<font color="#ff6060">1</font>:length(q)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font>&nbsp;var <font color="#ff6060">'(:,2)==lonj(q(z))'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r=<font color="#00ffff">[</font>r y<font color="#00ffff">]</font><font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;<font color="#ffff00">~</font>isempty(r)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disp(var)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(:,3),'</font>&nbsp;var <font color="#ff6060">'(:,2),''k.-'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#00ffff">eval</font>(<font color="#00ffff">[</font><font color="#ff6060">'plot('</font>&nbsp;var <font color="#ff6060">'(r,3),'</font>&nbsp;var <font color="#ff6060">'(r,2),''m.'')'</font><font color="#00ffff">]</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pause<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gooduns(incr).name=var<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gooduns(incr).vals=r<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;incr=incr<font color="#ffff00">+</font><font color="#ff6060">1</font><font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clf<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imagesc(lon,lat,g,<font color="#00ffff">[</font><font color="#ff6060">0</font>&nbsp;<font color="#ff6060">.5</font><font color="#00ffff">]</font>)<font color="#ff40ff">;</font>colorbar<font color="#ff40ff">;</font>axis xy<font color="#ff40ff">;</font>&nbsp;hold on<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;worldmap(range)<font color="#ff40ff">;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+<font color="#ffff00">end</font><br>
+<br>
+<font color="#ffff00">end</font>&nbsp;<font color="#8080ff">% if~exist(gooduns)</font><br>
+<font color="#ffff00">end</font>&nbsp;<font color="#8080ff">% if 0</font><br>
+</font></body>
+</html>

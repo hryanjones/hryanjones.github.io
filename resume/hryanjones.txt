@@ -1,0 +1,55 @@
+=H.Ryan Jones=
+[mailto:hryanjones@gmail.com] -- (206)-414-8475 -- Seattle, WA -- 
+[http://hryanjones.com/resume/hryanjones.html download HTML version] -- [http://hryanjones.com/resume/hryanjones.txt plain text version]
+-------------------------
+
+===Skills Summary===
+
+Knowledgable in Linux, javascript, ruby (+others), web programming and [http://aws.amazon.com AWS]. Also  able to teach, support, and relate to others.  Seeking a position as a web developer.
+-------------------------
+
+===Experience Summary Graph (Present -> 2002) ===
+<iframe id="experience-graph" src="http://hryanjones.com/resume/graph.html"></iframe>
+
+[http://hryanjones.com/resume/experience.json Data (JSON)]
+-------------------------
+
+===Skills===
+
+{|
+|                      || '''Proficient'''                    || '''Some Experience''' || '''Beginner'''
+|'''OS & coding'''     || Linux/Bash, Ruby, Python, Git       || Matlab                || 
+|'''Web focused'''     || Javascript(jQuery), HTML, CSS, JSON ||                       || [http://middlemanapp.com/ Middleman], PHP
+|'''Cloud Computing''' || EC2(compute), ELB(load-balancing), S3(storage), Route53(DNS) || DynamoDB(NoSQL), CloudFront(CDN) || 
+|'''Language'''      || English                   || Spanish               || Hindi, Luganda
+|'''Interpersonal''' || product support/ownership || project management, mentoring new developers || 
+|}
+-------------------------
+
+===Professional Experience===
+
+[http://hryanjones.com/resume/references.html references]
+
+# ''Technical Support Engineer'' - '''Amazon Web Services''' (Seattle, WA)
+#* ~1 years<sup>*</sup> of development on internally used web-based tools, including an operational dashboard and many [http://en.wikipedia.org/wiki/Greasemonkey Greasemonkey] scripts to increase engineer efficiency.
+#* ~2 years of providing deep technical support for a wide array of services (compute, storage, DNS, content delivery, coding) for a range of customer backgrounds.
+# ''Math/Science Tutor'' -- '''ATAC''' (Seattle, WA)
+# ''Temporary Worker'' -- '''Carpenter's Trust of Western Washington''' (Seattle, WA)
+# ''Volunteer'' -- '''Peace Corps''' (Uganda, Africa)
+# ''Data Analysis/Visualization'' -- '''Applied Physics Laboratory at UW''' (Seattle, WA)
+# ''Independent Private Tutor'' (Seattle, WA)
+# ''Tutor'' -- '''Student Athlete Academic Service''' (Seattle, WA)
+# ''Teaching Assistant'' -- '''Physics Department at UW''' (Seattle, WA)
+# ''Factory Worker'' -- '''Pacific Pak Ice''' (Spokane, WA)
+
+-------------------------
+
+===Education===
+
+[http://hryanjones.com/resume/H.RyanJones_UnofficialTranscript_UW.htm Unofficial Transcript]
+
+* '''2002-2006:''' BS Cum Laude with College Honors in Physics at [http://www.washington.edu/ UW]
+* GPA: 3.85
+-------------------------
+
+''last updated 9th Feb. 2014''

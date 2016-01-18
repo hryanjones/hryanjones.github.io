@@ -1,0 +1,27 @@
+================
+Computer Module 10: Undo/Redo, Copy/Paste, Find/Replace
+================
+
+#. Word processing provides many functions that are useful in saving time and simplifying work.  (*the following functions can usually be found in the **Edit** menu*)
+#. **Undo**: a function in many programs to reverse the last action (keboard shortcut: *CTRL+Z*)
+#. **Copy - Paste**:  these two functions allow you to make copies of words, sentences, pictures (or other objects, even files) quickly.
+	* *Procedure*:
+		* First select (highlight) the text or items to be copied
+		* *Copy* (using the Edit menu or the shortcut *CTRL+C*)
+		* Choose the place to put the copy (by moving the cursor or bringing a different window)
+		* *Paste* (using the Edit menu or the shortcut *CTRL+V*)
+
+	* Copy-Paste is especially useful in moving information between files or programs (*e.g. copy an article about Ugandan history into a document about Kayonza P/S*)
+
+#. **Find**: a common function to search for words in a document.  (often in the Edit menu or using the shortcut *CTRL+F*)
+#. (Find &) **Replace**:  is often associated with find and allows you to quickly replace a word or phrase many times within a document.  (*e.g. if a name is misspelled the same way in a report, find/replace can replace all the misspellings with the correct one*)
+
+Exercise
+--------
+
+#. Copy-Paste the encyclopedia article about Uganda into the word processor.
+#. How many times is the word "Uganda" in the article? (*hint*: use the find function)
+#. Replace the word "Uganda" with "The Pearl of Africa" for all "Uganda"s in the document.
+#. Delete everything in the document.  (try using *CTRL+A*, select all)
+#. Undo the deletion and the replacement to arrive back at the original article.
+

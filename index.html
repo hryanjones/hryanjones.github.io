@@ -1,0 +1,73 @@
+
+<html>
+  <head>
+    <!-- CSS -->
+    <link id="theme-css" rel="stylesheet" type="text/css" href="/assets/css/themes/dark.css"></link>
+    <link id="base-css" rel="stylesheet" type="text/css" href="/assets/css/hryanjones.css"></link>
+    <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.1.custom.css" />
+
+    <!-- Javascript -->
+    <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $( "#tabs" ).tabs({
+          beforeLoad: function( event, ui ) {
+            ui.jqXHR.error(function() {
+              ui.panel.html(
+                "Couldn't load this tab. I must've derped it."
+              );
+            });
+          },
+          load: function( event, ui) {
+            console.log(event);
+            console.log(ui);
+          }
+        });
+        var tabId = window.location.hash;
+        $(tabId).click();
+
+      });
+    </script>
+  </head>
+
+  <body>
+    <table class="title">
+      <tr>
+        <td class="title"><h1>H. Ryan Jones</h1></td>
+        <td class="title"><input type="button" id="change-to-light" value="Light Theme"></input></td>
+        <td class="title"><input type="button" id="change-to-dark" value="Dark Theme"></input></td>
+        <td class="title"><input type="button" id="change-to-blAwh" value="Black/White"</input></td>
+      </tr>
+      <script type="text/javascript">
+        $("document").ready(function() {
+
+          $("#change-to-light").click(function(event) {
+            $("link#theme-css").attr({href :"/assets/css/themes/light.css"});
+            event.preventDefault();
+          });
+
+          $("#change-to-dark").click(function(event) {
+            $("link#theme-css").attr({href :"/assets/css/themes/dark.css"});
+            event.preventDefault();
+          });
+
+          $("#change-to-blAwh").click(function(event) {
+            $("link#theme-css").attr({href :"/assets/css/themes/bANDw.css"});
+            event.preventDefault();
+          });
+
+        });
+    </script>
+    </table>
+    <div id="tabs">
+      <ul>
+        <li><a id="wiki-feeback" href="/wiki-feedback/">Wiki Parser</a>
+        <li><a id="resume" href="/resume/">Resume</a></li>
+        <li><a id="jobs" href="/html/jobs_etc.html">Jobs & Stuff</a></li>
+        <li><a id="calendar" href="/html/calendar.html">Calendar</a></li>
+        <li><a id="projects" href="/science/">Small Projects</a></li>
+      </ul>
+    </div>
+</body>
+</html>

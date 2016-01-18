@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>/media/SEA_DISC/jones_stuff/backup_from_DVD/2006 (Job) - APL/sep_tracks.csh.html</title>
+<meta name="Generator" content="Vim/7.2">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body bgcolor="#000000" text="#ffffff"><font face="monospace">
+<font color="#8080ff">#!/bin/csh</font><br>
+<font color="#8080ff">#&nbsp;&nbsp;Name: sep_tracks.csh</font><br>
+<font color="#8080ff">#&nbsp;&nbsp;Purpose:&nbsp;&nbsp;To take outputs from Jerome Patoux's modified version of Simmond's</font><br>
+<font color="#8080ff">#&nbsp;&nbsp;&nbsp;&nbsp; cyclone tracking program and write the tracks to ASCII data (for input</font><br>
+<font color="#8080ff">#&nbsp;&nbsp;&nbsp;&nbsp; into Matlab)</font><br>
+<font color="#8080ff">#&nbsp;&nbsp;Author:&nbsp;&nbsp;H. Ryan Jones</font><br>
+<font color="#8080ff">#&nbsp;&nbsp;Creation Date:&nbsp;&nbsp;June 27, 2006</font><br>
+<font color="#8080ff">#&nbsp;&nbsp;Last Modified:&nbsp;&nbsp;June 29, 2006</font><br>
+<br>
+<font color="#ffff00">echo</font>&nbsp;<font color="#ff6060">&quot;process ID: $$&quot;</font><br>
+<font color="#ffff00">set</font>&nbsp;dir=<font color="#ff6060">'/export/circ/hrj/storm_tracking'</font><br>
+<font color="#ffff00">cd</font>&nbsp;<font color="#00ff00">$dir</font><br>
+<font color="#ffff00">echo</font>&nbsp;<font color="#00ff00">$dir</font><br>
+<font color="#ffff00">set</font>&nbsp;tracknum=1233&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#8080ff">#####SET the (# OF TRACKS +1) HERE</font><br>
+<br>
+<font color="#ffff00">foreach</font>&nbsp;file (tracks2002.dat)&nbsp;&nbsp;<font color="#8080ff">#####SET the INPUT FILES THAT JEROME SENDS HERE</font><br>
+&nbsp;&nbsp;<font color="#ffff00">echo</font>&nbsp;<font color="#00ff00">$file</font><br>
+&nbsp;&nbsp;<font color="#ffff00">set</font>&nbsp;dirout=$dir/tracks/2002&nbsp;&nbsp;<font color="#8080ff">####CHANGE THIS FOR DIFFERENT SETS</font><br>
+&nbsp;&nbsp;<font color="#00ff00">echo</font>&nbsp;$dirout<br>
+&nbsp;&nbsp;mkdir <font color="#00ff00">$dirout</font><br>
+<br>
+<br>
+<font color="#8080ff"># first remove blanks</font><br>
+&nbsp;&nbsp;sed -e <font color="#ff6060">'/^$/d'</font>&nbsp;<font color="#00ff00">$file</font>&nbsp;<font color="#ffff00">&gt;</font>&nbsp;dum1<br>
+<font color="#8080ff"># next remove column headers</font><br>
+&nbsp;&nbsp;sed -e <font color="#ff6060">'/^.........t/d'</font>&nbsp;dum1 <font color="#ffff00">&gt;</font>&nbsp;dum2<br>
+<font color="#8080ff">#next loop data into separate track files so Matlab can read it in more easily&nbsp;&nbsp;</font><br>
+&nbsp;&nbsp;<font color="#ffff00">set</font>&nbsp;num=1<br>
+&nbsp;&nbsp;<font color="#ffff00">while</font>&nbsp;<font color="#ffff00">(</font><font color="#00ff00">$num</font>&nbsp;<font color="#ffff00">&lt;</font>&nbsp;<font color="#00ff00">$tracknum</font><font color="#ffff00">)</font>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">echo</font>&nbsp;<font color="#00ff00">$num</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">set</font>&nbsp;fileout=$dirout/trk$num.dat<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sed -e <font color="#ff6060">'1d'</font>&nbsp;dum2 <font color="#ffff00">&gt;</font>&nbsp;dum3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sed -ne <font color="#ff6060">'1,/.Track/p'</font>&nbsp;dum3 | sed -e <font color="#ff6060">'/Track/d'</font>&nbsp;<font color="#ffff00">&gt;</font>&nbsp;<font color="#00ff00">$fileout</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;sed -e <font color="#ff6060">'1,/.Track/d'</font>&nbsp;dum3 <font color="#ffff00">&gt;</font>&nbsp;dum2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@ num++<br>
+&nbsp;&nbsp;<font color="#ffff00">end</font><br>
+rm dum?&nbsp;&nbsp;<font color="#8080ff"># cleanup</font><br>
+<br>
+<font color="#8080ff">#some of the fluxes get large enough to connect columns = bad, add a space</font><br>
+<font color="#ffff00">cd</font>&nbsp;<font color="#00ff00">$dirout</font><br>
+<font color="#ffff00">foreach</font>&nbsp;file (trk*dat)<br>
+&nbsp;&nbsp;sed -e <font color="#ff6060">'s/-/ -/g'</font>&nbsp;<font color="#00ff00">$file</font>&nbsp;<font color="#ffff00">&gt;</font>&nbsp;dum4<br>
+&nbsp;&nbsp;cat dum4 <font color="#ffff00">&gt;</font>&nbsp;<font color="#00ff00">$file</font><br>
+<font color="#ffff00">end</font><br>
+<font color="#ffff00">echo</font>&nbsp;<font color="#ff6060">&quot;done fixing overly large columns&quot;</font><br>
+<font color="#ffff00">echo</font>&nbsp;<font color="#ff6060">&quot;Now run matlab reform_tracks.m to get useful data and reformat to Matlab&quot;</font><br>
+</font></body>
+</html>

@@ -1,0 +1,26 @@
+================
+Computer Module 4: Objects, Desktop, Taskbar & Start Menu
+================
+
+#. There are three major types of objects on the computer: (include more on how to recognize each) 
+	* **Program**: (or application): does some work (e.g. text editor, music player, game...) 
+	* **File**: stores information (e.g. document, picture, song...) 
+	* **Folder**: a space or location which contains files and other folders. 
+
+#. The **Desktop** has a picture **Background** (a.k.a. Wallpaper) 
+	* Files / Folders are put on the desktop for easy access 
+	* Program (shortcut) icons open programs.
+
+#. **Task Bar** (a.k.a Windows Bar) at bottom shows 
+	* **Show Desktop** button – minimizes all windows 
+	* A button for each Window. (*demonstrate this, ask "how many windows are open?"*) It's best to keep the number of open windows low (about 4-5) or else the computer will begin running slowly. 
+	* **Start Menu**
+	* Volume control – control the level of volume by adjusting the height of the bar next to the picture of the speaker. 
+
+#. **Start Menu**: allows access to all programs organized into different categories, most important of which are: 
+	* Office (word-processing, spreadsheet) 
+	* Accessories (calculator, text editor) 
+	* Games
+
+#. **Trash** (or recycle bin) is the location used for files/folders that are no longer wanted. 
+	* BE CERTAIN THAT A FILE IS YOURS OR CLEARLY UNWANTED BEFORE DELETING OR MOVING IT. 

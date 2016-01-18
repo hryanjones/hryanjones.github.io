@@ -1,0 +1,208 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.js"></script>
+    <style type="text/css">
+      div#placeholder {
+        /*width: 130%;*/
+        width: 1600px;
+        height: 170px;
+      }
+      #container > div {
+        text-align: center;
+      }
+      td.legendlabel {
+        padding-right: 13px;
+      }
+      h2 {
+        letter-spacing: 2px;
+        padding-left: 20px;
+        font-family: "Sans-serif";
+      }
+      div#legend td, div#placeholder canvas {
+        font-family: "Sans-serif";
+      }
+    </style>
+    <script type="text/javascript">
+      $(document).ready( function() {
+        function howMuchOffset(all_data, index_this_data, index_period) {
+          //all_data = all_data.reverse();
+          //assume that data is in beginning time order
+          //$('body').prepend( 'blerg = ' + JSON.stringify(all_data[index_this_data]) );
+          var this_period_data = all_data[index_this_data]['periods'][index_period];
+          var this_data_start = this_period_data['start'];
+          var this_data_end = this_period_data['end'];
+          var offset = 4;
+          for (var i in all_data) {
+            for (var p in all_data[i]['periods']) {
+              if (i == index_this_data && p == index_period) {
+                return offset;
+              }
+              //$('body').prepend('i,p = ' + i + ',' + p);
+              var that_data_start = all_data[i]['periods'][p]['start'];
+              var that_data_end = all_data[i]['periods'][p]['end'];
+              if (
+                (that_data_start < this_data_start) &&
+                (that_data_end > this_data_start)
+              ){
+                offset -= 1;
+              }
+            }
+          }
+          return 10;
+        }
+
+        graph_data = [];
+
+        var json_data = (function() {
+          var json_data = null;
+          $.ajax({
+            'async': false,
+            'global': false,
+            'url': 'experience.json',
+            'dataType': "json",
+            'success': function (data) {
+              json_data = data;
+            }
+          });
+          return json_data;
+        })();
+
+
+        json_data = json_data.reverse();
+
+        // first convert all the string to Date objects
+        for (var i in json_data) { // specific jobs
+          for (var p in json_data[i]['periods']) { // periods within a job
+            for (var t in json_data[i]['periods'][p]) {
+              json_data[i]['periods'][p][t] = new Date(json_data[i]['periods'][p][t]);
+            }
+          }
+        }
+
+        //$('body').prepend(JSON.stringify(json_data));
+
+        for (var i in json_data) { // specific jobs
+          var this_data = json_data[i];
+          temp = {};
+          var legend_index = (json_data.length - i).toString();
+          temp['label'] = '<nobr>' + legend_index + '. ' + this_data['title'] + '</nobr>';
+          temp['data'] = [];
+          temp['bars'] = {
+            show: true,
+            horizontal: true,
+            align: 'center',
+            lineWidth: 2,
+            //fill: true,
+            fillColor: {
+              colors: [ { opacity: 1 }, { opacity: 0.4 } ]
+            },
+          };
+
+          for (var p in this_data['periods']) {
+            var this_period = this_data['periods'][p];
+            temp['data'].push([
+              this_period['start'],
+              howMuchOffset(json_data, i, p),
+              this_period['end']
+            ]);
+            //temp['data'] = [[this_period['start']*1000,this_period['end']*1000]];
+            //$('body').prepend( howMuchOffset(graph_data, i, p) );
+          }
+          graph_data.push(temp);
+        }
+        //$('body').prepend(graph_data.length);
+
+        var options = {
+          yaxis: { show: false, },
+          xaxis: {
+            position: 'top',
+            ticks: 24,
+            mode: 'time',
+            timeformat: '%b<br>%Y',
+            monthNames: [
+              'January',
+              'February',
+              'March',
+              'April',
+              'May',
+              'June',
+              'July',
+              'August',
+              'September',
+              'October',
+              'November',
+              'December',
+            ],
+            transform: function (v) { return -v; },
+            inverseTransform: function (v) { return -v; },
+            font: {
+              size: 13,
+              family: "sans-serif",
+              variant: "small-caps"
+            },
+          },
+          grid: {
+            hoverable: true
+          },
+          legend: {
+            //show: false,
+            noColumns: graph_data.length,
+            container: '#legend',
+            margin: 30,
+            sorted: true,//'reverse'
+          }
+        };
+        $.plot("#placeholder", graph_data, options);
+
+
+        // TOOLTIP
+
+        function showTooltip(x, y, contents) {
+          $('<div>', {id: 'tooltip', html: contents}).css( {
+              position: 'absolute',
+              display: 'none',
+              top: y - 15,
+              left: x + 5,
+              'font-family': 'sans-serif',
+              'font-variant': 'small-caps',
+              border: '1px solid #fdd',
+              padding: '2px',
+              'background-color': '#fee',
+              opacity: 0.80,
+          }).appendTo('body').fadeIn(200);
+        }
+
+        $("#placeholder").bind("plothover", function (event, pos, item) {
+            if (item) {
+              if (previous_item !== item) {
+                previous_item = item; // global
+
+                $("#tooltip").remove();
+                var tooltip_contents = [
+                  item.series.label,
+                  'from',
+                  (new Date(item.datapoint[0]).toLocaleDateString()),
+                  'to',
+                  (new Date(item.datapoint[2]).toLocaleDateString()),
+                ].join(' ');
+                showTooltip(pos.pageX, pos.pageY, tooltip_contents);
+              }
+            }
+            else {
+              $("#tooltip").remove();
+              previous_item = null; // global
+            }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="data"></div>
+    <div id="container">
+      <div id="placeholder"></div>
+      <div id="legend"></div>
+  </div>
+  </body>
+</html>

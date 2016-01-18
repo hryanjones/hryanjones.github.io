@@ -1,0 +1,262 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>jQuery UI Accordion - Open on hoverintent</title>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <style type="text/css">
+    /* override */
+    body .ui-accordion .ui-accordion-content {
+      padding: 2px 10px;
+    }
+    body .ui-accordion .ui-accordion-icons {
+      padding: 0px 26px;
+    }
+
+    body > div 
+    {
+      width: 50%;
+      border: 2px solid #447;
+      background-color: #CCF;
+    }
+    body > div > div
+    {
+      border: 2px solid #474;
+      background-color: #CFC;
+    }
+    body > div > div > div
+    {
+      border: 2px solid #744;
+      background-color: #FCC;
+    }
+    body > div > div > div > div
+    {
+      border: 2px solid #665;
+      background-color: #EEC;
+    }
+  </style>
+	<script>
+	$(function() {
+		$( ".accordion" ).accordion({
+      event: "click hoverintent",
+      collapsible: true,
+      active: false,
+      heightStyle: "content"
+		});
+	});
+
+  /*
+  $(document).ready( function() {
+  //*
+
+  });
+  //*/
+	/*
+	 * hoverIntent | Copyright 2011 Brian Cherne
+	 * http://cherne.net/brian/resources/jquery.hoverIntent.html
+	 * modified by the jQuery UI team
+	 */
+	$.event.special.hoverintent = {
+		setup: function() {
+			$( this ).bind( "mouseover", jQuery.event.special.hoverintent.handler );
+		},
+		teardown: function() {
+			$( this ).unbind( "mouseover", jQuery.event.special.hoverintent.handler );
+		},
+		handler: function( event ) {
+			var currentX, currentY, timeout,
+				args = arguments,
+				target = $( event.target ),
+				previousX = event.pageX,
+				previousY = event.pageY;
+
+			function track( event ) {
+				currentX = event.pageX;
+				currentY = event.pageY;
+			};
+
+			function clear() {
+				target
+					.unbind( "mousemove", track )
+					.unbind( "mouseout", clear );
+				clearTimeout( timeout );
+			}
+
+			function handler() {
+				var prop,
+					orig = event;
+
+				if ( ( Math.abs( previousX - currentX ) +
+						Math.abs( previousY - currentY ) ) < 7 ) {
+					clear();
+
+					event = $.Event( "hoverintent" );
+					for ( prop in orig ) {
+						if ( !( prop in event ) ) {
+							event[ prop ] = orig[ prop ];
+						}
+					}
+					// Prevent accessing the original event since the new event
+					// is fired asynchronously and the old event is no longer
+					// usable (#6028)
+					delete event.originalEvent;
+
+					target.trigger( event );
+				} else {
+					previousX = currentX;
+					previousY = currentY;
+					timeout = setTimeout( handler, 100 );
+				}
+			}
+
+			timeout = setTimeout( handler, 100 );
+			target.bind({
+				mousemove: track,
+				mouseout: clear
+			});
+		}
+	};
+	</script>
+</head>
+<body>
+
+
+  <div class="accordion">
+    <h3>Account Resources</h3>
+    <div class="accordion">
+
+      <h3>One (EC2)</h3>
+      <div class="accordion">
+        <h3>One.One (IAD) 4 VPCs</h3>
+        <div>
+          <ul>
+            <li>One.One (VPC-Default)</li>
+            <li>One.Two (VPC 1)</li>
+            <li>One.Three (VPC 2)</li>
+            <li>One.Four (VPC 3)</li>
+          </ul>
+        </div>
+        <h3>One.Two (PDX)</h3>
+      </div>
+
+      <h3>Two (RDS)</h3>
+      <div>
+        <ul>
+          <li>Two.One</li>
+          <li>Two.Two</li>
+          <li>Two.Three</li>
+          <li>Two.Four</li>
+        </ul>
+      </div>
+
+      <h3>Three (S3)</h3>
+      <div class="accordion">
+        <h3>Three.One (Classic) 5 Buckets</h3>
+        <div>
+          <ul>
+            <li>Two.One (Bucket 1)</li>
+            <li>Two.Two (Bucket 2)</li>
+            <li>Two.Three (Bucket 3)</li>
+            <li>Two.Four (Bucket 4)</li>
+          </ul>
+        </div>
+        <h3>Three.Two</h3><div></div>
+        <h3>Three.Three</h3><div></div>
+        <h3>Three.Four</h3><div></div>
+        <h3>Three.Five</h3><div></div>
+      </div>
+
+      <h3>Four</h3>
+      <div>
+        <ul>
+          <li>Four.One</li>
+          <li>Four.Two</li>
+        </ul>
+      </div>
+
+    </div>
+    
+  </div>
+
+ 
+<!--
+<div class="accordion" id="top">
+  <h3>Mouseover for accordion</h3>
+  <div class="accordion">
+    <h3>Section 1</h3>
+    <div class="accordion">
+      <h3>1.1</h3>
+      <div>
+        <p>
+        moar infos
+        </p>
+      </div>
+      <h3>1.2</h3>
+      <div>
+        <p>
+        really moar infos
+        </p>
+      </div>
+      <h3>1.3</h3>
+      <div>
+        <p>
+        moar infos
+        </p>
+      </div>
+    </div>
+    <h3>Section 2</h3>
+    <div>
+      <p>
+      Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet
+      purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor
+      velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In
+      suscipit faucibus urna.
+      </p>
+      <h3>1.1</h3>
+      <div>
+        <p>
+        moar infos
+        </p>
+      </div>
+    </div>
+    <h3>Section 2.5</h3>
+    <div>
+      Nam
+    </div>
+    <h3>Section 3</h3>
+    <div>
+      Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+      Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
+      ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
+      lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
+      </p>
+      <ul>
+        <li>List item one</li>
+        <li>List item two</li>
+        <li>List item three</li>
+      </ul>
+    </div>
+    <h3>Section 4</h3>
+    <div>
+      <p>
+      Cras dictum. Pellentesque habitant morbi tristique senectus et netus
+      et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
+      faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
+      mauris vel est.
+      </p>
+      <p>
+      Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+      Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+      inceptos himenaeos.
+      </p>
+    </div>
+  </div>
+  </div>
+
+  -->
+
+</body>
+</html>

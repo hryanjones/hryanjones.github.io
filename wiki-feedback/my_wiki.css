@@ -1,0 +1,65 @@
+div#preview > div {
+	padding-right: 15;
+}
+
+table.title
+{
+	border: none;
+	width: 100%;
+}
+
+td.title
+{
+	border: none;
+}
+
+table, th, td
+{
+	border: 3px solid;
+	padding: 10px;
+	border-collapse: collapse;
+}
+
+td
+{
+	border: 1px solid;
+}
+
+#editor, #preview {
+	float: left;
+	width: 50%;
+}
+textarea, div.ui-tabs-panel textarea {
+/*
+  background-color: #090020;
+  color: #fff;
+*/
+	font-size: 95%;
+	width:95%;
+  font-family: courier;
+	padding: 10px;
+}
+input#input-url {
+  width: 50%;
+}
+#debug {
+	clear: both;
+}
+div.debug {
+  color: #f9bc47;
+	border: 8px ridge gray;
+	padding: 11px;
+	margin: 13px;
+	width: 80%;
+}
+xmp {
+	padding: 7px;
+	font-size: 105%;
+}
+
+div.clearfix:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both;
+}

@@ -1,0 +1,34 @@
+body, div#preview > div, div#tabs > div.ui-tabs-panel {
+  font-family: Sans;
+}
+body {
+  padding: 20 100;
+}
+
+div#tabs > div.ui-tabs-panel
+{
+	padding: 20 20;
+}
+
+table.title {
+	border: none;
+	width: 100%;
+}
+
+td.title {
+	border: none;
+}
+
+table, th, td {
+	border: 3px solid;
+	padding: 10px;
+	border-collapse: collapse;
+}
+
+td {
+	border: 1px solid;
+}
+
+xmp {
+	font-family: courier;
+}

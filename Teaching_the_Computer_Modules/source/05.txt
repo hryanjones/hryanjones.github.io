@@ -1,0 +1,24 @@
+================
+Computer Module 5: Creating & Updating Files
+================
+
+#. a **File** is an object on the computer that stores information. Examples of files:
+	* text (words), ending in ".txt", ".doc" ".abw" ".odt"
+	* other documents (spreadsheet, PDF) ending in ".pdf", ".html", ".xls", ".ods"
+	* sound (music) ending in ".mp3", ".ogg" , ".wav"
+	* movie ".avi", ".vob" , ".mov"
+
+#. Files on computer are shown by an icon (small picture) with a filename.
+#. If power suddenly turns off any work you are doing (*e.g. you have written a poem*) ***will be lost unless it is saved!***
+#. Saving: Go to "Save" under the "File" menu to save.
+ 	* Saving with a new document creates the file (show example on computer). A small window will appear where we must specify two aspects of a file being saved:
+		* Filename - name of the file. Good filenames describe the file contents (e.g. "Migadde Computer poem 01.doc"). Bad filenames like "untitled1.doc" are hard to find and easy to lose.
+		* Location - the folder (place) on the computer to put the file. Some common locations include the Home folder, the Desktop, or an external disk (like a USB flash). (N.B. On the Kayonza Computer Lab computers, only files saved in the “Station Files” Folder on the Desktop will remain on the computer.)
+		* Filetype - the type of the file (which is shown by a three-letter file extension "dot blah blah blah" at the end of the filename (e.g. .doc .mp3 )) is usually handled by the computer. This extension tells the computer whether the file is a document, a sound file, or something else.
+
+#. Saving with a document that has already been created updates the file. Any changes will be added to the file.
+
+Appendix (more advanced information):
+-------------------------------------
+	* PDF stands for Portable Document Format
+	* Revert

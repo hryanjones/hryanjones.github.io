@@ -1,0 +1,106 @@
+[
+  {
+    "title": "AWS Tech. Support",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Feb 09 2014",
+        "start": "Mar 07 2011"
+      }
+    ]
+  },
+  {
+    "title": "Math/Science Tutor",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Mar 04 2011",
+        "start": "Jul 26 2010"
+      }
+    ]
+  },
+  {
+    "title": "Temp.",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Aug 30 2010",
+        "start": "Dec 31 2009"
+      }
+    ]
+  },
+  {
+    "title": "Peace Corps Volunteer",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Aug 06 2009",
+        "start": "May 14 2007"
+      }
+    ]
+  },
+  {
+    "title": "Private Tutor",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Feb 19 2007",
+        "start": "Jan 29 2006"
+      }
+    ]
+  },
+  {
+    "title": "Data Analyst",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Feb 19 2007",
+        "start": "Apr 30 2005"
+      }
+    ]
+  },
+  {
+    "title": "Physics TA",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Jun 14 2005",
+        "start": "Mar 14 2005"
+      }
+    ]
+  },
+  {
+    "title": "Math/Physics Tutor",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Dec 14 2005",
+        "start": "Oct 14 2004"
+      }
+    ]
+  },
+  {
+    "title": "Factory Worker",
+    "type": "job",
+    "periods": [
+      {
+        "end": "Sep 14 2003",
+        "start": "Jun 14 2003"
+      },
+      {
+        "end": "Sep 14 2004",
+        "start": "Jun 14 2004"
+      }
+    ]
+  },
+  {
+    "title": "UW Physics",
+    "type": "education",
+    "periods": [
+      {
+        "end": "Jun 14 2006",
+        "start": "Sep 14 2002"
+      }
+    ]
+  }
+]

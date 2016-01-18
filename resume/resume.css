@@ -1,0 +1,37 @@
+﻿TABLE.main, div.ui-tabs-panel table.main
+{
+	border: solid 8px #aaa;
+	border-spacing: 0px;
+	width: 963;
+}
+H2, div.ui-tabs-panel h2
+	{
+	font-size:18pt;
+	font-style:bold;
+	font-family:sans-serif;
+	}
+TD, div.ui-tabs-panel td
+	{
+	font-family:sans-serif;
+	border-bottom: 3px solid gray;
+	line-height:30px;
+	}
+TD.side, div.ui-tabs-panel td.side
+	{
+	width: 100px;
+	vertical-align: text-top;
+	padding: 20px;
+	}
+TD.body, div.ui-tabs-panel td.body
+	{
+	text-align: left;
+	padding: 20px;
+	}
+TD.internal, div.ui-tabs-panel td.internal 
+{
+	border-bottom: 0px;
+}
+UL, OL, div.ui-tabs-panel ul, div.ui-tabs-panel ol, 
+	{
+	font-size:14pt
+	}

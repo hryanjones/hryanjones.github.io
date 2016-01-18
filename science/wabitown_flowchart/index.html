@@ -1,0 +1,782 @@
+<html>
+  <head>
+    <title>Super Wabitown Siblings -- Decison Process</title>
+    <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+    <script src="http://hryanjones.com/science/wabitown_flowchart/jquery.jsPlumb-1.5.5-min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <style>
+      h1, h2, h3, h4,h5 {
+        display: inline;
+      }
+
+      #soundboard {
+        float: right;
+      }
+
+      body {
+        font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background-color:#eaedef;
+        margin: 0px 50px;
+      }
+
+      a, a:visited {
+        color:rgb(13,0,158);
+        -webkit-transition: color 0.15s ease-in;
+        -moz-transition: color 0.15s ease-in;
+        -o-transition: color 0.15s ease-in;
+        transition: color 0.15s ease-in;
+      }
+
+      a:hover {
+          color:#7AB02C;
+      }
+
+      a:active {
+        color:#FF2300;
+      }
+
+      #consensus_document {
+        clear: both;
+      }
+
+      .window, .label {
+        z-index:24;
+        cursor:pointer;
+        box-shadow: 2px 2px 19px #aaa;
+        -o-box-shadow: 2px 2px 19px #aaa;
+        -webkit-box-shadow: 2px 2px 19px #aaa;
+        -moz-box-shadow: 2px 2px 19px #aaa;
+      }
+
+      .window {
+        position:absolute;
+        padding:0.5em;
+        border:1px solid #346789;
+        background-color:white;
+        border-radius:0.5em;
+      }
+      .wabi_label {
+        font-size: 86%;
+        padding:0.1em;
+        background-color: rgb(204, 203, 203);
+        border-radius:0.2em;
+      }
+      .window,
+      .wabi_label {
+        white-space: nowrap;
+        box-shadow: 2px 2px 19px #e0e0e0;
+        -o-box-shadow: 2px 2px 19px #e0e0e0;
+        -webkit-box-shadow: 2px 2px 19px #e0e0e0;
+        -moz-box-shadow: 2px 2px 19px #e0e0e0;
+        -moz-border-radius:0.5em;
+        -webkit-transition: -webkit-box-shadow 0.15s ease-in;
+        -moz-transition: -moz-box-shadow 0.15s ease-in;
+        -o-transition: -o-box-shadow 0.15s ease-in;
+        transition: box-shadow 0.15s ease-in;
+      }
+
+      .window:hover {
+        border:1px solid #123456;
+        box-shadow: 2px 2px 19px #444;
+       -o-box-shadow: 2px 2px 19px #444;
+       -webkit-box-shadow: 2px 2px 19px #444;
+       -moz-box-shadow: 2px 2px 19px #fff;
+        opacity:0.9;
+        filter:alpha(opacity=90);
+      }
+
+
+      .aLabel {
+        background-color:white;
+        padding:0.4em;
+        font:12px sans-serif;
+        color:#444;
+        z-index:21;
+        border:1px dotted gray;
+        opacity:0.8;
+        filter:alpha(opacity=80);
+        cursor: pointer;
+      }
+      .aLabel._jsPlumb_hover {
+        background-color:#5C96BC;
+        color:white;
+        border:1px solid white;
+      }
+
+      #flowchart {
+        float: left;
+        position: relative;
+        margin-top: 40px;
+        padding-bottom: 50px;
+        height: 1200px;
+        /*background-image: url('http://telusers.com/image/2013/02/mario-background-22495-hd-wallpapers.jpg');*/
+        /* TODO Mario background*/
+      }
+      #node_template { display: none;}
+      .window label {
+        font-weight: bold;
+        font-size: 110%;
+      }
+      .wabi_label {
+        opacity: 0.8;
+      }
+
+      #pre_proposal.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/ani_1small.gif');
+      }
+      #proposal_sub_meeting.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/ani_1big.gif');
+      }
+      #proposal_presentation.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/animario.gif');
+      }
+      #questions_and_discussion.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/anicoin.gif');
+      }
+      #call_for_consensus.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/ani_1flower.gif');
+      }
+
+      #consensus_reached.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/ani_1star.gif');
+      }
+      #tabled.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/ani_1turtle2.gif');
+      }
+
+      #blocked.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/ani_1bowser.gif');
+      }
+      #super_majority_vote.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/aniqblock.gif');
+      }
+
+      #proposal_passed.icon:before {
+        content:url('http://hryanjones.com/science/wabitown_flowchart/ani_1climb.gif');
+      }
+    </style>
+    <script>
+
+      DATA = {
+        "flowchart_objects": [
+
+          {
+            "id":            "consensus_tone",
+            "sound":         "theme",
+            "expanded_html": "<ul><li>Unity of Purpose</li><li>Cooperation</li><li>Trust</li><li>Valued Differences</li><li>Valued Feelings</li><li>Equal Power & Responsibility</li><li>Common Ownership of Decisions</li><li>Time and Process</li><li>Willingless to Learn</li></ul>"
+          },
+          {
+            "id":            "pre_proposal",
+            "sound":         "little_mario_jump",
+            "expanded_html": "<ul><li>Short presentation</li><li>Get a little feedback from the group before digging in</li><li>Can be made by email at least one week before General Meeting</li></ul>"
+          },
+          {
+            "id":            "proposal_sub_meeting",
+            "sound":         "embiggening",
+            "expanded_html": "Interested members meet to flesh out proposal and make a presentation"
+          },
+          {
+            "id":            "proposal_presentation",
+            "sound":         "big_mario_jump",
+            "expanded_html": "Good practices: <ul><li>Give background</li><li>Why does this need to be addressed?</li><li>Pros & Cons</li><li>External examples?</li></ul>"
+          },
+          {
+            "id":            "questions_and_discussion",
+            "sound":         "bump coin",
+            "expanded_html": "Clarifying questions & Friendly amendments, then General Discussion"
+          },
+          {
+            "id":            "call_for_consensus",
+            "sound":         "power_up_appears",
+            "expanded_html": "Call for:<ol><li>Blocks</li><li>Stand-Asides</li><li>Consensus</li></ol>"
+          },
+          {
+            "id":            "consensus_reached",
+            "sound":         "1_up",
+            "expanded_html": "1 week for someone to block by email, otherwise let's do it! \\m/"
+          },
+          {
+            "id":            "tabled",
+            "sound":         "pause",
+            "expanded_html": "May be taken up again by another person."
+          },
+          {
+            "id":            "blocked",
+            "sound":         "bowser_fire power_down",
+            "expanded_html": "appropriate blocks express concern for good of group or safety"
+          },
+          {
+            "id":            "super_majority_vote",
+            "sound":         "little_mario_jump bump",
+            "expanded_html": "75% vote on original proposal"
+          },
+          {
+            "id":            "proposal_passed",
+            "sound":         "down_flag stage_clear",
+            "expanded_html": "Everyone supports the decision of the group."
+          },
+
+
+          {
+            "id":            "time_sensitive",
+            "sound":         "time_short",
+            "expanded_html": "We may decide to adopt special processes for time sensitive proposals."
+          },
+          {
+            "id":            "trial_period",
+            "sound":         "world_2",
+            "expanded_html": "For some proposals we might be able to try it out in an inexpensive way and revisit it later."
+          }
+
+        ],
+
+        "connectors": [
+          {
+            "label": "Press Start",
+            "start": "consensus_tone",
+            "end": "pre_proposal"
+          },
+          {
+            "label": "Proposer organizes sub meetings",
+            "start": "pre_proposal",
+            "end": "proposal_sub_meeting"
+          },
+          {
+            "label": "General meeting",
+            "start": "proposal_sub_meeting",
+            "end": "proposal_presentation"
+          },
+          {
+            "label": "open up to group",
+            "start": "proposal_presentation",
+            "end": "questions_and_discussion"
+          },
+          {
+            "label": "",
+            "start": "questions_and_discussion",
+            "end": "call_for_consensus"
+          },
+          {
+            "label": "3. Consensus",
+            "start": "call_for_consensus",
+            "end": "consensus_reached"
+          },
+          {
+            "label": "",
+            "start": "consensus_reached",
+            "end": "proposal_passed"
+          },
+          {
+            "label": "2. Stand Asides (>one-third)",
+            "start": "call_for_consensus",
+            "end": "tabled"
+          },
+          {
+            "label": "1. Blocks (1-3)",
+            "start": "call_for_consensus",
+            "end": "blocked"
+          },
+          {
+            "label": "Opposers organize 1-4 meetings",
+            "start": "blocked",
+            "start_position": "Right",
+            "end_position": "Right",
+            "end": "proposal_sub_meeting"
+          },
+          {
+            "label": "Failing reworked proposal",
+            "start": "blocked",
+            "end": "super_majority_vote"
+          },
+          {
+            "label": "passed",
+            "start": "super_majority_vote",
+            "end": "proposal_passed"
+          },
+          {
+            "label": "not passed",
+            "start": "super_majority_vote",
+            "start_position": "Left",
+            "end_position": "Bottom",
+            "end": "tabled"
+          }
+        ]
+      };
+
+
+      function buildObjects(object_hash, connector_hash) {
+        var top_margin = 90;
+        var prev_item_top = -top_margin;
+        var this_item_top = 0;
+        var prev_item_height = 0;
+
+        // for each Node in the above data structure
+        $.each(object_hash, function(i, object){
+          var left_offset = 10;
+
+          // Make a more readable name from the ID
+          object.name = object.id.split('_');
+          $.each(object.name, function(i,word){
+            object.name[i] = word[0].toUpperCase() + word.slice(1);
+          });
+          object.name = object.name.join(' ');
+
+          // start with the template and fill in more aspects
+          var $div = $('#node_template').clone();
+          $div.attr('id', object.id).hover(
+            function() { // when moused over, make it pop to top & show extra text
+              var new_z_index = parseInt($(this).css('z-index'))+1;
+              $(this).css('z-index', new_z_index);
+              $(this).find('span').show();
+              $(this).find('input').show();
+              jsPlumb.repaintEverything(); // also redo the connections
+            },
+            function() {
+              var new_z_index = parseInt($(this).css('z-index'))-1;
+              $(this).css('z-index', new_z_index);
+              // $(this).find('input').hide();
+              $(this).find('span').hide();
+              jsPlumb.repaintEverything(); // also redo the connections
+            }
+          );
+
+          $div.find('label a').text(object.name);
+          var link_href = '#ref-'+object.id;
+          if ($(link_href).length > 0) { // if element is on this page, link to it
+            $div.find('label a').attr('href', link_href);
+          }
+          var $audio_button = $div.find('input');
+          var sound_id = '#'+(object.sound.split(' ')[0]);
+          if ($(sound_id).length > 0 ) {
+            $audio_button.click(function() {
+              PlaySoundsSequentially(object.sound.split(' '));
+            })
+          }
+          else {
+            $audio_button.attr('value', $audio_button.attr('value')+' '+object.sound );
+          }
+          $audio_button.click(function() {
+            $div.addClass('icon');
+          })
+
+
+          $div.find('span').html(object.expanded_html);
+          $div.appendTo('#flowchart');
+
+          switch (object.id) {  // some layout specific to certain elements
+            case 'tabled':
+              left_offset = 300;
+              this_item_top = prev_item_top-20;
+              break;
+            case 'blocked':
+              left_offset = 500;
+              this_item_top = prev_item_top-80;
+              break;
+            case 'super_majority_vote':
+              left_offset = 470;
+            default:
+              this_item_top = prev_item_top+prev_item_height+top_margin;
+          }
+          if (object.id === 'consensus_reached') {
+              this_item_top += 90;
+          }
+
+
+          $div
+          .css('top', this_item_top+'px')
+          .css('left', left_offset+'px');
+          // left_offset += 20;
+
+          jsPlumb.draggable(object.id);
+
+          prev_item_height = $div.height();
+          prev_item_top = this_item_top;
+        });
+      }
+
+      function connectObjects(connector_hash) {
+
+        $.each(connector_hash, function(i, connector) {
+          var anchors = ['Bottom', 'Top']; // defaults
+          if (connector.start_position) anchors[0] = connector.start_position;
+          if (connector.end_position) anchors[1] = connector.end_position;
+
+          jsPlumb.connect({
+            source: connector.start,
+            target: connector.end,
+            anchors: anchors,
+            endpoint: "Rectangle",
+            endpointStyle: {
+              fillStyle: 'rgb(9, 202, 17);',
+              strokeStyle: 'rgb(9, 202, 17);',
+              lineWidth: 12,
+            },
+            connector: [
+              "Flowchart",
+              { stub: 10, gap:10, cornerRadius:2, alwaysRespectStubs:true }
+            ],
+            paintStyle: {
+              fillStyle: 'rgb(9, 202, 17);',
+              strokeStyle: 'rgb(9, 202, 17);',
+              lineWidth: 10,
+              outlineWidth: 3,
+              outlineColor: 'rgb(122, 255, 0)',
+              //dashStyle
+            },
+            overlays: [
+              ['Arrow', {
+                width: 10,
+                length: 10,
+                location: -1,
+                paintStyle: {
+                  fillStyle: 'white',
+                  strokeStyle: 'black',
+                  outlineWidth: 1,
+                }
+              }],
+              ['Arrow', {
+                width: 10,
+                length: 10,
+                location: 15,
+                paintStyle: {
+                  fillStyle: 'white',
+                  strokeStyle: 'black',
+                  outlineWidth: 1,
+                }
+              }],
+              ['Label', {
+                label: connector.label,
+                location: 0.8,
+                cssClass: 'wabi_label '+'ID'+connector.end
+              }]
+            ]
+          });
+        });
+
+        $('.wabi_label').each(function() {
+          var href = '#'+$(this).attr('class').match(/ID([a-z_]*)/)[1];
+          $(this).html( $('<a>', {href: href, text: $(this).text()+' >' }) );
+          if ( $(this).css('left').match(/^-/) ) { // can't have things unvisible on the left hand side
+            $(this).css('left','0');
+          }
+        });
+
+        // console.log(jsPlumb.getConnections({
+        //   source:"blocked"
+        // }));
+      }
+
+
+      function PlaySoundsSequentially(array_of_sound_ids) {
+        // NOTE: repeated sound ids currently causes an infinite loop, sorry :()
+        var prev_sound = null;
+        var this_sound = null;
+        console.log(array_of_sound_ids);
+        for (var i = 0; i < array_of_sound_ids.length; i++) {
+          console.log(i)
+          this_sound = document.getElementById(array_of_sound_ids[i]);
+          if (prev_sound && this_sound) {
+            console.log(prev_sound);
+            prev_sound.addEventListener('ended',
+              function() {
+                this_sound.play();
+                prev_sound.removeEventListener('ended');
+              },
+              false
+            );
+          }
+          else if (this_sound) {
+            console.log('playing')
+            console.log(this_sound);
+            this_sound.play();
+          }
+          prev_sound = this_sound;
+        };
+      }
+
+
+
+      $(document).ready(function() {
+        buildObjects(DATA.flowchart_objects);
+        connectObjects(DATA.connectors);
+      });
+    </script>
+  </head>
+
+
+
+
+
+
+
+
+
+  <body>
+  <div id="sound_library">
+    <audio id="theme" src="http://hryanjones.com/science/wabitown_flowchart/mario_theme_shorter.wav" preload="true" autobuffer></audio>
+    <audio id="big_mario_jump" src="http://hryanjones.com/science/wabitown_flowchart/smb_jump-super.wav" preload="true" autobuffer></audio>
+    <audio id="embiggening" src="http://hryanjones.com/science/wabitown_flowchart/smb_powerup.wav" preload="true" autobuffer></audio>
+    <audio id="little_mario_jump" src="http://hryanjones.com/science/wabitown_flowchart/smb_jump-small.wav" preload="true" autobuffer></audio>
+    <audio id="bump" src="http://hryanjones.com/science/wabitown_flowchart/smb_bump.wav" preload="true" autobuffer></audio>
+    <audio id="coin" src="http://hryanjones.com/science/wabitown_flowchart/smb_coin.wav" preload="true" autobuffer></audio>
+    <audio id="1_up" src="http://hryanjones.com/science/wabitown_flowchart/smb_1-up.wav" preload="true" autobuffer></audio>
+    <audio id="down_flag" src="http://hryanjones.com/science/wabitown_flowchart/smb_flagpole.wav" preload="true" autobuffer></audio>
+    <audio id="stage_clear" src="http://hryanjones.com/science/wabitown_flowchart/smb_stage_clear.wav" preload="true" autobuffer></audio>
+    <audio id="time_short" src="http://hryanjones.com/science/wabitown_flowchart/smb_warning.wav" preload="true" autobuffer></audio>
+
+    <audio id="bowser_fire" src="http://hryanjones.com/science/wabitown_flowchart/smb_bowserfire.wav" preload="true" autobuffer></audio>
+    <audio id="power_down" src="http://hryanjones.com/science/wabitown_flowchart/smb_pipe.wav" preload="true" autobuffer></audio>
+
+    <audio id="pause" src="http://hryanjones.com/science/wabitown_flowchart/smb_pause.wav" preload="true" autobuffer></audio>
+    <audio id="power_up_appears" src="http://hryanjones.com/science/wabitown_flowchart/smb_powerup_appears.wav" preload="true" autobuffer></audio>
+  </div>
+
+  <h1>Super Wabitown Siblings</h1> -- <h2>Decision Process</h2>
+
+  <div id="flowchart">
+  </div>
+
+  <div id="node_template" class="window">
+    <label><a></a></label>
+    <input type="button" value="&#9834;" style="display:none;"></input>
+    <!-- <input type="button" value="&#9834;"></input> -->
+    <br>
+    <span style="display:none;">
+    </span>
+
+  </div>
+<!--
+  <div id="soundboard">
+  <object type="application/x-shockwave-flash" data="./mariosoundboard.swf" width="600" height="400" inputd="flashObject" style="visibility: visible;"><param name="swliveconnect" value="true"></object>
+ -->
+
+<div id="consensus_document">
+
+  <h2 id="ref-consensus_tone">Consensus</h2>
+  <a href="#consensus_tone">(flowchart)</a>
+
+  <p>
+  A consensus decision has three essential ingredients:
+  <ul>
+    <li>It is made with the community's best interest in mind.</li>
+    <li>Everyone takes responsibility to speak their point of view and listen to others.</li>
+    <li>Everyone agrees not to hinder its implementation.</li>
+  </ul>
+  </p>
+
+  <p>
+  <b>Reaching consensus</b>
+  <br>
+  Reaching consensus requires gathering and blending the ideas and concerns of individual members, and synthesizing these into a decision with which everyone in the group can live. Full consent does not mean that everyone must be completely satisfied with the final outcome. <u id="ref-proposal_passed">Full consent means that the decision must be acceptable enough to everyone, and everyone commits to supporting the decision</u> <a href="#proposal_passed">(flowchart)</a>.
+  </p>
+
+  <p>
+  Because members listen to each other, give time to each other, build trust and patience, and strive for what is best for the community as a whole, blocking a decision from being made should rarely be used. Blocking should not be used for personal preference. Blocking should be used when there is a concern that a Proposal will negatively affect the good of the group, including adherence to its values and member safety.
+
+  <h2>Principles of Consensus</h2>
+  <p>
+  <b>Unity of purpose</b> - We are working together to make the best decisions possible for the good of the group. We are guided by our shared beliefs, as embodied in our Vision statement.
+  </p>
+
+  <p>
+  <b>Cooperation</b> - We share information and resources and provide mutual support and suggestions. We are all working to find a solution that best meets everyone's needs. Our ability to reach agreement will depend on truth, creativity, logic, respect, and love, and will not involve deception, coercion, lobbying or malice.
+  </p>
+
+  <p>
+  <b>Trust</b> - Consensus only works in conditions of trust. We trust that each person is honestly keeping the best interest of the group in mind and that every contribution will be offered and received with respect and patience.
+  </p>
+
+  <p>
+  <b>Differences are valued</b> - In an atmosphere of trust, we appreciate that difference and disagreement are not damaging but are, in fact, important and creative processes. Conflict, when dealt with in the safety of the group, can often lead to the greatest solutions.
+  </p>
+
+  <p>
+  <b>Feelings are valued</b> - Knowledge does not just exist at an intellectual level and we believe that emotion and intuition are powerful tools for understanding an issue. Emotions and gut reactions are valued for the breadth and depth of understanding they provide. If emotions are not addressed, the process suffers and good decisions cannot be made.
+  </p>
+
+  <p>
+  <b>Equal power, equal responsibility</b> - Because consensus decision-making requires a high level of involvement and responsibility from all participants, we strive to ensure that we all have equal opportunity for participation, leadership roles and access to information. Each of us needs to feel responsible for every decision made and every meeting we attend.
+  </p>
+
+  <p>
+  <b>Common ownership of ideas</b> - A consensus decision is owned equally by all of us. All members agree to support the decision and not hinder its implementation.
+  </p>
+
+  <p>
+  <b>Time and process</b> - In order to make good decisions and nurture our community, we respect the process and give it the time that it needs.
+  </p>
+
+  <p>
+  <b>Willingness to learn skills</b> - Consensus decision-making requires skills such as communication, facilitation, and meeting participation that we may not have yet developed. In order to develop these skills, we are willing to work to learn them.
+
+  <h2>The Consensus Process</h2>
+  <br>
+  <br>
+  <h3 id="ref-pre_proposal">1 - Create A Pre-proposal</h3>
+  <a href="#pre_proposal">(flowchart)</a>
+
+  <p>
+  At a General Meeting, the Proposer will make a short presentation about the proposal they wish to create and bring to a General Meeting, or the group will suggest an idea for a Proposal that needs to be created, which will be adopted by a Proposer or team. It will include the following points:
+  <ol>
+    <li>The situation / problem that the Proposal will address</li>
+    <li>A broad stroke description of the Proposal, if applicable</li>
+  </ol>
+  The Proposer will then ask for feedback, and may solicit help in creating the Proposal. The Proposer will set up any necessary meetings to create the Proposal. The general meeting may also be a good time for a brainstorm to quickly get Member input for the Proposal.
+  </p>
+
+  <p>
+  Pre-Proposals may also be initiated over email, at least one week before the General Meeting at which the Proposal is to be discussed.
+  </p>
+
+  <p id="ref-proposal_sub_meeting">
+  <a href="#proposal_sub_meeting">(flowchart)</a>
+  <br>
+  The Proposer is responsible for requesting the expected amount of time on the agenda at the General Meeting at which the Proposal is to be discussed.
+  </p>
+
+  <p>
+
+  <h3 id="ref-proposal_presentation">2 - The Proposal</h3>
+  <a href="#proposal_presentation">(flowchart)</a>
+
+  <p>
+  The following information is recommended, but not required:
+  <ul>
+    <li>Background on the issue / Why we need this proposal</li>
+    <li>List of questions / Issues raised</li>
+    <li>Pros &amp; Cons</li>
+    <li>Examples from other co-housing communities (Has the wheel already been invented?)</li>
+  </ul>
+  </p>
+
+  <p>
+  At the General Meeting at which the Proposal is to be discussed, the following steps will be followed:
+  <ol>
+  <li>A Presentation of the Proposal</li>
+    <ul>
+    <li>It is recommended that this include a visual piece (ppt, text, graphic, etc.)</li>
+    <li>The length of presentation is determined by the Proposers, and the time allotted on the agenda.</li>
+    </ul>
+  <li id="ref-questions_and_discussion">Clarifying Questions and Friendly Amendments <a href="#questions_and_discussion">(flowchart)</a></li>
+    <ul>
+    <li>This is the time for factual questions about the Proposal, and ends with everyone understanding what the Proposal is about. The discussion is lead by the Proposers. It is important to allow ample time for this clarification process, and to not allow the time to turn into a debate, lobbying, or Proposal of alternatives.</li>
+    <li>"Friendly Amendments" are suggestions from the Members that the Proposer decides are an improvement to the Proposal, and do not substantially change the Proposal.</li>
+    </ul>
+  <li>Discussion</li>
+    <ul>
+    <li>Proposals, there will be room for all to speak and ask questions and allow for surfacing of feelings concerning the Proposal. The discussion phase is time-bounded by the amount of time requested on the agenda.</li>
+    </ul>
+  <li>Call for Consensus</li>
+    <ul>
+    <li>In the final five minutes of allotted time, the Proposer may call for consensus on the original Proposal, possibly with the addition of some friendly amendments.</li>
+    </ul>
+  </ol>
+  </p>
+
+  <h3 id="ref-call_for_consensus">3 - The Consensus Process</h3>
+  <a href="#call_for_consensus">(flowchart)</a>
+
+  <p>
+  The call for consensus will go in the following order:
+  <ul>
+    <li><b>Call for blocks on the Proposal</b> --
+    A block is considered appropriate if it expresses concern for the good of the group, defined as adherence to the values and vision of the group as a whole, or the safety of group members.</li>
+    <li><b>Call for stand-asides on the Proposal</b> --
+    A stand-aside is a way to express concerns or personal reservations without impeding the group process.</li>
+    <li><b>Call for consensus on the Proposal</b> --
+    Consensus is defined as being in favor of, or generally fine with, the Proposal.</li>
+  </ul>
+  </p>
+
+  <p>
+  <ol>
+    <li>When someone calls for consensus and no one blocks, and fewer than one-third of the people present stand-aside, the proposal passes.</li>
+    <li><u>When someone stands aside</u>, (or even if they consent?) they are able to register Concerns for the Minutes</li>
+      <ul><li>"Concerns for the Minutes" provides an outlet for the Members to register ideas and/or disagreements, but without halting a decision on the Proposal. Concerns are noted in the minutes along with the consensed decision.</li></ul>
+    <li><u id="ref-tabled">If more than one-third of the people present stand aside</u> <a href="#tabled">(flowchart)</a>, but there are no blocks, then consensus has not been reached and the Proposal is tabled. A tabled Proposal can be brought up again at the discretion of the original Proposers, or it can be taken up by another person.</li>
+    <li><u id="ref-blocked">If someone blocks</u> <a href="#blocked">(flowchart)</a>, the person blocking is obligated to meet with small groups of other members in a series of solution-oriented, consensus-building meetings to think through the issues and mutually agree on a new proposal that addresses the same problem as the blocked proposal. They present the new proposal at the next General Meeting.</li>
+      <ul>
+        <li>The small groups are required to meet one to four times and within one month after the proposal was blocked. (Extenuating circumstances or request of the small group may be considered to revise this timeline.)</li>
+        <li>The people who supported the proposal can send representatives to these meetings, but they don't have to attend all of the meetings like the blocking person does.</li>
+        <li>The person blocking is responsible for organizing the meetings, and the meetings must take place. If the person blocking doesn't do this, the group assumes he or she doesn't care about the proposal enough to have made a responsible block. Then the block is considered dropped and the original proposal is put back on the agenda of the next General Meeting to finalize. (Via a vote?)</li>
+        <li><u>A New Proposal</u>: If a new, mutually agreed upon proposal is created in one of the meetings, it goes back to the whole group and is taken up as a new proposal.</li>
+        <li><u id="ref-super_majority_vote">75 Percent Super-Majority Vote</u> <a href="#super_majority_vote">(flowchart)</a>: If the person blocking and the other members cannot come up with a mutually agreed-on new proposal during the series of meetings, the original proposal goes back to the next General Meeting, where it can be passed by a 75 percent super-majority vote of the members present.</li>
+        <li>The same process applies if two or three people block. (If more than a few people block a proposal though, of course the proposal doesn't pass because clearly, it doesn't have enough support, and the Proposal is tabled.)</li>
+    </ul>
+    <li><u id="ref-consensus_reached">If the Proposal passes</u> <a href="#consensus_reached">(flowchart)</a> those Members not in attendance at the General Meeting where it was Proposed have up to one week to review the Proposal, read the General Meeting minutes, and potentially block the Proposal via email. If a Member blocks via email, the same process applies.</li>
+  </ol>
+  </p>
+
+  <h4>Respect</h4>
+  <p>
+  This method aims to respect both the person blocking and those who support the proposal.
+  It respects the person blocking because it offers a month of informal opportunities -- and up to four formal opportunities -- to share his or her views with others in a more intimate setting and mutually create a new proposal.
+  </p>
+  <p>
+  It respects the people supporting the proposal because, if the small groups cannot build enough consensus to reach agreement, the later 75 percent super-majority vote will ensure that the most number of people will get the most of what they want.
+  </p>
+
+  <h4 id="ref-trial_period">Trial Periods</h4>
+  <a href="#trial_period">(flowchart)</a>
+  <p>
+  For social rules (or where appropriate), suggesting a trial period for the Proposal may be a good way to achieve consensus, with an agreement to revisit the Proposal after the trial period and submit it to a full consensus process. In these cases, it is recommended that objectives be listed in advance, and the Proposal be evaluated by how well it meets those objectives over the trial period.
+  </p>
+
+  <h4>Swirling Conversations</h4>
+  <p>
+  Swirling conversations are a part of the informal governance process at WabiTown, to be used whenever there is an upcoming proposal that has a lot of emotional charge for people, or when a proposal has been blocked. Members are encouraged over the course of several weeks to meet with two or three others - most often informally and spontaneously - to talk about the Proposal or the problem. This can also be used at a General Meeting if needed. Then these Members "swirl away" to another group to share what they learned and advance the discussion and search for solutions. Members encourage each other not to talk negatively about another Member. Ideally, most of the Members who care about the issue will participate in these discussions, and contribute to the inevitable solution.
+  </p>
+
+  <h4>4 - Other Decision-making Options</h4>
+  <p>
+  For some decisions, a consensus-based process is not appropriate. In these listed situations, alternative decision-making processes will be used.
+  </p>
+  <ol>
+    </li><b>Multi-Voting</b>
+      When deciding on an issue of personal taste, there is no solution that "best meets the needs of the community," so it is usually not appropriate to use consensus. To use Multi-Voting, create a list of alternatives and then allow each member a given number of votes to select alternatives. This is often done with sticky dots. Generally some maximum number of votes can be used for each alternative. Then, if needed, vote on the top alternatives allowing one vote per member. Generally a simple majority wins.</li>
+
+  <li>
+    <b id="ref-time_sensitive">Time-Sensitive Proposals</b>
+    <a href="#time_sensitive">(flowchart)</a>
+    In some cases, a proposal will be deemed urgent and the full consensus process will take longer than is practical or possible to make a decision. In these cases, it may be possible to implement an expedited process. (NO IDEA exactly how this works. Need input.)
+  </li>
+  </ol>
+
+
+  <hr>
+  SUMMARY OF PROCESS
+
+  1 - Create a Pre-Proposal, either at a meeting or via email
+  2 - Present the Proposal
+  Presentation
+  Clarifying Questions / Friendly Amendments
+  Discussion
+  Call for Consensus
+  3 - The Consensus Process
+  If no blocks and less than one-third stand-aside, the Proposal passes
+  If more than one-third of those present stand-aside, and there are no blocks, the Proposal is tabled
+  If someone blocks (in person or via email), they must arrange solution-oriented meetings
+  A new or reworked Proposal goes through the usual Proposal process
+  No agreement in small group meetings will result in original Proposal going to 75% super-majority vote.
+  If more than 4 people block, the proposal is tabled.
+  4 - Other Decision-Making Options
+  Multi-Voting for issues of personal taste
+  Expedited process for time-sensitive issues
+  </p>
+
+  <p>
+
+  GLOSSARY OF SUPER-SPECIAL CONSENSUS TERMS - just highlight somehow in original, where defined.
+  Tabling
+  Blocking
+  General Meeting
+  Small Group, Solution-Oriented
+  Stand Aside
+  Consensus
+  Proposal
+
+
+</div>
+  </body>
+</html>
+

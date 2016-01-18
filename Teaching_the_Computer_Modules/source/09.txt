@@ -1,0 +1,14 @@
+================
+Computer Module 9: Managing Files and Folders (Skeleton)
+================
+
+#. Copy (pointer with plus sign)
+#. Move (pointer with arrow)
+#. Create Folder
+#. Renaming Files
+#. Deleting Files
+#. Copying/Moving many files
+#. Using a USB flash
+	* ejecting
+
+

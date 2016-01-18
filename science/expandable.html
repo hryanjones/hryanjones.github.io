@@ -1,0 +1,190 @@
+<html>
+  <head>
+    <style type="text/css">
+      #tool {
+        font-size: xx-large;
+      }
+      #tool {
+        position: fixed;
+        z-index: 999;
+      }
+      .content {
+        padding-top: 40px;
+        padding-left: 10px;
+      }
+      .de-emphasize
+      {
+        color: #555;
+      }
+      span
+      {
+        opacity: 0.95;
+        margin: 2px;
+        padding: 5px;
+        font-size: 85%;
+        display: inline-block;
+      }
+      body > div > span 
+      {
+        border: 2px solid #447;
+        background-color: #CCF;
+      }
+      body > div > span > span
+      {
+        border: 2px solid #474;
+        background-color: #CFC;
+      }
+      body > div > span > span > span
+      {
+        border: 2px solid #744;
+        background-color: #FCC;
+      }
+      body > div > span > span > span span
+      {
+        border: 2px solid #665;
+        background-color: #EEC;
+      }
+    </style>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="./jquery.nestedAccordion.js"></script>
+    <script type="text/javascript">
+      $(document).ready( function() {
+        $('#tool > span span, #tool > span br').hide();
+        isMouseOver = {};
+        $('body > div > span, body > div > span span').mouseenter( function() {
+          var _this = this;
+          isMouseOver[_this] = true;
+          $(this).removeClass('de-emphasize');
+          setTimeout( function() {
+            $(_this).parent().children('br').show();
+            $(_this).children().slideDown();//slideDown('fast');
+          },
+          100);
+        });
+        $('body > div > span span').mouseleave( function() {
+          var _this = this;
+          isMouseOver[_this] = false;
+          $(this).addClass('de-emphasize');
+          setTimeout( function() {
+            if ( isMouseOver[_this] === false ) {
+              $(_this).children().hide();//fadeOut('fast');//slideUp('slow');
+            }
+          },
+          800);
+        });
+        $('body > div > span').mouseleave( function() {
+          var _this = this;
+          isMouseOver[_this] = false;
+          setTimeout( function() {
+            if ( isMouseOver[_this] === false ) {
+              $(_this).find('span').slideUp('slow');
+              setTimeout(function() {
+                $(_this).find('br').hide();
+              },
+              600);
+            }
+          },
+          800);
+        });
+
+        $('.accordion').accordion();
+
+      });
+    </script>
+  </head>
+  <body>
+    <div id="tool">
+      <span>Account Resources
+        <br>
+          <span>One (EC2)
+            <br>
+            <span>One.One (IAD) 4 VPCs
+                <br>
+                  <span>One.One (VPC-Default)</span>
+                  <span>One.Two (VPC 1)</span>
+                  <span>One.Three (VPC 2)</span>
+                  <span>One.Four (VPC 3)</span>
+                </span>
+            <br>
+              <span>One.Two (PDX)</span>
+          </span>
+        <br>
+          <span>Two (RDS)
+            <span>Two.One</span>
+            <span>Two.Two</span>
+            <span>Two.Three</span>
+            <span>Two.Four</span>
+          </span>
+        <br>
+          <span>Three (S3)
+            <br>
+              <span>Three.One (Classic) 5 Buckets
+                <br>
+                  <span>Two.One (Bucket 1)</span>
+                  <span>Two.Two (Bucket 2)</span>
+                  <span>Two.Three (Bucket 3)</span>
+                  <span>Two.Four (Bucket 4)</span>
+              </span>
+            <br>
+              <span>Three.Two</span>
+            <br>
+              <span>Three.Three</span>
+            <br>
+              <span>Three.Four</span>
+            <br>
+              <span>Three.Five</span>
+          </span>
+        <br>
+        <span>Four
+          <span>Four.One</span>
+          <span>Four.Two</span>
+        </span>
+      </span>
+    </div>
+    <div class="content">
+      <hr>
+      <h1>Some page of information</h1>
+        <p>
+          This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  
+        </p>
+        <p>
+          This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  
+        </p>
+        <p>
+          This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  This is some derpen content.  
+        </p>
+
+        <h1> Actually might use </h1>
+        <h2><a href="http://www.adipalaz.com/experiments/jquery/accordion2.html">This Method of nesting</a></h2>
+        Need to know if accordion could support spans instead of divs -- not a deal breaker, but better in terms of screen real estate.
+        <ul class="accordion">
+          <li>Account Resources
+            <ul>
+              <li>One (EC2)
+                <ul>
+                  <li>One.One (IAD) 4 VPCs
+                    <ul>
+                    <li>One.One (VPC-Default)</li>
+                    <li>One.Two (VPC 1)</li>
+                    <li>One.Three (VPC 2)</li>
+                    <li>One.Four (VPC 3)</li>
+                  </li>
+                  <li>One.Two (PDX)</li>
+                </ul>
+              </li>
+              <li>Two (RDS)
+                <ul>
+                  <li>Two.One</li>
+                  <li>Two.Two</li>
+                  <li>Two.Three</li>
+                  <li>Two.Four</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <h2>Use <a href="http://jqueryui.com/accordion/#hoverintent">Hover Intent</a></h2>
+        Rather than tuning the jQuery myself.
+    </div>
+  </body>
+</html>

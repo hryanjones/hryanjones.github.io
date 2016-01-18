@@ -1,0 +1,40 @@
+﻿================
+Computer Module 3: Windows and their Parts
+================
+
+#. Programs open in windows
+#. Most windows have these Parts
+	* Border
+	* Title Bar
+	* Menu Bar
+	* Tool Bar
+	* Scroll Bar
+	* Status Bar
+
+#. Border - edge of window
+	* Drag border to resize window
+
+#. **Title Bar** – top of window which contains the title and three control buttons.
+	* minimize button - hide the window
+		* window goes where? (down to bottom in a button on the Taskbar)
+		* How bring it back? (click on its button)
+
+	* maximize button - fill the screen
+	* close button - close (or quit) the window
+	* Move window by dragging Title Bar
+
+#. **Menu Bar** - each word contains a menu
+	* Menus
+		* Each line has a Program Action
+		* Gray actions are not available
+		* Keyboard shortcuts on the right
+
+#. Tool Bar - buttons for accessing program actions quickly
+#. **Scroll Bar** - Used to see extra information too big to fit in window
+	* Small, light blue bar shows position
+	* Small arrows move slowly
+	* Drag small bar to move quickly
+	* (Some mice also have a “scroll” wheel as a center button)
+
+#. Status Bar – Displays some useful information about the working space or selected items.
+

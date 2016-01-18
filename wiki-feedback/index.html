@@ -1,0 +1,176 @@
+<!--DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
+<html>
+  <head>
+    <title>My_Wiky_Parser</title>
+    <link rel="stylesheet" type="text/css" href="/wiki-feedback/my_wiki.css"></link>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <!-- EXTERNAL JS DEPENDENCIES -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+    <!-- INTERNAL JS DEPENDENCIES -->
+    <script type="text/javascript" src="/wiki-feedback/my_wiki.js"></script>
+
+    <script src="./js/jquery.expandable.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+      jQuery(function($) {
+        $('#version').html('using jQuery ' + $.fn.jquery);
+        $('textarea').expandable();
+      });
+    </script>
+
+    <script type="text/javascript">
+      function openDownloadableWindowOfObject( jquery_object ) {
+        if (!window.btoa) {
+            window.btoa = function(str) {
+            return Base64.encode(str);
+          }
+        }
+        if ( jquery_object.prop('tagName') == 'TEXTAREA' ) {
+          var data = jquery_object.val();
+        }
+        else {
+          var data = jquery_object.html();
+        }
+        data = window.btoa(data);
+        //echoDebug( jquery_object.prop('tagName') );
+        if ( jquery_object.prop('tagName') == 'TEXTAREA' ) {
+          window.open('data:application/octet-stream;charset=utf-8;base64,' + data,
+              'WikiText -- Save As to Download');
+        }
+        else { //if not textarea assume it's HTML
+          window.open('data:text/html;charset=utf-8;base64,' + data,
+              'Generated HTML -- Save As to Download');
+        }
+      }
+
+      function getCharacterBeforeAndAfterCursor( jquery_object ) {
+        var el = jquery_object.get(0);
+        var pos = 0;
+        if('selectionStart' in el) {
+            pos = el.selectionStart;
+        } else if('selection' in document) {
+            el.focus();
+            var Sel = document.selection.createRange();
+            var SelLength = document.selection.createRange().text.length;
+            Sel.moveStart('character', -el.value.length);
+            pos = Sel.text.length - SelLength;
+        }
+        return jquery_object.val().slice(pos-1, pos+1);
+      }
+
+      function firstRender() {
+        //$('.debug').remove();
+        $('#preview > div').html('');
+        var text = $('#editor > textarea').val();
+        $('#preview > div').html( wiki.process(text) );
+      }
+/* May revisit this when need to speed this up
+      function rerenderLastLine() {
+        var text = $('#textarea').val().split(/\r?\n/)
+        var last_two_lines = [ text.pop(), text.pop() ].reverse().join('\n');
+        echoDebug(last_two_lines);
+        //generate wiki text for these last two lines
+        var html_to_replace = wiki.process(last_two_lines);
+        $('#preview > span.wikiline:last').remove();
+        $('#preview > span.wikiline:last').remove();
+        $('#preview').append(html_to_replace);
+      };
+*/
+      $(document).ready( function() {
+        effect_time = 'slow';
+        //$('.feedback').hide();
+        $('input#input-url').keyup(function(e) {
+          var feedback_span = $('input#input-url').next().next();
+          if (e.which == 13) {
+            //echoDebug('pushed enter');
+            $.get( $(this).val(), function(data) {
+              feedback_span.slideUp(effect_time);
+              $('#editor > textarea').val(data);
+              firstRender();
+            });
+          }
+          else {
+            feedback_span.slideDown(effect_time);
+          }
+        });
+        $('#get-html').click(function() {
+          alert('You can use your browser to save this to your local system (File > Save Page As).');
+          openDownloadableWindowOfObject($('div#preview > div'));
+        });
+        $('#get-text').click(function() {
+          alert('You may need to change the extension to ".txt" when or after downloading.');
+          openDownloadableWindowOfObject($('#editor > textarea'));
+        });
+        firstRender();
+        $('#editor > textarea').click(function() {
+          $('div.debug').remove();
+          //echoDebug('character before and after cursor = "' + getCharacterBeforeAndAfterCursor($(this)) + '"');
+        });
+        $('#editor > textarea').keyup(function(e) {
+          $('div.debug').remove();
+          //echoDebug('character before and after cursor = "' + getCharacterBeforeAndAfterCursor($(this)) + '"');
+
+          /*if (e.which == 13) {
+            $('#preview > div').append('<span class="wikiline"></span>');
+          }
+          else*/ if ( [37,38,39,40].indexOf(e.which) == -1 ) {
+            firstRender();
+            //rerenderLastLine();
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <!-- <div id="qunit"></div> -->
+    <div class="clearfix"><!-- had to do this because of using UI tabs http://goo.gl/Dzj2Q -->
+      <div id="editor">
+        <input id="input-url" type="text" value="(copy in URL to wiki text)"></input>
+          <br>
+          <span class="feedback" style="{display:none}">
+            now press <b><i>&lt;Enter&gt;</i></b> to load this wiki text.</span>
+        <div id="debug"></div>
+        <br>
+        <textarea cols="90" rows="48">=Direct Feedback Wiki Editor=
+== A small project inspired by [http://vimeo.com/36579366 this video] ==
+
+Type on the ''left'' '''<<<''' and it shows up rendered in HTML on the ''right'' '''>>>''', '''''as you type'''''.
+
+You can create bare ([http://google.com]) and [http://google.com named] links.
+
+* Mixed Bulleted
+*# and numbered
+*# lists also work as they would
+*# when editing Wikipedia.
+*#* to any depth (''I think'')
+* Another bullet
+** Now switching to sub points
+
+ A space in front of the line will give you an unformatted block, which is useful...
+ for ( the ) {
+   codes(of,awesomeness);
+ }
+ or ASCII ART
+        ,--,_               ,--,_
+ __    _\.---'-.     __    _\.---'-.
+ \ '.-"     // o\    \ '.-"     // o\
+ /_.'-._    \\  /    /_.'-._    \\  /
+        `"--(/"`            `"--(/"`
+
+{|
+| '''simple''' || tables || ''also'' || should
+| work || which are || similar to || [http://http://en.wikipedia.org/wiki/Help:Table#Examples these]
+|}
+
+===Images should also work===
+
+[[File:http://i.imgur.com/IppKJ.jpg?fb pic]]</textarea>
+      </div>
+      <div id="preview">
+        <button id="get-html">Click to get bare HTML</button>
+        <div></div>
+      <p></p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,121 @@
+body,
+div#preview > div,
+div#tabs > div.ui-tabs-panel {
+  background-color: white;
+  color: black;
+}
+
+body,
+div#preview > div,
+div#tabs > div.ui-tabs-panel, 
+.ui-state-default a,
+.ui-state-default a:link,
+.ui-state-default a:visited {
+  color: black;
+}
+
+/*
+a:link,
+.ui-tabs-panel a:link {
+  color:  blue;
+}
+a:visited,
+.ui-tabs-panel a:visited {
+  color: purple;
+}
+h1 {
+  color:  #ee5500;
+}
+*/
+xmp {
+  border: 2px dashed black;
+}
+xmp,
+textarea,
+div.ui-tabs-panel textarea,
+.ui-widget-header,
+.ui-widget-content {
+  background-color: #EEEEEE;
+}
+
+/* jQuery UI colors */
+/*
+	background: #000000;
+	color: #ffffff;
+}
+.ui-widget-header {
+	background: #333333;
+	color: #ffffff;
+	font-weight: bold;
+}
+.ui-widget-header a {
+	color: #ffffff;
+}
+*/
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+	border: 1px solid black;
+	background: #999999;
+}
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus {
+	border: 1px solid white;
+	background: #222222;
+	color: #DDDDDD;
+}
+.ui-state-hover a,
+.ui-state-hover a:hover,
+.ui-state-hover a:link,
+.ui-state-hover a:visited {
+	color: #ffffff;
+}
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+	border: 3px ridge gray;
+	background: black;
+	color: white;
+}
+.ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited {
+	color: #ffffff;
+}
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+	border: 1px solid #cccccc;
+	background: #eeeeee;
+	color: #2e7db2;
+}
+.ui-state-highlight a,
+.ui-widget-content .ui-state-highlight a,
+.ui-widget-header .ui-state-highlight a {
+	color: #2e7db2;
+}
+.ui-state-error,
+.ui-widget-content .ui-state-error,
+.ui-widget-header .ui-state-error {
+	border: 1px solid #ffb73d;
+	background: #ffc73d;
+	color: #111111;
+}
+.ui-state-error a,
+.ui-widget-content .ui-state-error a,
+.ui-widget-header .ui-state-error a {
+	color: #111111;
+}
+.ui-state-error-text,
+.ui-widget-content .ui-state-error-text,
+.ui-widget-header .ui-state-error-text {
+	color: #111111;
+}

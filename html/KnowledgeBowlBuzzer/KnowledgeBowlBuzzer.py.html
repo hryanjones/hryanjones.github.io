@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>~/code_stuff/KnowledgeBowlBuzzer/KnowledgeBowlBuzzer.py.html</title>
+<meta name="Generator" content="Vim/7.2">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body bgcolor="#1c0a2b" text="#f3aa4f"><font face="monospace">
+<a href="http://ugandajones.com/KnowledgeBowlBuzzer.html">Go Back to General Description Page for Knowledge Bowl Buzzer</a>
+<hr>
+<font color="#8080ff"># This is a small program written by H. Ryan Jones (hryanjones@gmail.com) with</font><br>
+<font color="#8080ff"># the purpose of serving as a buzzer for a Knowledge Bowl type competition.</font><br>
+<font color="#8080ff"># It waits for certain keypresses (some are designated for each team, see below) and</font><br>
+<font color="#8080ff"># then gives that team a predetermined amount of seconds to answer the question.</font><br>
+<font color="#8080ff"># The administrator of the questions uses the two main mouse buttons to control</font><br>
+<font color="#8080ff"># game flow:</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#8080ff"># The left mouse button opens &amp; closes answering sessions</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#8080ff"># The right mouse button will pause during a team countdown</font><br>
+<font color="#8080ff">#</font><br>
+<font color="#8080ff"># Note that this was written using Python 3.1.2 (not the often used 2.7), I quickly tried </font><br>
+<font color="#8080ff"># and failed to make it compatible in both, but may try again at another date.</font><br>
+<font color="#8080ff"># Also, one thing that I know breaks this program is if someone presses and</font><br>
+<font color="#8080ff"># holds on one of the keyboards.</font><br>
+<font color="#8080ff"># </font><br>
+<font color="#8080ff"># This software is distributed under the GNU General Public License 3 which is available in full text</font><br>
+<font color="#8080ff"># at this link&nbsp;&nbsp;<a href="http://www.gnu.org/copyleft/gpl.">http://www.gnu.org/copyleft/gpl.</a></font><br>
+<font color="#8080ff"># Some brief information is available at <a href="http://en.wikipedia.org/wiki/GNU_General_Public_License#Terms_and_conditions">http://en.wikipedia.org/wiki/GNU_General_Public_License#Terms_and_conditions</a></font><br>
+<font color="#8080ff"># Generally this means you are able to copy, use, modify, and even sell this software </font><br>
+<font color="#8080ff">#</font><br>
+<font color="#8080ff"># A source I used for how to get keypresses is here&nbsp;&nbsp; <a href="http://www.daniweb.com/forums/thread115282.html#">http://www.daniweb.com/forums/thread115282.html#</a></font><br>
+<br>
+<font color="#ff40ff">import</font>&nbsp;tkinter <font color="#ffff00">as</font>&nbsp;tk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#8080ff"># this is the GUI module that allows the simple window to be built</font><br>
+<font color="#ff40ff">from</font>&nbsp;tkinter.constants <font color="#ff40ff">import</font>&nbsp;*&nbsp;&nbsp;<font color="#8080ff"># this allows the root keybindings at the end of the code</font><br>
+<font color="#ff40ff">import</font>&nbsp;time <font color="#ffff00">as</font>&nbsp;t<br>
+<font color="#8080ff">#import winsound as ws&nbsp;&nbsp;&nbsp;&nbsp;# if you want to add in sounds mess around with this</font><br>
+<br>
+<font color="#8080ff">#GUIDE TO BUZZER LOCK STATES</font><br>
+<font color="#8080ff"># lock = 2 (Buzzer closed, also stops any current countdowns)</font><br>
+<font color="#8080ff"># lock = 1 (Buzzer closed while a team counts down)</font><br>
+<font color="#8080ff"># lock = 0 (Buzzer open and waiting for a team)</font><br>
+<br>
+<br>
+lock = <font color="#ff2222">1</font><br>
+pause = <font color="#ff2222">0</font>&nbsp;<font color="#8080ff"># for pausing while a team is answering so teams in the queue don't come up</font><br>
+queue = [] <font color="#8080ff"># teams that are waiting to answer</font><br>
+has_answered = []<br>
+<br>
+<font color="#ffff00">def</font>&nbsp;<font color="#22ff22">lock_toggle</font>(event):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">global</font>&nbsp;lock<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;lock == <font color="#ff2222">2</font>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock = <font color="#ff2222">0</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.text.<font color="#22ff22">set</font>(<font color="#ff2222">'Any team may buzz in!'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label.configure(background=<font color="#ff2222">'white'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">elif</font>&nbsp;lock == <font color="#ff2222">1</font>&nbsp;<font color="#ffff00">or</font>&nbsp;lock == <font color="#ff2222">0</font>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lock = <font color="#ff2222">2</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.text.<font color="#22ff22">set</font>(<font color="#ff2222">'BUZZER CLOSED!'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label.configure(background=<font color="#ff2222">'red'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#22ff22">print</font>(<font color="#ff2222">'lock_toggle set to %s'</font>&nbsp;% lock)<br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;print 'lock_toggle set to %s' % lock</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<font color="#ffff00">def</font>&nbsp;<font color="#22ff22">answering</font>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">global</font>&nbsp;has_answered<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">global</font>&nbsp;queue<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">global</font>&nbsp;lock<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">global</font>&nbsp;pause<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pause = <font color="#ff2222">0</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;lock = <font color="#ff2222">1</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#22ff22">print</font>(<font color="#ff2222">'ANSWERING HAS BEGUN'</font>)<br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;print 'ANSWERING HAS BEGUN'</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">while</font>&nbsp;queue:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#22ff22">print</font>(<font color="#ff2222">'the current queue is %s'</font>&nbsp;% queue)<br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print 'the current queue is %s' % queue</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;team = queue.pop(<font color="#ff2222">0</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pause = <font color="#ff2222">0</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;has_answered.append(team)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label.configure(background=team)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;secs = <font color="#ff2222">15</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#8080ff">################## TIME FOR EACH TEAM TO ANSWER AFTER THEY'VE BUZZED IN</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">while</font>&nbsp;secs <font color="#ffff00">and</font>&nbsp;lock == <font color="#ff2222">1</font>&nbsp;<font color="#ffff00">and</font>&nbsp;<font color="#ffff00">not</font>&nbsp;pause:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;queue: extra_string = <font color="#ff2222">'</font><font color="#ff40ff">\n</font><font color="#ff2222">'</font>&nbsp;+ <font color="#22ff22">str</font>(queue)[<font color="#ff2222">1</font>:-<font color="#ff2222">1</font>] + <font color="#ff2222">' coming next'</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">else</font>: extra_string = <font color="#ff2222">''</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.text.<font color="#22ff22">set</font>(<font color="#ff2222">'Team %s has </font><font color="#ff40ff">\n</font><font color="#ff2222">%s seconds to answer%s'</font>&nbsp;% (team,secs,extra_string))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label.update()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.sleep(<font color="#ff2222">1</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;secs -= <font color="#ff2222">1</font><br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(secs)</font><br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print secs</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">while</font>&nbsp;lock == <font color="#ff2222">1</font>&nbsp;<font color="#ffff00">and</font>&nbsp;pause:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.text.<font color="#22ff22">set</font>(<font color="#ff2222">'PAUSED'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label.update()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.sleep(<font color="#ff2222">0.5</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;<font color="#ffff00">not</font>&nbsp;secs:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.text.<font color="#22ff22">set</font>(<font color="#ff2222">'FAIL!'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label.configure(background=<font color="#ff2222">'orange'</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label.update()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.sleep(<font color="#ff2222">1</font>) <font color="#8080ff"># wait for a sec so people can see the FAIL screen</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;has_answered = []&nbsp;&nbsp;<font color="#8080ff"># reset teams that have answered</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;lock_toggle(<font color="#ff2222">1</font>)<br>
+<br>
+<font color="#ffff00">def</font>&nbsp;<font color="#22ff22">pause_toggle</font>(event):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">global</font>&nbsp;pause<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;pause == <font color="#ff2222">0</font>:&nbsp;&nbsp; pause = <font color="#ff2222">1</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">elif</font>&nbsp;pause == <font color="#ff2222">1</font>: pause = <font color="#ff2222">0</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#22ff22">print</font>(<font color="#ff2222">'pause set to %s'</font>&nbsp;% pause)<br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;print 'pause set to %s' % pause</font><br>
+<br>
+<br>
+<font color="#ffff00">def</font>&nbsp;<font color="#22ff22">keypress</font>(event):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">global</font>&nbsp;has_answered<br>
+&nbsp;&nbsp;&nbsp;&nbsp;team = <font color="#ff2222">''</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;event.keysym == <font color="#ff2222">'Escape'</font>: <font color="#8080ff"># allow the program to be quit at any time with ESC</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;root.destroy()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x = event.char<br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;print x</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;x <font color="#ffff00">in</font>&nbsp;&nbsp; [<font color="#ff2222">'1'</font>,<font color="#ff2222">'x'</font>,<font color="#ff2222">'X'</font>,<font color="#ff2222">'6'</font>,<font color="#ff2222">','</font>,<font color="#ff2222">'='</font>,<font color="#ff2222">'8'</font>,<font color="#ff2222">'3'</font>]: team = <font color="#ff2222">'blue'</font>&nbsp;&nbsp;<font color="#8080ff">###############BLUE TEAM BUTTONS</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">elif</font>&nbsp;x <font color="#ffff00">in</font>&nbsp;[<font color="#ff2222">'2'</font>,<font color="#ff2222">'c'</font>,<font color="#ff2222">'C'</font>,<font color="#ff2222">'-'</font>,<font color="#ff2222">'.'</font>,<font color="#ff2222">'9'</font>]: team = <font color="#ff2222">'green'</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#8080ff">##############GREEN TEAM BUTTONS</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">elif</font>&nbsp;x <font color="#ffff00">in</font>&nbsp;[<font color="#ff2222">'z'</font>,<font color="#ff2222">'Z'</font>,<font color="#ff2222">'5'</font>,<font color="#ff2222">'m'</font>,<font color="#ff2222">'M'</font>,<font color="#ff2222">'0'</font>,<font color="#ff2222">'7'</font>]: team = <font color="#ff2222">'yellow'</font>&nbsp;&nbsp;&nbsp;&nbsp;<font color="#8080ff">#############YELLOW TEAM BUTTONS</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#22ff22">print</font>(<font color="#ff2222">'</font><font color="#ff40ff">\t</font><font color="#ff2222">'</font>&nbsp;+ x + <font color="#ff2222">'TEAM %s'</font>&nbsp;% team )<br>
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;team <font color="#ffff00">and</font>&nbsp;lock &lt; <font color="#ff2222">2</font>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#22ff22">print</font>(<font color="#ff2222">'%s has answered'</font>&nbsp;% has_answered)<br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print '%s has answered' % has_answered</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;team <font color="#ffff00">not</font>&nbsp;<font color="#ffff00">in</font>&nbsp;has_answered <font color="#ffff00">and</font>&nbsp;team <font color="#ffff00">not</font>&nbsp;<font color="#ffff00">in</font>&nbsp;queue:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue.append(team)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#22ff22">print</font>(<font color="#ff2222">'%s team has been added to the queue'</font>&nbsp;% team)<br>
+<font color="#8080ff">##&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print '%s team has been added to the queue' % team</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#ffff00">if</font>&nbsp;<font color="#ffff00">not</font>&nbsp;lock: answering() <font color="#8080ff"># start the answering queue if buzzer's open</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<br>
+root = tk.Tk()<br>
+root.text = tk.StringVar()<br>
+root.bgcolor = tk.StringVar()<br>
+root.bind_all(<font color="#ff2222">'&lt;Key&gt;'</font>,keypress)<br>
+root.bind(<font color="#ff2222">'&lt;Button-1&gt;'</font>,lock_toggle)<br>
+root.bind(<font color="#ff2222">'&lt;Button-3&gt;'</font>,pause_toggle)<br>
+label = tk.Label(root, bg=<font color="#ff2222">'red'</font>, fg=<font color="#ff2222">'black'</font>, textvariable=root.text, font=(<font color="#ff2222">'Helvetica'</font>,<font color="#ff2222">45</font>), padx=<font color="#ff2222">300</font>, pady=<font color="#ff2222">400</font>)<br>
+label.pack(fill=BOTH, expand=<font color="#ff2222">1</font>)<br>
+root.mainloop()<br>
+toggle_buzzer(<font color="#ff2222">1</font>)<br>
+&nbsp;<br>
+</font></body>
+</html>

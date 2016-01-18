@@ -1,0 +1,37 @@
+================
+Computer Module 8: Simple Formatting (Word Processing)
+================
+
+#. Formatting is modifying the form of anything. Within a word processor this can mean changing many aspects of the words in the document you are creating. 
+#. Most formatting is done by first **selecting** (or **highlighting**) the words, sentences, or paragraphs to be changed. You select by dragging the cursor from the beginning to the end of the text you want to change. You can also select one word by double clicking it. 
+#.  **Font** is a style of letters you can write in. Many font changes can be done using the Formatting tool bar. 
+	Three basic changes to a font are to make it bold, italic, or underlined. These changes can be combined, for example you can have bold underlined, or bold italic. 
+	Also, the Font itself can be changed: 
+	This sentence is written in "Times New Roman." 
+	This sentence is written in "Arial." 
+	This sentence is written in "Steve." 
+	Additionally the Font Size can be changed: 
+	This sentence is in 12 (point) font-a common size for body text. 
+	This sentence is in 14 (point) font - commonly used for sub-headings. 
+	18 (point) font - commonly used for headings. 
+#. Justification is the place where the text will be placed on the page: 
+	This text is justified on the left. 
+	.. centered::	This text is center justified. 
+
+#. Numbered and Bulleted lists can also be made quickly with the numbering and bullet buttons. A new bullet or number appears after you push the <Enter> key. The <Tab> key can be used to indent to a sub-point (and <Shift+Tab> to un-indent). 
+
+#. **Tables** are used when you want to organize words and numbers into rows and columns. Rows are horizontal lines and columns are vertical lines. 
+	e.g. 
+
+============= ======== === ============ ===============
+Name          Village  Age Typing Speed Typing Accuracy
+============= ======== === ============ ===============
+Migadde Jones Kayonza  25  32 WPM       88%
+Iga Fredrick  Makukulu 34  48 WPM       97% 
+Natalimye Ida Nakyesa  17  64 WPM       92% 
+============= ======== === ============ ===============
+
+	You can make a table by going to the "Table" menu, then choosing "Insert", then "Table..." You must put in the number of columns and rows, the above example has 4 rows and 5 columns (the "Name" column, the "Village" column, etc.). 
+	Homework: Copy this module into the computer. 
+
+

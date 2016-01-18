@@ -1,0 +1,34 @@
+================
+Computer Module 2: Touch Typing
+================
+
+#. **Cursor** is the blinking line where text is inserted.
+#. There are two methods of typing:
+	* Hunt & Peck (*demonstrate*)
+	* Touch Typing (*demonstrate*)
+	
+#. Hunt & Peck not effective because you:
+	* Look at Keys
+	* Only use 2 Fingers
+	
+#. Touch Typing is a valuable skill because:
+	* You can go faster by using all fingers
+	* You don't waste time looking at the keyboard
+	
+#. Proper Touch Typing Position:
+	* Keyboard in a comfortable position (not stretching to reach, or "scrunched up")
+	* Sitting up straight
+	* Fingers laid lightly on the Home Row with thumbs on the Space Bar.
+		* Home Row is the keys A-S-D-F on the left hand and J-K-L-; on the right.
+		
+	* Fingers should be slightly curled, so as to hit only one key
+	
+#. Typing tutor {KTouch, klavaro, gtypist, etc.}
+#. Always look at monitor
+#. Special Keys
+	* *< Spacebar >* inserts a space
+	* *< Backspace >* deletes one character to the left
+
+#. Accuracy is more important than speed.
+#. Holding down a key causes the letter (or space, or deletion) to repeat.
+

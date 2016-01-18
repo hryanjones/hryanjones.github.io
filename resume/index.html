@@ -1,0 +1,35 @@
+<!--DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
+<html>
+  <head>
+    <title>H. Ryan Jones -- Resume</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <!-- EXTERNAL JS DEPENDENCIES -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+    <!-- INTERNAL JS DEPENDENCIES -->
+    <script type="text/javascript" src="/wiki-feedback/my_wiki.js"></script>
+    <!--<script type="text/javascript" src="/js/echoDebug.js"></script>-->
+
+    <style type="text/css">
+      iframe#experience-graph {
+        width: 100%;
+        height: 240px;
+        background: white;
+      }
+    </style>
+
+
+    <script type="text/javascript">
+      $(document).ready( function() {
+        $.get( '/resume/hryanjones.txt', function(data) {
+          $('div#resume-html').html( wiki.process(data) );
+          //$('a:contains("Graph")').load('/resume/graph.html');
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="resume-html"></div>
+  </body>
+</html>

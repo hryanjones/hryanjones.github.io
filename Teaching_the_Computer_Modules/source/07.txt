@@ -1,0 +1,29 @@
+==============
+Computer Module 7:  Location - Folders & File Browsing
+==============
+
+#. First, think about *"Where are we?"* from smaller to larger areas, this could be called our address:
+	* *Kayonza Computer lab*, inside of
+	* *Kayonza P/S, inside of*
+	* *Kayonza Sub-County*, inside of
+	* *Baale County*, inside of
+	* *Kayunga District*, inside of
+	* *Uganda*, inside of
+	* *Africa*, inside of
+	* *The World (Earth)*, inside of
+
+#. Places on the computer are also organized into smaller and larger spaces each of which is called a **Folder**. All folders have:
+	* A name, which says what type of things are stored there (*e.g. Wasswa's Music*)
+	* An address (or path) beginning which like above tells us exactly where the folder is in the Universe of the computer {*which is called a File System on some computers*}.
+
+#. We can look inside and travel to different folders using the {*File Browser*}, a program which opens every time we open a folder.
+	* One toolbar, the Address bar, shows us our location. From the above example we might have an address like this: /World/Africa/Uganda/Kayunga/Baale/Kayonza/
+
+#. Three devices (physical things) where files and folders can be stored:
+	* **Hard-Drive (HD)**: This is the part inside of a computer which stores it's files and folders.
+	* **USB "flash"** {*sometimes labeled like "1G Removable Volume"*}: is a portable device allowing you to move files and folders between computers.
+	* **CD/DVD**: Round discs which can also hold files and folders.
+
+#. The File Manager allows us to move into and see things inside of different folders. We can move to a new folder by double clicking on it.
+	* *Icon View* versus *List View*
+	* The Side Pane can be used to see many folders at once.

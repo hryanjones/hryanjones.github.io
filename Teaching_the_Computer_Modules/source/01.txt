@@ -1,0 +1,57 @@
+================
+Computer Module 1: Introduction and Using the Mouse
+================
+
+Introduction
+------------
+#. Some parts of the computer 
+	* **Monitor (or screen)**: The "tv" or screen part, where we view our work and content. 
+	* **Keyboard**: The grouping of buttons or keys where we can type words into the computer. 
+	* **Mouse**: A device to graphically select and manipulate things on the computer. 
+	* (**Advanced Parts**): see Appendix
+	
+#. Computer Lab Rules (*refer to chart*) 
+	* No food or *drink* (*why? - because water can cause electronic devices to break*)
+	 
+#. Quickly introduce **Desktop** Space 
+#. **Icons** - small pictures on Desktop 
+
+Using the Mouse
+---------------
+#. Mouse is connected to the **pointer** (the small arrow on the screen). 
+#. Move the pointer by moving the mouse on the desk [or one finger on the touchpad] 
+#. Mouse has 2 buttons (one on left, one on right) 
+#. Mouse Actions (*use GCompris games to give practice*)
+	* **Point**: Move the pointer to an object. 
+	* (Left-) **Click**: push the left mouse button once. 
+	* **Double Click**: push the left button twice (fast). 
+	* **Right Click**: push the right mouse button once. 
+	* **Drag** (-and-Drop) : push and hold down the left mouse button, move the mouse on the desk to move the object to the desired location, then release the button. 
+
+#. Only the very tip of the pointer matters when clicking. 
+#. Common uses of Mouse Actions 
+	* Point: View a short description of object 
+	* Click: Select or Choose (especially on "buttons" or in menus) 
+	* *Double Click: Open an icon (program) *
+	* Right Click: Open an item's menu 
+	* Drag: Move something
+
+Appendix (more advanced information):
+-------------------------------------
+
+* computer: any electronic device that can carry out computations and stores data digitally (using a binary system - 1s and 0s). 
+* hardware: the physical components (parts) of a computer. 
+* software: the programs and operating system that are used by the hardware to do some work. 
+* More parts of the computer [brackets indicate an optional device]: 
+
+	* hard drive: The part of the computer that contains the operating system and stores information 
+	* central processing unit (CPU): The part of the computer that performs actions such as calculations, comparisons, etc. (the part that "thinks") 
+	* RAM (Random Access Memory): A resource of the computer that allows it to do more than one thing at once. A computer with more RAM memory can have more and larger programs open at the same time. 
+	* motherboard 
+	* video card
+	* sound card 
+	* ethernet card 
+	* [CD-ROM drive (Compact Disc - Random Access Memory)] 
+	* [DVD drive (Digital Video Disc)] 
+	* [wireless card] 
+	* USB ports: One of the most common types of ports on a computer that many devices (e.g. external Hard drive, external mouse, flash/pen-drive, camera) use to connect to the computer. USB stands for Universal Serial Bus. 

@@ -1,0 +1,37 @@
+.. Teaching the Computer Modules documentation master file, created by
+   sphinx-quickstart on Thu Mar 31 10:05:32 2011.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. default-domain:: voc
+
+Welcome to Teaching the Computer Modules's documentation!
+=========================================================
+
+These notes on teaching computers to people with no computer experience came
+out of my experience teaching computers in Uganda.  *These are not standalone!*
+As a teacher they may provide a skeleton of where to start, but you should
+throw in games (for learning how to use the mouse & keyboard) as well as any
+other applications that your students will want to learn.  This guide is meant
+to be fairly bare bones to get people using (and learning-by-using) computers
+as soon as possible.  If you have any questions, comments, or requests about
+this information please contact me through email (hryanjones@gmail.com).
+Lastly, you can download an offline copy of these materials here:
+http://hryanjones.com/files/TeachingModules.zip
+
+Contents
+--------
+
+.. toctree::
+    :maxdepth: 2
+
+    01
+    02
+    03
+    04
+    05
+    06
+    07
+    08
+    09
+    10

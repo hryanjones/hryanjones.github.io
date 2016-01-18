@@ -1,0 +1,27 @@
+================
+Computer Module 6: Special Keys & Basic Editing (Word Processing)
+================
+
+#. **Word Processor**: a program to write & format written documents (e.g. a letter, a report, a time table)
+#. Opening Word Processor: go to Start menu and select Office then Word Processor
+#. Remind about Cursor (a blinking line where letters are inserted).
+#. Shift & Caps Lock keys both CAPITALIZE letters
+	* Hold *< Shift >* down while you push a letter to capitalize it. For keys with two symbols (e.g. *< /? >*) *< Shift >* will bring the upper symbol.
+	* *< Caps Lock >* is a switch. When Caps Lock is "on" all letters will be capitalized. When it is "off" letters will be lowercase.
+
+#. *< Enter >* (also called Return) is used when we want the next item of text to appear on the next line (n.b. If you continue typing at the end of a line in a word processor, the line will automatically be "wrapped" to the next line - you shouldn't push enter in the middle of a paragraph or sentence.)
+#. *< Tab >* inserts an ident for starting paragraphs (or lining up text on different lines).
+#. *< Backspace >* deletes one letter left (back) of cursor & *< Delete >* deletes one letter right (forward) of the cursor.
+#. In order to edit a document you must move the cursor to the place where mistakes must be removed (wih *< Backspace >*) or where correct letters/words will be inserted (placed in). You can move the cursor by using the mouse to click on the place where you want it to go.
+#. Arrow keys also move the cursor (especially small distances):
+	* **/\\** up one line
+	* **\\/** down one line
+	* **<-** left one letter
+	* **->** right one letter
+
+#. *< Insert >*, like *< Caps Lock >*, is also a switch.
+	* When it is "on" you are in Overwrite Mode, which means that letters typed will replace the letters ahead of them. Also, OVR or OVER will be shown in the Status Bar part of the window.
+	* When it is "off" you are in Insert Mode and anything typed will be inserted (with the following text being pushed further along the line).
+
+
+
