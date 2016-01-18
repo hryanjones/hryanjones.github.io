@@ -6,6 +6,34 @@
     <link id="base-css" rel="stylesheet" type="text/css" href="/assets/css/hryanjones.css"></link>
     <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.1.custom.css" />
 
+    <title>H. Ryan Jones</title>
+  </head>
+
+  <body>
+    <table class="title">
+      <tr>
+        <td class="title"><h1>H. Ryan Jones</h1></td>
+        <td class="title"><input type="button" id="change-to-light" value="Light Theme"></input></td>
+        <td class="title"><input type="button" id="change-to-dark" value="Dark Theme"></input></td>
+        <td class="title"><input type="button" id="change-to-blAwh" value="Black/White"</input></td>
+      </tr>
+    </table>
+    <div id="tabs">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a id="wiki-feeback" href="/wiki-feedback/">Wiki Parser</a>
+        <li><a id="resume" href="/resume/">Resume</a></li>
+        <li><a id="jobs" href="/html/jobs_etc.html">Jobs & Stuff</a></li>
+        <li><a id="calendar" href="/html/calendar.html">Calendar</a></li>
+        <li><a id="projects" href="/science/">Small Projects</a></li>
+      </ul>
+      <div id="home">
+        <p>Hi,</p>
+        <p>I'm a Web Developer in Seattle. You may want to check out the above tabs or my most recent fun project:</p>
+        <a href="/adas/"><h2>Web Versions of Adalogical Ænigma's</h2></a>
+      </div>
+    </div>
+
     <!-- Javascript -->
     <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
@@ -19,18 +47,8 @@
 
       });
     </script>
-    <title>H. Ryan Jones</title>
-  </head>
-
-  <body>
-    <table class="title">
-      <tr>
-        <td class="title"><h1>H. Ryan Jones</h1></td>
-        <td class="title"><input type="button" id="change-to-light" value="Light Theme"></input></td>
-        <td class="title"><input type="button" id="change-to-dark" value="Dark Theme"></input></td>
-        <td class="title"><input type="button" id="change-to-blAwh" value="Black/White"</input></td>
-      </tr>
-      <script type="text/javascript">
+    <script type="text/javascript">
+        // theme changer
         $("document").ready(function() {
 
           $("#change-to-light").click(function(event) {
@@ -50,21 +68,7 @@
 
         });
     </script>
-    </table>
-    <div id="tabs">
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a id="wiki-feeback" href="/wiki-feedback/">Wiki Parser</a>
-        <li><a id="resume" href="/resume/">Resume</a></li>
-        <li><a id="jobs" href="/html/jobs_etc.html">Jobs & Stuff</a></li>
-        <li><a id="calendar" href="/html/calendar.html">Calendar</a></li>
-        <li><a id="projects" href="/science/">Small Projects</a></li>
-      </ul>
-      <div id="home">
-        <p>Hi,</p>
-        <p>I'm a Web Developer in Seattle. You may want to check out the above tabs or my most recent fun project:</p>
-        <a href="/adas/"><h2>Web Versions of Adalogical Ænigma's</h2></a>
-      </div>
-    </div>
+
+    <script src="/assets/js/googleAnalytics.js"></script>
 </body>
 </html>
