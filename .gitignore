@@ -1,0 +1,4 @@
+node_modules
+**/*.map
+npm-debug.log
+science/babel/babel.js

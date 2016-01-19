@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Babel experiments</title>
+</head>
+<body ng-app="app" ng-controller="ctrl">
+    <h1>Here we go with some babel</h1>
+    <input ng-model="name" ng-change="text = templatize(name)">
+    <pre>
+        {{text}}
+    </pre>
+
+    <h3>set</h3>
+    <pre>{{set | json}}</pre>
+
+    {{capitalize(derp)}}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+    <script src="./babel.js"></script>
+</body>
+</html>
