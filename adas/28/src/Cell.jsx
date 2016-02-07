@@ -2,6 +2,7 @@ var React = require('react');
 var LocalStorageMixin = require('react-localstorage');
 var _ = {
   isFinite: require('lodash/isFinite'),
+  isString: require('lodash/isString'),
 };
 
 var Cell = React.createClass({
@@ -20,11 +21,22 @@ var Cell = React.createClass({
     this.toggleCell(e, null, null, true);
   },
   render: function() {
+    var val = this.state.value;
+    var label = String((__isVista(this) && val) || '   ');
+    var className = 'cell' + __getCellCSSModifier(val);
     return (
-      <span className="cell" onClick={this.toggleCell} onContextMenu={this.toggleTree}>
-        {String(this.state.value)}
-      </span>
+      <div className={className} onClick={this.toggleCell} onContextMenu={this.toggleTree}>
+        <div className="cell-label">
+          {label}
+        </div>
+      </div>
     );
+
+    function __getCellCSSModifier(val) {
+      if (!val) { return ''; }
+      if (_.isFinite(val)) { return ' path';}
+      return ' ' + val;
+    }
   }
 });
 

@@ -1,0 +1,215 @@
+/* border-box doesn't seem to help anything ... */
+#puzzle-board {
+  background: white;
+  display: inline-block;
+  padding: 15px;
+}
+
+.cell {
+  border: 2px inset black;
+  margin-left: -2px;
+  margin-top: -2px;
+
+  height: 36px;
+  width: 36px;
+  text-align: center;
+  vertical-align: top;
+  display: inline-block;
+
+  position: relative;
+  color: black;
+  cursor: pointer;
+  font-size: 20px;
+
+  /* so that users don't accidentally select part of the board */
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+
+  touch-action: manipulation; /* to try and work around 300ms delay in Android */
+}
+/* TODO
+.cell.complete {
+  color: gray;
+}
+*/
+
+/*.conjecture.path .cell-label::after,
+.conjecture.tree .cell-label::after {
+  content: "?";
+  position: absolute;
+  right: 1px;
+  bottom: 0px;
+  font-size: 16px;
+  font-weight: bold;
+  color: hsla(0, 1%, 50%, 1);
+}
+.conjecture.tree .cell-label::after {
+  color: white
+}
+*/
+.cell-label {
+  height: 32px;
+  width: 32px;
+}
+.path,
+.puzzle-legend .cell.path {
+  background-color: hsla(200, 100%, 89%, 1);
+}
+/*.path.conjecture,
+.puzzle-legend .path.conjecture {
+  background-color: hsla(200, 1%, 89%, 1);
+}
+*/
+.path .cell-label {
+  border-color: hsla(200, 100%, 64%, .7);
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+  background-color: white;
+}
+/*.path.conjecture .cell-label {
+  border-color: hsla(200, 1%, 64%, .7);
+}
+*/
+.cell.tree,
+.puzzle-legend .cell.tree {
+  background-color: hsla(260, 100%, 20%, 1);
+}
+.cell.tree.invalid-tree {
+  background-color: red;
+}
+.cell.tree.invalid-tree::after {
+  content: "!";
+  position: absolute;
+  left: 1px;
+  top: 0px;
+  font-size: 21px;
+  font-weight: bold;
+  color: white;
+}
+.cell.path.invalid-clue .cell-label {
+  background-color: black;
+  color: white;
+}
+.cell.path.invalid-clue::after {
+  content: "!";
+  position: absolute;
+  left: 0px;
+  top: -4px;
+  font-size: 32px;
+  font-weight: bold;
+  color: red;
+}
+/*.cell.tree.conjecture {
+  background: repeating-linear-gradient(
+    45deg,
+    hsla(0, 1%, 20%, 1),
+    hsla(0, 1%, 70%, 1) 5px
+  );
+}
+.cell.tree.conjecture.invalid-tree {
+  background: repeating-linear-gradient(
+    45deg,
+    hsla(0, 100%, 20%, 1),
+    hsla(0, 100%, 70%, 1) 5px
+  );
+}
+.cell.conjecture.first-conjecture {
+  border-color: yellow;
+  border-style: solid;
+}
+*/
+.invalid .cell-label {
+  color: red;
+}
+
+.puzzle-legend .badge {
+  margin-bottom: 4px;
+}
+.puzzle-legend .badge[title],
+.puzzle-legend .badge[title] * {
+  cursor: help;
+}
+
+.puzzle-legend label {
+  vertical-align: top;
+  padding: 5px;
+}
+.puzzle-legend .cell {
+  background-color: white;
+}
+.puzzle-legend .cell-label {
+  height: 100%;
+  width: 100%;
+}
+
+.alert,
+.info-bubble,
+.success-bubble {
+  border-radius: 8px;
+}
+.info-bubble,
+.success-bubble {
+  padding: 10px;
+  margin: 2px 0px;
+}
+.info-bubble {
+  border: 1px solid blue;
+}
+.success-bubble {
+  border: 1px solid green;
+}
+.puzzle-legend .info-bubble {
+  padding: 2px;
+}
+.alert {
+  border: 1px solid red;
+}
+
+.build-mode-inputs input {
+  width: 26px;
+}
+
+.tab {
+  background: hsla(0, 1%, 80%, 1);
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0px;
+  cursor: pointer;
+  padding: 6px 16px;
+}
+.tab.selected {
+  background: white;
+}
+
+.twitter-mention-button {
+  vertical-align: middle;
+}
+
+/* GENERAL HELPERS */
+
+.no-margin {
+  margin: 0;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+body {
+  width: 1020px;
+  margin: 0 auto;
+  fill: currentColor;
+}

@@ -20,11 +20,22 @@ representation that can be played back out. The following values should support 
 TODO: how to represent conjecture or not
 */
 
+// var INPUT = '2 5  6            3   4   5   5            3  4 5'; // Example puzzle
+var INPUT = `5 3 4               9          5      4          5   7  6     7   5    2    6 2  6      7     6      9  5 6       4                      4       A 5  5      3     3      5  5 5    4    8   4     5  7   3          6      9          6               4 6 8`;
+
+function __TEMP(input) {
+    return {
+        value: (input === ' ' ? null : parseInt(input === 'A' ? 10 : input, 10))
+    };
+}
+
 var PuzzleBoard = React.createClass({
   getInitialState: function() {
     return {
-      cells: [{value: 4}, {value: null}, {value: null}, {value: null}, {value: null}, {value: 2}].map(__addKey),
-      width: 3,
+      cells: INPUT.split('').map(__TEMP).map(__addKey),
+      // width: 7, // example
+      width: 21,
+      puzzleName: 'aenigma-28',
     };
 
     function __addKey(cell, i) {
@@ -39,10 +50,11 @@ var PuzzleBoard = React.createClass({
   // },
   render: function() {
     // var saveCellState = this.saveCellState;
+    var keyPrefix = this.state.puzzleName;
     var cells = _.chunk(this.state.cells, this.state.width).map(__renderRow);
 
     return (
-      <div className="puzzle-board">
+      <div id="puzzle-board">
         {cells}
       </div>
     );
@@ -59,7 +71,7 @@ var PuzzleBoard = React.createClass({
 
     function __renderCell(cell) {
       // return ( <Cell data={cell} key={cell.key} localStorageKey={cell.key + 1} onCellUpdate={saveCellState} /> );
-      return ( <Cell data={cell} key={cell.key} localStorageKey={cell.key + 1} /> );
+      return ( <Cell data={cell} key={cell.key} localStorageKey={keyPrefix + cell.key} /> );
     }
   }
 });

@@ -4,6 +4,7 @@
 <head>
   <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="/assets/css/bootstrap-solarized-light.css" rel="stylesheet" type="text/css" />
+  <link href="./main.css" rel="stylesheet" type="text/css" />
   <!-- <link href="./main.css" rel="stylesheet" type="text/css" /> -->
 
   <meta name="viewport" content="width=device-width, user-scalable=yes">
@@ -14,18 +15,39 @@
 <body>
 
   <h1>
-    Web Version of
+    <em>Alpha</em> Web Version of
     <a href="http://www.pavelspuzzles.com/adas/28/" target="_blank">
       Adalogical Ænigma #28
     </a>
-    <small class="pull-right text-info">share <share-buttons></share-buttons></small>
+    <!-- <small class="pull-right text-info">share <share-buttons></share-buttons></small> -->
     <br/>
     <small>
       Plant Trees and Connect Paths to Fulfill the Numbered Vistas
     </small>
   </h1>
 
+  <!-- below image is for verifying that I entered the puzzle correctly -->
+<!--   <div style="position: relative">
+    <img style="position: absolute; left: 12px; top: 12px; width: 719px; opacity: 0.4; z-index: 10;" src="http://www.pavelspuzzles.com/aenigmas/28/grid.png"/>
+  </div>
+ -->
   <div id="content"></div>
+
+  <h3>Disclaimer</h3>
+  <p>
+    This is a work-in-progress version, although it does save in browser. I hope to add a number of features (in this order) that were in previous puzzles:
+    <ul>
+      <li>Example Puzzle &amp; switching</li>
+      <li>Conjecture Mode</li>
+      <li>Validation</li>
+      <li>Legend</li>
+      <li>Rules (for now please see the <a href="">PDF version</a>)</li>
+    </ul>
+    These aren't present because I'm using a new framework to code ( <a href="https://facebook.github.io/react/">ReactJS</a>), so am redesigning a number of these features.
+  </p>
+  <p>
+    Also, see <a href="../">other web puzzles which are more complete</a>.
+  </p>
 
   <script src="./main.js"></script>
   <script src="/assets/js/googleAnalytics.js"></script>
