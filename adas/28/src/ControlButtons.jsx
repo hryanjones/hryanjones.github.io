@@ -10,9 +10,6 @@ true -- on
 const React = require('react');
 
 var ControlButtons = React.createClass({
-  componentWillReceiveProps(nextProps) {
-      console.log('received', nextProps)
-  },
   render() {
     return (<div>
         <ConjectureModeButtons
@@ -26,8 +23,9 @@ var ControlButtons = React.createClass({
 
 var ClearPuzzleButton = React.createClass({
   clearPuzzle() {
-    console.log('clear!')
-    // FIXME are you sure?
+    var response = window.confirm('Are you sure you want to clear your progress? (cannot be undone)');
+    if (!response) { return; }
+    console.log('clearing')
     this.props.onPuzzleClear({clear: true});
   },
   render() {
@@ -41,9 +39,6 @@ var ClearPuzzleButton = React.createClass({
 });
 
 var ConjectureModeButtons = React.createClass({
-  componentWillReceiveProps(nextProps) {
-      console.log('cModeBtns received', nextProps)
-  },
   acceptConjectures(e) {
     this.props.onConjectureUpdate({conjectureMode: 'accept'});
   },

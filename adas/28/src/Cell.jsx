@@ -15,6 +15,14 @@ var Cell = React.createClass({
     });
   },
   getInitialState() {
+    var key = this.props.localStorageKey;
+    var savedState = JSON.parse(localStorage.getItem(key));
+    var savedValue = savedState && savedState.value;
+    if (savedValue && _.isFinite(this.props.data.value) && savedValue !== this.props.data.value) {
+      console.log('removing storage at', this.props.localStorageKey, 'because saved value', savedState.value,
+        'was not equal to given value', this.props.data.value)
+      localStorage.removeItem(this.props.localStorageKey);
+    }
     return this.props.data;
   },
   toggleCell(e, dum1, dum2, toggleTree) {

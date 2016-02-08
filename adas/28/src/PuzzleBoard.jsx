@@ -59,8 +59,6 @@ var PuzzleBoard = React.createClass({
     return ['conjectureMode']; // only need to save conjecture mode for each puzzle as pieces keep track of their state
   },
   resetBoard(e) {
-    var response = window.confirm('Are you sure you want to clear your progress? (cannot be undone)');
-    if (!response) { return; }
     var keyPrefix = this.state.puzzleName;
     this.state.cells.forEach(__removeStoredCellState);
     localStorage.removeItem(this.state.puzzleName);
@@ -74,10 +72,6 @@ var PuzzleBoard = React.createClass({
     this.setState(newMode);
   },
   render() {
-    if (this.state.cells[175] && this.state.cells[175].value === 5) { // TEMP made a mistake in original board
-      localStorage.removeItem(this.state.puzzleName);
-      location.reload();
-    }
     var keyPrefix = this.state.puzzleName;
     var conjectureMode = this.state.conjectureMode;
     var cells = _.chunk(this.state.cells, this.state.width).map(__renderRow);
