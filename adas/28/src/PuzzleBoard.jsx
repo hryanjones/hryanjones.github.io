@@ -18,7 +18,7 @@ const PUZZLES = {
     conjectureMode: false,
   },
   'aenigma-28': {
-    cellsTemplate: '5 3 4               9          5      4          5   7  6     7   5    2    6 2  6      7     6      9  5 6       4                      4       A 5  5      3     3      5  5 5    4    8   4     5  7   3          6      9          6               4 6 8',
+    cellsTemplate: '5 3 4               9          5      4          5   7  6     7   5    2    6 2  6      7     6      9  5 6       4                      4       A 5  5      3     3      5  5 6    4    8   4     5  7   3          6      9          6               4 6 8',
     width: 21,
     puzzleName: 'aenigma-28',
     conjectureMode: false,
@@ -74,6 +74,10 @@ var PuzzleBoard = React.createClass({
     this.setState(newMode);
   },
   render() {
+    if (this.state.cells[175].value === 5) { // TEMP made a mistake in original board
+      localStorage.removeItem(this.state.puzzleName);
+      location.reload();
+    }
     var keyPrefix = this.state.puzzleName;
     var conjectureMode = this.state.conjectureMode;
     var cells = _.chunk(this.state.cells, this.state.width).map(__renderRow);
