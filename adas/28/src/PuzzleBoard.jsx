@@ -74,7 +74,7 @@ var PuzzleBoard = React.createClass({
     this.setState(newMode);
   },
   render() {
-    if (this.state.cells[175].value === 5) { // TEMP made a mistake in original board
+    if (this.state.cells[175] && this.state.cells[175].value === 5) { // TEMP made a mistake in original board
       localStorage.removeItem(this.state.puzzleName);
       location.reload();
     }
