@@ -28,6 +28,9 @@ var Cell = React.createClass({
   toggleCell(e, dum1, dum2, toggleTree) {
     e.preventDefault();
     if (__isVista(this)) { return; }
+    if (!toggleTree && e.shiftKey) {
+      toggleTree = true;
+    }
     var newValue = {value: __getNextState(this.state.value, toggleTree)};
     if (this.props.conjectureMode === true) {
       newValue.conjecture = true;
