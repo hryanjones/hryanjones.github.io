@@ -34,7 +34,7 @@
 }
 */
 
-/*.conjecture.path .cell-label::after,
+.conjecture.path .cell-label::after,
 .conjecture.tree .cell-label::after {
   content: "?";
   position: absolute;
@@ -47,7 +47,7 @@
 .conjecture.tree .cell-label::after {
   color: white
 }
-*/
+
 .cell-label {
   height: 32px;
   width: 32px;
@@ -56,11 +56,11 @@
 .puzzle-legend .cell.path {
   background-color: hsla(200, 100%, 89%, 1);
 }
-/*.path.conjecture,
+.path.conjecture,
 .puzzle-legend .path.conjecture {
   background-color: hsla(200, 1%, 89%, 1);
 }
-*/
+
 .path .cell-label {
   border-color: hsla(200, 100%, 64%, .7);
   border-width: 2px;
@@ -68,10 +68,10 @@
   border-radius: 50%;
   background-color: white;
 }
-/*.path.conjecture .cell-label {
+.path.conjecture .cell-label {
   border-color: hsla(200, 1%, 64%, .7);
 }
-*/
+
 .cell.tree,
 .puzzle-legend .cell.tree {
   background-color: hsla(260, 100%, 20%, 1);
@@ -101,7 +101,7 @@
   font-weight: bold;
   color: red;
 }
-/*.cell.tree.conjecture {
+.cell.tree.conjecture {
   background: repeating-linear-gradient(
     45deg,
     hsla(0, 1%, 20%, 1),
@@ -119,7 +119,7 @@
   border-color: yellow;
   border-style: solid;
 }
-*/
+
 .invalid .cell-label {
   color: red;
 }
