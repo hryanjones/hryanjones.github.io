@@ -4,7 +4,6 @@ const _ = {
   chunk: require('lodash/chunk'),
   clone: require('lodash/clone'),
 };
-const queryString = require('query-string');
 const LocalStorageMixin = require('react-localstorage');
 
 var Cell = require('./Cell.jsx');
@@ -33,26 +32,39 @@ function __addKey(cell, i) {
   return cell;
 }
 
-const SELECTED_PUZZLE = PUZZLES[queryString.parse(location.search).puzzle || 'example'] || PUZZLES['example'];
-
 var PuzzleChangeTabs = React.createClass({
+  getInitialState() {
+      return { puzzleName: 'example' };
+  },
+  mixins: [LocalStorageMixin],
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.puzzleName !== this.state.puzzleName) {
+      this.props.setPuzzle(nextState);
+    }
+  },
+  setAenigma() {
+    this.setState({puzzleName: 'aenigma-28'});
+  },
+  setExample() {
+    this.setState({puzzleName: 'example'});
+  },
   render() {
-    var exampleSelected = SELECTED_PUZZLE.puzzleName === 'example';
+    var exampleSelected = this.state.puzzleName === 'example';
     return (
       <form id="tabs">
-        <a href="?puzzle=example" className={'tab h4' + (exampleSelected ? ' selected' : '')}>
+        <label onClick={this.setExample} className={'tab h4' + (exampleSelected ? ' selected' : '')}>
           example
-        </a>
-        <a href="?puzzle=aenigma-28" className={'tab h4' + (exampleSelected ? '' : ' selected')}>
+        </label>
+        <label onClick={this.setAenigma} className={'tab h4' + (exampleSelected ? '' : ' selected')}>
           Ænigma #28
-        </a>
+        </label>
       </form>
     );
   }
 });
 
 var PuzzleBoard = React.createClass({
-  getInitialState: _.constant(SELECTED_PUZZLE),
+  getInitialState: _.constant(PUZZLES.example),
   mixins: [LocalStorageMixin],
   getLocalStorageKey() { return this.state.puzzleName; },
   getStateFilterKeys() {
@@ -68,8 +80,14 @@ var PuzzleBoard = React.createClass({
       localStorage.removeItem(keyPrefix + cell.key);
     }
   },
-  setConjectureMode(newMode) {
-    this.setState(newMode);
+  setPuzzleState(newState) {
+    this.setState(newState);
+  },
+  setPuzzle(newPuzzle) {
+    var newPuzzleName = newPuzzle.puzzleName;
+    if (newPuzzleName && newPuzzleName !== this.state.puzzleName) {
+      this.setState(PUZZLES[newPuzzleName]);
+    }
   },
   render() {
     var keyPrefix = this.state.puzzleName;
@@ -78,14 +96,14 @@ var PuzzleBoard = React.createClass({
 
     return (
       <div>
-        <PuzzleChangeTabs />
+        <PuzzleChangeTabs setPuzzle={this.setPuzzle}/>
         <div id="puzzle-board">
           {cells}
         </div>
         <ControlButtons
           onPuzzleClear={this.resetBoard}
           conjectureMode={this.state.conjectureMode}
-          onConjectureUpdate={this.setConjectureMode}
+          onConjectureUpdate={this.setPuzzleState}
         />
       </div>
     );
