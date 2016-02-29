@@ -1,6 +1,6 @@
 /* GENERAL HELPERS */
 body {
-  width: 1020px;
+  width: 1000px;
   margin: 0 auto;
   fill: currentColor;
 }
@@ -132,10 +132,15 @@ body {
   line-height: 1;
   border: .12em solid black;
 }
+.puzzle-legend .node-label {
+  left: 0%;
+  top: 0%;
+}
 .node-label {
   /*border-radius: 1em;*/
   background: white;
   z-index: 2;
+  cursor: help;
 }
 .porch {
   z-index: 1;
@@ -240,18 +245,24 @@ body {
   border-right: .3em solid hsla(262, 100%, 20%, 1);
 }
 
-/* FIXME need to test these styles */
 .connection.right.connected.conjecture .line  {
   border-bottom-color: dimgray;
   border-bottom-style: dotted;
 }
-.connection.right.connected.invalid .line  {
-  border-bottom-color: red;
-  border-bottom-style: dotted;
+.connection.connected.conjecture.first-conjecture {
+  border-color: hsla(60, 100%, 50%, 0.7);
+  border-width: 2px;
+  border-style: solid;
+  cursor: help;
 }
 .connection.down.connected.conjecture .line  {
   border-right-color: dimgray;
   border-right-style: dotted;
+}
+/* FIXME need to test these styles */
+.connection.right.connected.invalid .line  {
+  border-bottom-color: red;
+  border-bottom-style: dotted;
 }
 .connection.down.connected.invalid .line  {
   border-right-color: red;

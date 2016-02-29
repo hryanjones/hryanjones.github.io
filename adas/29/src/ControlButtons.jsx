@@ -16,8 +16,9 @@ var ControlButtons = React.createClass({
           conjectureMode={this.props.conjectureMode}
           onConjectureUpdate={this.props.onConjectureUpdate}
         />{' '}
-        <ClearPuzzleButton onPuzzleClear={this.props.onPuzzleClear} />
+        <ClearPuzzleButton onPuzzleClear={this.props.onPuzzleClear} />{' '}
     </div>);
+        // <Legend/>
   },
 });
 
@@ -41,12 +42,11 @@ var ClearPuzzleButton = React.createClass({
 var ConjectureModeButtons = React.createClass({
   toggleConjectureMode() {
     this.props.onConjectureUpdate({
-      conjectureMode: !this.props.conjectureMode,
+      conjectureMode: this.props.conjectureMode ? false : 'first-conjecture',
     });
   },
   render() {
-    //  ng-class="{'bg-info text-info info-bubble block': conjectures.enabled}"
-    var mode = this.props.conjectureMode === true;
+    var mode = this.props.conjectureMode;
     return (
       <span className={
           'conjecture-container' + (mode ? ' bg-info text-info info-bubble block clearfix' : '')
@@ -63,13 +63,49 @@ var ConjectureModeButtons = React.createClass({
           (
             <div className="col-md-10">
                 <i className="glyphicon glyphicon-info-sign"></i>{' '}
-                In <em>conjecture mode</em> all of your actions will be marked in gray with question marks (?) so that you can make temporary assumptions. When {"you're"} done <em>Clear all conjectures</em>.
+                In <em>conjecture mode</em> all of your actions will be marked in dotted gray so that you can make temporary assumptions. The first conjecture is highlighted with a border. When {"you're"} done <em>Clear all conjectures</em>.
             </div>
           ) :
           ''
         }
       </span>
     );
+  },
+});
+
+let Legend = React.createClass({
+  getInitialState() {
+    // return {open: false};
+    return {open: false};
+  },
+  render() {
+    let open = this.state.open;
+    return (
+      <span className= {
+          'conjecture-container' + (open ? ' bg-info text-info info-bubble block clearfix' : '')
+        } onClick={this.__toggleLegend}>
+        <div className="btn btn-info puzzle-legend">
+          <button className="btn btn-default btn-xs" style={{lineHeight: 0.8, padding: '1px 2px'}}>
+            {open ? '+' : '-'}
+          </button>{' '}
+          Legend
+        </div>
+        {
+          open ?
+            <div className="badge">
+              <div className="node porch-W" title="A house where the owner talks a walk of 3 turns from their West-side porch.">
+                <div className="node-label">3</div>
+                <div className="porch"/>
+              </div>
+              <label>A House w/<br/>West-side porch</label>
+            </div>
+            : null
+        }
+      </span>
+    );
+  },
+  __toggleLegend() {
+    this.setState({open: !this.state.open});
   },
 });
 

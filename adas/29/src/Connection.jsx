@@ -1,10 +1,13 @@
+const _ = {
+  toString: require('lodash/toString'),
+};
 const React = require('react');
 const LocalStorageMixin = require('react-localstorage');
 
 let Connection = React.createClass({
   mixins: [LocalStorageMixin],
   getInitialState() {
-    console.log('localStorageKey', this.props.localStorageKey)
+    // console.log(this.props.localStorageKey);
     return {
       value: null,
       // conjecture: false
@@ -12,11 +15,14 @@ let Connection = React.createClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (!this.state.conjecture) { return; }
-    this.setState({
-      value: !nextProps.conjectureMode ? null : this.state.value,
-      conjecture: false // remove conjecture
-    });
+    let thisIsAConjecture = this.state.conjecture;
+    let conjectureModeWasTurnedOff = this.props.conjectureMode && !nextProps.conjectureMode;
+    if (thisIsAConjecture && conjectureModeWasTurnedOff) {
+      this.setState({
+        value: null,
+        conjecture: false, // remove conjecture
+      });
+    }
   },
 
 
@@ -30,6 +36,7 @@ let Connection = React.createClass({
     let className = this.props.type === 'right' ?
       'connection right' :
       'connection down';
+    let title = '';
     if (this.state.value === 'connected') {
       className += ' connected';
     }
@@ -37,14 +44,19 @@ let Connection = React.createClass({
       className += ' blocked';
     }
     if (this.state.conjecture) {
-      className += ' conjecture'
+      className += ' conjecture';
+      if (this.state.conjecture === 'first-conjecture') {
+        className += ' ' + _.toString(this.state.conjecture);
+        title = 'First conjecture'
+      }
     }
 
     return (
       <div
         className={className}
         onClick={this.__toggleState}
-        onContext={this.__toggleNotPath}
+        onContextMenu={this.__toggleNotPath}
+        title={title}
         >
         <div className="line"/>
         <div className="x">x</div>
@@ -52,10 +64,10 @@ let Connection = React.createClass({
     );
   },
 
-  __toggleState() {
-    var newState = {value: __getNextValue(this.state.value)};
+  __toggleState(e, dum1, dum2, toggleNotPath) {
+    var newState = {value: __getNextValue(this.state.value, toggleNotPath)};
     if (this.props.conjectureMode) {
-      newState.conjecture = true;
+      newState.conjecture = this.props.conjectureMode;
 
       // don't clobber existing non-conjecture values
       if (!this.state.conjecture && this.state.value) {
@@ -64,14 +76,18 @@ let Connection = React.createClass({
     }
     this.setState(newState);
   },
+  __toggleNotPath(e) {
+    e.preventDefault();
+    this.__toggleState(null, null, null, true);
+  },
 });
 
-function __getNextValue(value) {
+function __getNextValue(value, toggleNotPath) {
   if (!value) {
-    return 'connected';
+    return toggleNotPath ? 'blocked' : 'connected';
   }
   if (value === 'connected') {
-    return 'blocked';
+    return toggleNotPath ? null : 'blocked';
   }
   return null;
 }

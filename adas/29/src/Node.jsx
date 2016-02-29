@@ -6,6 +6,8 @@ const _ = {
   constant: require('lodash/constant'),
 };
 
+const porchToDir = {N: 'North', E: 'East', S: 'South', W: 'West'};
+
 const Connection = require('./Connection.jsx');
 
 let Node = React.createClass({
@@ -30,8 +32,11 @@ let Node = React.createClass({
   //   this.toggleNode(e, null, null, true);
   // },
   render() {
+    let title = this.props.value !== null ?
+      `A house where the owner talks a walk of ${this.props.value} turns from their ${porchToDir[this.props.porchSide]}-side porch.` :
+        null;
     return (
-      <div className={'node porch-' + this.props.porchSide}>
+      <div className={'node porch-' + this.props.porchSide} title={title}>
         {this.props.value !== null ?
           <div>
             <div className="node-label">{this.props.value}</div>
