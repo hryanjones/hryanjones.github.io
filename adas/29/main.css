@@ -1,0 +1,405 @@
+/* GENERAL HELPERS */
+body {
+  width: 1000px;
+  margin: 0 auto;
+  fill: currentColor;
+}
+
+/* COLORS */
+/* these get reused and generally work for colorblind folks
+ note that straight "red" is used for invalid things and otherwise black and white*/
+.very-light-blue {
+  background-color: hsla(200, 100%, 89%, 1);
+}
+.very-light-blue-gray {
+  background-color: hsla(200, 1%, 89%, 1);
+}
+.light-blue {
+  /*border-color: hsla(200, 100%, 64%, .7);*/
+  background-color: hsla(200, 100%, 64%, .7);
+}
+.light-blue-gray {
+  /*border-color: hsla(200, 1%, 64%, .7);*/
+  background-color: hsla(200, 1%, 64%, .7);
+}
+.purple{
+  background-color: hsla(260, 100%, 20%, 1);
+}
+
+/* Puzzle selection tabs */
+.tab {
+  background: hsla(0, 1%, 80%, 1);
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0px;
+  cursor: pointer;
+  padding: 6px 16px;
+}
+.tab.selected {
+  background: white;
+}
+
+/* Social -- NEEDS TO BE FIXED */
+.twitter-mention-button {
+  vertical-align: middle;
+}
+
+/* Legend */
+
+.puzzle-legend .badge {
+  margin-bottom: 4px;
+}
+.puzzle-legend .badge[title],
+.puzzle-legend .badge[title] * {
+  cursor: help;
+}
+
+.puzzle-legend label {
+  vertical-align: top;
+  padding: 5px;
+}
+.puzzle-legend .node {
+  background-color: white;
+}
+.puzzle-legend .node-label {
+  height: 100%;
+  width: 100%;
+}
+
+/* alerts and info bubble styles */
+
+.alert,
+.info-bubble,
+.success-bubble {
+  border-radius: 8px;
+}
+.info-bubble,
+.success-bubble {
+  padding: 10px;
+  margin: 2px 0px;
+}
+.info-bubble {
+  border: 1px solid blue;
+}
+.success-bubble {
+  border: 1px solid green;
+}
+.puzzle-legend .info-bubble {
+  padding: 2px;
+}
+.alert {
+  border: 1px solid red;
+}
+
+/* puzzle specific */
+/* border-box doesn't seem to help anything ... */
+#puzzle-board {
+  padding-left: 36px;
+  padding-top: 36px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  background: white;
+  display: inline-block;
+}
+
+.node {
+  height: 36px;
+  width: 36px;
+  text-align: center;
+  vertical-align: top;
+  display: inline-block;
+
+  position: relative;
+  color: black;
+
+  /* so that users don't accidentally select part of the board */
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+
+  touch-action: manipulation; /* to try and work around 300ms delay in Android */
+}
+
+.porch, .node-label {
+  position: absolute;
+  width: 65%;
+  height: 65%;
+  left: -54%;
+  top: -54%;
+  margin: .4em .5em .5em .4em;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+  border: .12em solid black;
+}
+.puzzle-legend .node-label {
+  left: 0%;
+  top: 0%;
+}
+.node-label {
+  /*border-radius: 1em;*/
+  background: white;
+  z-index: 2;
+  cursor: help;
+}
+.porch {
+  z-index: 1;
+  background-color: saddlebrown;
+  border-color: saddlebrown;
+}
+.porch-N .porch { top: -68%; }
+.porch-S .porch { top: -42%; }
+.porch-E .porch { left: -42%; }
+.porch-W .porch { left: -68%; }
+
+
+/*saving this because I don't think other stylesheet has it*/
+/*.node.tree.invalid-tree::after {
+  content: "!";
+  position: absolute;
+  left: 1px;
+  top: 0px;
+  font-size: 21px;
+  font-weight: bold;
+  color: white;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* other file's CSS */
+/*.node.letter-mode {
+  border: none;
+}
+.node.muted {
+  border-color: gray;
+}
+.muted .node-label {
+  color: gray;
+}
+*/
+/*.muted.letter-mode .node-label {
+  color: black;
+}
+*/
+.node.invalid {
+  border-color: red;
+  border-style: dotted;
+  background-color: yellow;
+}
+.connection {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  cursor: crosshair;
+}
+.connection:hover {
+  background-color: hsla(60, 100%, 50%, 0.7);
+}
+.connection.right {
+  left: 0%;
+  top: -25%;
+  height: 50%;
+  /*background-color: slateblue;*/
+}
+.connection.down{
+  left: -25%;
+  top: 0%;
+  width: 50%;
+/*  background-color: purple;
+*/}
+.connection .line {
+  position: absolute;
+}
+.connection.right .line {
+  width: 100%;
+  height: 50%;
+  border-bottom: .1em dotted gray;
+}
+.connection.down .line {
+  width: 50%;
+  height: 100%;
+  border-right: .1em dotted gray;
+}
+
+.connection.right.connected .line {
+  left: -7%;
+  width: 111%; /* extra so that lines overlap enough to form unbroken path */
+  height: 58%;
+  border-bottom: .3em solid hsla(262, 100%, 20%, 1);
+}
+.connection.down.connected .line {
+  top: -7%;
+  height: 111%;
+  width: 58%; /* thicker line has to be nearer the middle */
+  border-right: .3em solid hsla(262, 100%, 20%, 1);
+}
+
+.connection.right.connected.conjecture .line  {
+  border-bottom-color: dimgray;
+  border-bottom-style: dotted;
+}
+.connection.connected.conjecture.first-conjecture {
+  border-color: hsla(60, 100%, 50%, 0.7);
+  border-width: 2px;
+  border-style: solid;
+  cursor: help;
+}
+.connection.down.connected.conjecture .line  {
+  border-right-color: dimgray;
+  border-right-style: dotted;
+}
+/* FIXME need to test these styles */
+.connection.right.connected.invalid .line  {
+  border-bottom-color: red;
+  border-bottom-style: dotted;
+}
+.connection.down.connected.invalid .line  {
+  border-right-color: red;
+  border-right-style: dotted;
+}
+
+.x { /* blocked X's are hidden unless the appropriate class is on connector */
+  color: purple;
+  font-weight: 900;
+  font-size: 110%;
+  position: absolute;
+  display: none;
+}
+.right .x {
+  top: -17%;
+  left: 37%;
+}
+.down .x {
+  top: 18%;
+  left: 25%;
+}
+.blocked .x {
+  display: block;
+}
+.conjecture .x {
+  color: gray;
+  font-size: 100%;
+}
+
+.right.connectionator {
+  height: 15px;
+  width: 35px;
+  left: 0px;
+  top: -8px;
+  /* background-color: yellow; */
+}
+.right.connectionator .blocked {
+  left: 35%;
+  top: 3px;
+}
+.right-blocked .right .blocked {
+  display: block;
+}
+.below.connectionator {
+  height: 35px;
+  width: 15px;
+  left: -8px;
+  top: 0px;
+  /* background-color: blue; */
+}
+.below.connectionator .blocked {
+  top: 35%;
+  left: 2px;
+}
+.below-blocked .below .blocked {
+  display: block;
+}
+
+.legend .badge,
+.legend .badge label {
+  cursor: help;
+}
+.legend label {
+  vertical-align: top;
+  padding: 5px;
+}
+.legend .node-container {
+  background: white;
+  border: 5px solid white;
+}
+.connections.no-offset {
+  left: 0;
+  top: 0;
+}
+
+.alert,
+.info-bubble {
+  border-radius: 8px;
+}
+.info-bubble {
+  border: 1px solid blue;
+  padding: 10px;
+  margin: 2px 0px;
+}
+.legend .info-bubble {
+  padding: 2px;
+}
+.alert {
+  border: 1px solid red;
+}
+
+.build-input {
+  width: 26px;
+}
+
+.tab {
+  background: hsla(0, 0%, 80%, 1);
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0px;
+  cursor: pointer;
+  padding: 1px 12px;
+}
+.tab.selected {
+  background: white;
+}
+#tabs .checkbox {
+  min-height: 18px;
+}
+
+.answer input {
+  color: black;
+  height: 35px;
+  width: 35px;
+  padding: 5px;
+  font-size: 180%;
+}
+
+.twitter-mention-button {
+  vertical-align: middle;
+}
+
+/* GENERAL HELPERS */
+
+.no-margin {
+  margin: 0;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+
