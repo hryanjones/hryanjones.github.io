@@ -21,7 +21,7 @@ const PUZZLES = {
     width: 21,
     puzzleName: 'aenigma-28',
     conjectureMode: false,
-  }
+  },
 };
 
 PUZZLES.example.cells = PUZZLES.example.cellsTemplate.split('').map(__convertTemplateToCells).map(__addKey);
@@ -60,7 +60,7 @@ var PuzzleChangeTabs = React.createClass({
         </label>
       </form>
     );
-  }
+  },
 });
 
 var PuzzleBoard = React.createClass({
@@ -70,7 +70,7 @@ var PuzzleBoard = React.createClass({
   getStateFilterKeys() {
     return ['conjectureMode']; // only need to save conjecture mode for each puzzle as pieces keep track of their state
   },
-  resetBoard(e) {
+  resetBoard() {
     var keyPrefix = this.state.puzzleName;
     this.state.cells.forEach(__removeStoredCellState);
     localStorage.removeItem(this.state.puzzleName);
@@ -128,13 +128,13 @@ var PuzzleBoard = React.createClass({
         />
       );
     }
-  }
+  },
 });
 
 function __convertTemplateToCells(input) {
-    return {
-        value: (input === ' ' ? null : parseInt(input === 'A' ? 10 : input, 10))
-    };
+  return {
+    value: (input === ' ' ? null : parseInt(input === 'A' ? 10 : input, 10)),
+  };
 }
 
 module.exports = PuzzleBoard;

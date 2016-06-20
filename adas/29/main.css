@@ -119,38 +119,44 @@ body {
   touch-action: manipulation; /* to try and work around 300ms delay in Android */
 }
 
-.porch, .node-label {
+.porch {
+  position: absolute;
+  width: 40%;
+  height: 40%;
+  left: -43%;
+  top: -43%;
+  margin: .4em .5em .5em .4em;
+  font-size: 20px;
+  line-height: 1;
+  z-index: 1;
+  background-color: saddlebrown;
+}
+.porch-N .porch { top: -72%; }
+.porch-S .porch { top: -15%; }
+.porch-E .porch { left: -15%; }
+.porch-W .porch { left: -72%; }
+
+.node-label {
   position: absolute;
   width: 65%;
   height: 65%;
-  left: -54%;
-  top: -54%;
+  left: -56%;
+  top: -56%;
   margin: .4em .5em .5em .4em;
   color: black;
   font-size: 20px;
   font-weight: bold;
   line-height: 1;
   border: .12em solid black;
+  border-radius: 5px;
+  background: white;
+  z-index: 2;
+  cursor: help;
 }
 .puzzle-legend .node-label {
   left: 0%;
   top: 0%;
 }
-.node-label {
-  /*border-radius: 1em;*/
-  background: white;
-  z-index: 2;
-  cursor: help;
-}
-.porch {
-  z-index: 1;
-  background-color: saddlebrown;
-  border-color: saddlebrown;
-}
-.porch-N .porch { top: -68%; }
-.porch-S .porch { top: -42%; }
-.porch-E .porch { left: -42%; }
-.porch-W .porch { left: -68%; }
 
 
 /*saving this because I don't think other stylesheet has it*/

@@ -2,51 +2,36 @@ const _ = {
   toString: require('lodash/toString'),
 };
 const React = require('react');
-const LocalStorageMixin = require('react-localstorage');
+// const LocalStorageMixin = require('react-localstorage');
 
 let Connection = React.createClass({
-  mixins: [LocalStorageMixin],
-  getInitialState() {
-    // console.log(this.props.localStorageKey);
-    return {
-      value: null,
-      // conjecture: false
-    };
-  },
+  // mixins: [LocalStorageMixin],
 
-  componentWillReceiveProps(nextProps) {
-    let thisIsAConjecture = this.state.conjecture;
-    let conjectureModeWasTurnedOff = this.props.conjectureMode && !nextProps.conjectureMode;
-    if (thisIsAConjecture && conjectureModeWasTurnedOff) {
-      this.setState({
-        value: null,
-        conjecture: false, // remove conjecture
-      });
-    }
-  },
+  // FIXME need to move this up
+  // componentWillReceiveProps(nextProps) {
+  //   let thisIsAConjecture = this.state.conjecture;
+  //   let conjectureModeWasTurnedOff = this.props.conjectureMode && !nextProps.conjectureMode;
+  //   if (thisIsAConjecture && conjectureModeWasTurnedOff) {
+  //     this.setState({
+  //       value: null,
+  //       conjecture: false, // remove conjecture
+  //     });
+  //   }
+  // },
 
 
   render() {
-    let lastColumn = this.props.numCols && this.props.numCols === this.props.col;
-    let lastRow = this.props.numRows && this.props.numRows === this.props.row;
-    if (lastColumn || lastRow) {
-      return (<span/>);
-    }
-
     let className = this.props.type === 'right' ?
       'connection right' :
       'connection down';
     let title = '';
-    if (this.state.value === 'connected') {
-      className += ' connected';
+    if (this.props.value) {
+      className += ' ' + this.props.value;
     }
-    if (this.state.value === 'blocked') {
-      className += ' blocked';
-    }
-    if (this.state.conjecture) {
+    if (this.props.conjecture) {
       className += ' conjecture';
-      if (this.state.conjecture === 'first-conjecture') {
-        className += ' ' + _.toString(this.state.conjecture);
+      if (this.props.conjecture === 'first-conjecture') {
+        className += ' ' + _.toString(this.props.conjecture);
         title = 'First conjecture'
       }
     }
@@ -65,17 +50,22 @@ let Connection = React.createClass({
   },
 
   __toggleState(e, dum1, dum2, toggleNotPath) {
-    var newState = {value: __getNextValue(this.state.value, toggleNotPath)};
-    if (this.props.conjectureMode) {
-      newState.conjecture = this.props.conjectureMode;
+    var newValue = __getNextValue(this.props.value, toggleNotPath);
+    let connectionPath = this.props.connectionPath;
+    console.log({connectionPath, newValue})
+    this.props.onConnectionClick(connectionPath, newValue);
 
-      // don't clobber existing non-conjecture values
-      if (!this.state.conjecture && this.state.value) {
-        return;
-      }
-    }
-    this.setState(newState);
+    // FIXME this needs to be moved to the top level
+    // if (this.props.conjectureMode) {
+    //   newState.conjecture = this.props.conjectureMode;
+
+    //   // don't clobber existing non-conjecture values
+    //   if (!this.state.conjecture && this.state.value) {
+    //     return;
+    //   }
+    // }
   },
+
   __toggleNotPath(e) {
     e.preventDefault();
     this.__toggleState(null, null, null, true);
