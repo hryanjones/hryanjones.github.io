@@ -15,8 +15,8 @@
     "watchify": "^3.7.0"
   },
   "scripts": {
-    "build": "browserify -t [ babelify --presets [ react ] ] adas/28/src/main.jsx -o adas/28/main.js; browserify -t [ babelify --presets [ react ] ] adas/29/src/main.jsx -o adas/29/main.js",
-    "dev": "watchify --debug -t [ babelify --presets [ react ] ] adas/28/src/main.jsx -o adas/28/main.js"
+    "build": "browserify -t [ babelify --presets [ react ] ] adas/28/src/main.jsx -o adas/28/main.js; browserify -t [ babelify --presets [ react ] ] adas/29/src/main.jsx -o adas/29/main.js; browserify -t [ babelify --presets [ react ] ] adas/33/src/main.jsx -o adas/33/main.js",
+    "dev": "watchify --debug -t [ babelify --presets [ react ] ] adas/33/src/main.jsx -o adas/33/main.js"
   },
   "dependencies": {
     "lodash": "^4.2.1",
