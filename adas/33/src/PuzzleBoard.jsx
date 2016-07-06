@@ -19,7 +19,7 @@ const ControlButtons = require('./ControlButtons.jsx');
 
 const PUZZLES = {};
 PUZZLES[EXAMPLE] = {
-  nodesTemplate:      'ig22lc2r0gad4mpn2m1p21fx4la2kz2rsjr31h1g1yzr1_2j2',
+  nodesTemplate:      'ig22lc2r0gad4mpn2m1p21fx4la2kz2rsjr31h1g1yzr1 2j2',
   blackCellsTemplate: '   x    x         x  x  x  x  x         x    x   ',
   width: 7,
   puzzleName: EXAMPLE,

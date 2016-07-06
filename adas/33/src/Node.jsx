@@ -26,7 +26,7 @@ let Node = React.createClass({
     let {linesFacing, connectedLines, letter} = this.props;
     let {line, conjecture} = this.state;
     let title = 'TODO';
-    let isFacing = _.isInteger(linesFacing) || letter === '_';
+    let isFacing = _.isInteger(linesFacing) || letter === ' ';
 
     let className = 'node';
     if (letter) {
