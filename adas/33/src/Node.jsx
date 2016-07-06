@@ -31,6 +31,8 @@ let Node = React.createClass({
     let className = 'node';
     if (letter) {
       className += ' letter';
+    } else {
+      className += ' number';
     }
     if (isFacing) {
       className += ' black';

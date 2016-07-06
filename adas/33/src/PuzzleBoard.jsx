@@ -24,6 +24,7 @@ PUZZLES[EXAMPLE] = {
   width: 7,
   puzzleName: EXAMPLE,
   conjectureMode: false,
+  showLetters: false,
 };
 
 PUZZLES[PUZZLE] = {
@@ -54,6 +55,7 @@ PUZZLES[PUZZLE] = {
   width: 21,
   puzzleName: PUZZLE,
   conjectureMode: false,
+  showLetters: false,
 };
 
 PUZZLES[EXAMPLE].nodes = __convertTemplateToNodes(PUZZLES[EXAMPLE]);
@@ -87,6 +89,14 @@ let PuzzleChangeTabs = React.createClass({
             Ænigma #33
           </label>
         : null}
+        <label title="Only really useful if you\'ve completed the grid">
+          <input
+            type='checkbox'
+            checked={this.props.showLetters}
+            onClick={this.props.toggleShowLetters}
+          />
+          show letters
+        </label>
       </form>
     );
   },
@@ -97,7 +107,7 @@ let PuzzleBoard = React.createClass({
   mixins: [LocalStorageMixin],
   getLocalStorageKey() { return this.state.puzzleName + 'conjectureMode'; },
   // only need to save conjecture mode for each puzzle as pieces keep track of their own state
-  stateFilterKeys: ['conjectureMode'],
+  stateFilterKeys: ['conjectureMode', 'showLetters'],
   resetBoard() {
     let {puzzleName} = this.state;
     this.state.nodes.forEach(node => {
@@ -119,16 +129,23 @@ let PuzzleBoard = React.createClass({
       this.setState(PUZZLES[newPuzzleName]);
     }
   },
+  _toggleShowLetters() {
+    this.setState({showLetters: !this.state.showLetters});
+  },
   render() {
-    let {conjectureMode, nodes, width} = this.state;
+    let {conjectureMode, nodes, width, showLetters} = this.state;
     let onClickNode = this.__updateConjectureMode;
     let rowsOfNodes  = _.chunk(nodes, width).map(__renderRow);
     let {puzzleName} = this.state;
 
     return (
       <div>
-        <PuzzleChangeTabs setPuzzle={this.setPuzzle}/>
-        <div id='puzzle-board'>
+        <PuzzleChangeTabs
+          setPuzzle={this.setPuzzle}
+          toggleShowLetters={this._toggleShowLetters}
+          showLetters={showLetters}
+        />
+        <div id='puzzle-board' className={showLetters ? 'show-letters' : ''}>
           <div>{/* just for extra border */}
             {rowsOfNodes}
           </div>
