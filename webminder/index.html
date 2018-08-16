@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cdn.jsdelivr.net/npm/chrono-node@1.3/chrono.min.js"></script>
+
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <form onsubmit="return createNewReminder()">
+            <strong>Remind me</strong>
+            <input id="new-reminder-time" value="in 1 hour" placeholder="real or relative time" style="width: 180px" required/>
+            <input id="new-reminder-title" type="text" placeholder="reminder" required/>.
+            
+            <p style="font-size: small">
+                (<em>optional:</em> and go to 
+                <input 
+                    id="new-reminder-link"
+                    type="text"
+                    placeholder="link"
+                    style="width: 30px; font-size: small" 
+                    pattern="https?://.*"
+                    title="starts with http:// or https://"
+                />)
+            </p>
+
+            <input style="display: none" type="submit" value="add reminder"/>
+            <input style="display: none" id="new-reminder-reset" type="reset"/>
+        </form>
+
+        <hr/>
+
+        <ul id="saved-reminders"></ul>
+
+        <script>
+            /*
+            1. storage
+                sync periodically
+            2. do notification
+            - seems need to use chrome instead of firefox because firefox doesn't support actions
+            - needs to be HTTPS for chrome
+            3. 
+            */
+            const startingPermission = Notification.permission;
+            if (startingPermission === 'default') {
+                Notification.requestPermission()
+                    .then(main);
+            } else {
+                main(Notification.permission);
+            }
+
+            function main(permission) {
+                if (permission !== 'granted') {
+                    // should I fall back to alert in this case?
+                    return;
+                }
+                focusTimeInput();
+            }
+
+            function createNewReminder() {
+                const timeDescription = getValue('new-reminder-time');
+                const reminderTime = chrono.parseDate(timeDescription, new Date(), {forwardDate: true});
+
+                if (!reminderTime) {
+                    alert(`couldn't parse time, try again`);
+                    focusTimeInput();
+                    return false;
+                }
+                
+                const title = getValue('new-reminder-title');
+                const link = getValue('new-reminder-link');
+                saveReminder(reminderTime, title, link);
+                
+                resetForm();
+                return false;
+            }
+            
+            const deleteButtonHtml = `
+                <button class="delete-button" title="remove reminder">
+                    ✕
+                </button>
+            `;
+
+            function focusTimeInput() {
+                const timeInput = getElement('new-reminder-time');
+                timeInput.select();
+            }
+
+            function saveReminder(reminderTime, title, link) {
+
+                // TODO break this function up into smaller parts
+                const now = new Date();
+                const timeUntilReminder = Math.max(reminderTime - now, 0);
+    
+                const linkHtml = link ?
+                    `<a href="${link}" target="_blank">
+                        ${link}
+                    </a>` :
+                    '';
+
+                const savedReminderElement = document.createElement('li');
+                savedReminderElement.innerHTML = `
+                    ${deleteButtonHtml}
+
+                    Will remind you "${title}" at ${reminderTime.toLocaleString()}.
+
+                    ${linkHtml}
+                `;
+
+                const reminderCountDown = setTimeout(
+                    () => {
+                        sendNotification(title, link);
+                        savedReminderElement.remove();
+                    },
+                    timeUntilReminder
+                );
+
+                savedReminderElement.querySelector('button').onclick = e => {
+                    window.clearTimeout(reminderCountDown);
+                    savedReminderElement.remove();
+                };
+
+                const savedRemindersContainer = getElement('saved-reminders');
+                savedRemindersContainer.prepend(savedReminderElement);
+            }
+            
+            function resetForm() {
+                const resetButton = getElement('new-reminder-reset');
+                resetButton.click();
+                focusTimeInput();
+            }
+
+            function sendNotification(title, link) {
+                const notification = new Notification(title, {
+                    data: link,
+                    requireInteraction: true,
+                    // actions: [
+                    //     {action: 'snooze', title: 'Snooze'},
+                    //     {action: 'done', title: 'Done'}
+                    // ]
+                });
+
+                notification.addEventListener('click', openLinkOnClick)
+                return notification;
+
+                function openLinkOnClick(e) {
+                    const link = e.originalTarget.data;
+                    if (link) {
+                        window.open(link);
+                    }
+                }
+            }
+
+            function getValue(id) {
+                const element = getElement(id);
+                return element && element.value;
+            }
+
+            function getElement(id) {
+                return document.getElementById(id);
+            }
+        </script>
+    </body>
+</html>
