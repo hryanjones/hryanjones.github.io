@@ -8,29 +8,52 @@
             body {
                 font-family: sans-serif;
             }
+            .main-form, .main-form input {
+                font-size: xx-large;
+            }
+            label {
+                padding-left: 20px;
+            }
         </style>
     </head>
     <body>
-        <form onsubmit="return createNewReminder()">
-            <strong>Remind me</strong>
-            <input id="new-reminder-time" value="in 1 hour" placeholder="real or relative time" style="width: 180px" required/>
-            <input id="new-reminder-title" type="text" placeholder="reminder" required/>.
+        <form onsubmit="return createNewReminder()" autocom>
+            <p class="main-form">
+                <strong>Remind me</strong>
+                <input id="new-reminder-time" value="in 1 hour" placeholder="real or relative time" style="width: 320px" required list="reminder-times"/>
+                <input id="new-reminder-title" type="text" placeholder="reminder" required/>.
+            </p>
             
-            <p style="font-size: small">
-                (<em>optional:</em> and go to 
+            <p>
+                <em>optional:</em>
+
+                <label>go to </label>
                 <input 
                     id="new-reminder-link"
                     type="text"
                     placeholder="link"
-                    style="width: 30px; font-size: small" 
+                    style="width: 60px" 
                     pattern="https?://.*"
                     title="starts with http:// or https://"
-                />)
+                />
+
+                <label><input id="new-reminder-play-sound" type="checkbox" checked="true"> play sound</label>
             </p>
 
             <input style="display: none" type="submit" value="add reminder"/>
             <input style="display: none" id="new-reminder-reset" type="reset"/>
         </form>
+
+        <datalist id="reminder-times">
+            <option value="in 5 minutes"></option>
+            <option value="in 1 hour"></option>
+            <option value="in 3 hours"></option>
+            <option value="in 8 hours"></option>
+            <option value="at 10am"></option>
+            <option value="at 1pm"></option>
+            <option value="at 6pm"></option>
+            <option value="Monday at 10am"></option>
+        </datalist>
 
         <hr/>
 
@@ -73,7 +96,8 @@
                 
                 const title = getValue('new-reminder-title');
                 const link = getValue('new-reminder-link');
-                saveReminder(reminderTime, title, link);
+                const playSound = getValue('new-reminder-play-sound');
+                saveReminder(reminderTime, {title, link, playSound});
                 
                 resetForm();
                 return false;
@@ -90,7 +114,7 @@
                 timeInput.select();
             }
 
-            function saveReminder(reminderTime, title, link) {
+            function saveReminder(reminderTime, {title, link, playSound}) {
 
                 // TODO break this function up into smaller parts
                 const now = new Date();
@@ -113,7 +137,7 @@
 
                 const reminderCountDown = setTimeout(
                     () => {
-                        sendNotification(title, link);
+                        sendNotification({title, link, playSound});
                         savedReminderElement.remove();
                     },
                     timeUntilReminder
@@ -134,7 +158,7 @@
                 focusTimeInput();
             }
 
-            function sendNotification(title, link) {
+            function sendNotification({title, link, playSound}) {
                 const notification = new Notification(title, {
                     data: link,
                     requireInteraction: true,
@@ -143,25 +167,50 @@
                     //     {action: 'done', title: 'Done'}
                     // ]
                 });
+                if (playSound) {
+                    playNotificationSound();
+                }
 
                 notification.addEventListener('click', openLinkOnClick)
                 return notification;
 
                 function openLinkOnClick(e) {
-                    const link = e.originalTarget.data;
+                    const link = getData(e);
                     if (link) {
                         window.open(link);
                     }
+                }
+
+                function getData(e) {
+                    return (e.originalTarget && e.originalTarget.data) ||
+                        (e.target && e.target.data) || 
+                        (e.currentTarget && e.currentTarget.data);
                 }
             }
 
             function getValue(id) {
                 const element = getElement(id);
-                return element && element.value;
+                if (!element) {
+                    return '';
+                }
+                if (element.type === 'checkbox') {
+                    return element.checked;
+                }
+                return element.value;
             }
 
             function getElement(id) {
                 return document.getElementById(id);
+            }
+
+            function playNotificationSound() {
+                const soundElement = document.createElement('audio');
+                soundElement.src = './light.mp3';
+                soundElement.autoplay = true;
+                soundElement.addEventListener('ended', () => {
+                    soundElement.remove();
+                });
+
             }
         </script>
     </body>
