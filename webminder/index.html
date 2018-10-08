@@ -20,8 +20,22 @@
         <form onsubmit="return createNewReminder()" autocom>
             <p class="main-form">
                 <strong>Remind me</strong>
-                <input id="new-reminder-time" value="in 1 hour" placeholder="real or relative time" style="width: 320px" required list="reminder-times"/>
-                <input id="new-reminder-title" type="text" placeholder="reminder" required/>.
+                <input 
+                    id="new-reminder-time"
+                    placeholder="real or relative time"
+                    style="width: 320px"
+                    required
+                    list="reminder-times"
+                />
+                <input 
+                    id="new-reminder-title"
+                    type="search"
+                    type="text"
+                    placeholder="reminder"
+                    required
+                    pattern=".{0,180}"
+                    title="notification is too long to be displayed (> 180)"
+                />.
             </p>
             
             <p>
@@ -94,8 +108,11 @@
                     return false;
                 }
                 
-                const title = getValue('new-reminder-title');
                 const link = getValue('new-reminder-link');
+                let title = getValue('new-reminder-title');
+                if (link) {
+                    title = '🔗 ' + title;
+                }
                 const playSound = getValue('new-reminder-play-sound');
                 saveReminder(reminderTime, {title, link, playSound});
                 
@@ -158,10 +175,16 @@
                 focusTimeInput();
             }
 
+            const CUT_TITLE_THRESHOLD = 25;
+
             function sendNotification({title, link, playSound}) {
+                let body = '';
+                breakTitleBetweenWords();
+                body += getSmallTimeStamp();
                 const notification = new Notification(title, {
                     data: link,
                     requireInteraction: true,
+                    body,
                     // actions: [
                     //     {action: 'snooze', title: 'Snooze'},
                     //     {action: 'done', title: 'Done'}
@@ -173,6 +196,33 @@
 
                 notification.addEventListener('click', openLinkOnClick)
                 return notification;
+
+                // gives back a string like '(Sun 23:58)'
+                function getSmallTimeStamp() {
+                    const now = new Date();
+                    const shortWeekDay = now.toDateString().replace(/ .*/, '');
+                    const time = now.toTimeString().replace(/:.. .*/, '');
+                    return ` (${shortWeekDay} ${time}) `;
+                }
+
+                function breakTitleBetweenWords() {
+                    if (title.length <= CUT_TITLE_THRESHOLD) {
+                        return;
+                    }
+
+                    const parts = title.split(' ');
+                    title = '';
+                    let firstBodyWordIndex = 0;
+                    parts.every((word, i) => {
+                        if ((title.length + word.length) < CUT_TITLE_THRESHOLD) {
+                            title += word + ' ';
+                            return true;
+                        }
+                        firstBodyWordIndex = i;
+                        return false;
+                    });
+                    body += parts.slice(firstBodyWordIndex).join(' ');
+                }
 
                 function openLinkOnClick(e) {
                     const link = getData(e);
