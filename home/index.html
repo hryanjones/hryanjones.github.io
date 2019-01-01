@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <style>
+  /* Mine (hryanjones) */
+
+.motd-author, .motd-source, .motd-link {
+    font-style: italic;
+    margin-left: 1em;
+  }
+  
+  .motd-source, .motd-link {
+    font-size: 80%;
+  }
+  
+  nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0.3em;
+    display: flex;
+    justify-content: space-between;
+    background-color: #333;
+    border-top: 0.1em solid gray;
+  }
+  nav img {
+    background-color: white;
+    padding: 0.3em;
+    border-radius: 50%;
+    margin-right: 0.3em;
+    height:1em;
+  }
+  nav a {
+    display: flex;
+    align-items: center;
+  }
+  
+  
+  
+  /* BELOW modified from http://thomasf.github.io/solarized-css/ */
+  
+  article,aside,details,figcaption,figure,footer,header,hgroup,section,summary{
+      display:block
+  }
+  audio,canvas,video{
+      display:inline-block
+  }
+  audio:not([controls]){
+      display:none;
+      height:0
+  }
+  [hidden]{
+      display:none
+  }
+  html{
+      font-family:sans-serif;
+      -webkit-text-size-adjust:100%;
+      -ms-text-size-adjust:100%
+  }
+  body{
+      margin:0
+  }
+  a:focus{
+      outline:thin dotted
+  }
+  a:active,a:hover{
+      outline:0
+  }
+  h1{
+      font-size:2em;
+  }
+  abbr[title]{
+      border-bottom:1px dotted
+  }
+  b,strong{
+      font-weight:bold
+  }
+  dfn{
+      font-style:italic
+  }
+  mark{
+      background:#ff0;
+      color:#000
+  }
+  code,kbd,pre,samp{
+      font-family:monospace,serif;
+      font-size:1em
+  }
+  pre{
+      white-space:pre-wrap;
+      word-wrap:break-word
+  }
+  q{
+      quotes:"\201C" "\201D" "\2018" "\2019"
+  }
+  small{
+      font-size:80%
+  }
+  sub,sup{
+      font-size:75%;
+      line-height:0;
+      position:relative;
+      vertical-align:baseline
+  }
+  sup{
+      top:-0.5em
+  }
+  sub{
+      bottom:-0.25em
+  }
+  img{
+      border:0
+  }
+  svg:not(:root){
+      overflow:hidden
+  }
+  figure{
+      margin:0
+  }
+  fieldset{
+      border:1px solid #c0c0c0;
+      margin:0 2px;
+      padding:.35em .625em .75em
+  }
+  legend{
+      border:0;
+      padding:0
+  }
+  button,input,select,textarea{
+      font-family:inherit;
+      font-size:100%;
+      margin:0
+  }
+  button,input{
+      line-height:normal
+  }
+  button,html input[type="button"],input[type="reset"],input[type="submit"]{
+      -webkit-appearance:button;
+      cursor:pointer
+  }
+  button[disabled],input[disabled]{
+      cursor:default
+  }
+  input[type="checkbox"],input[type="radio"]{
+      box-sizing:border-box;
+      padding:0
+  }
+  input[type="search"]{
+      -webkit-appearance:textfield;
+      -moz-box-sizing:content-box;
+      -webkit-box-sizing:content-box;
+      box-sizing:content-box
+  }
+  input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{
+      -webkit-appearance:none
+  }
+  button::-moz-focus-inner,input::-moz-focus-inner{
+      border:0;
+      padding:0
+  }
+  textarea{
+      overflow:auto;
+      vertical-align:top
+  }
+  table{
+      border-collapse:collapse;
+      border-spacing:0
+  }
+  html{
+      font-family:sans-serif
+  }
+  pre,code{
+      font-family:sans-serif
+  }
+  h1,h2,h3,h4,h5,h6{
+      font-family:sans-serif;
+      font-weight:500;
+  }
+  html{
+      background-color:#fdf6e3;
+      color:#657b83;
+      margin:1em
+  }
+  body{
+      margin:0 auto;
+  
+  }
+  a{
+      color:#b58900
+  }
+  a:visited{
+      color:#cb4b16
+  }
+  a:hover{
+      color:#cb4b16
+  }
+  h1{
+      color:#d33682
+  }
+  h2,h3,h4,h5,h6{
+      color:#859900
+  }
+  pre code{
+      background-color:#fdf6e3
+  }
+  h1{
+      font-size:2.8em
+  }
+  h2{
+      font-size:2.4em
+  }
+  h3{
+      font-size:1.8em
+  }
+  h4{
+      font-size:1.4em
+  }
+  h5{
+      font-size:1.3em
+  }
+  h6{
+      font-size:1.15em
+  }
+  .tag{
+      background-color:#eee8d5;
+      color:#d33682;
+      padding:0 .2em
+  }
+  .todo,.next,.done{
+      color:#fdf6e3;
+      background-color:#dc322f;
+      padding:0 .2em
+  }
+  .tag{
+      -webkit-border-radius:.35em;
+      -moz-border-radius:.35em;
+      border-radius:.35em
+  }
+  .TODO{
+      -webkit-border-radius:.2em;
+      -moz-border-radius:.2em;
+      border-radius:.2em;
+      background-color:#2aa198
+  }
+  .NEXT{
+      -webkit-border-radius:.2em;
+      -moz-border-radius:.2em;
+      border-radius:.2em;
+      background-color:#268bd2
+  }
+  .ACTIVE{
+      -webkit-border-radius:.2em;
+      -moz-border-radius:.2em;
+      border-radius:.2em;
+      background-color:#268bd2
+  }
+  .DONE{
+      -webkit-border-radius:.2em;
+      -moz-border-radius:.2em;
+      border-radius:.2em;
+      background-color:#859900
+  }
+  .WAITING{
+      -webkit-border-radius:.2em;
+      -moz-border-radius:.2em;
+      border-radius:.2em;
+      background-color:#cb4b16
+  }
+  .HOLD{
+      -webkit-border-radius:.2em;
+      -moz-border-radius:.2em;
+      border-radius:.2em;
+      background-color:#d33682
+  }
+  .NOTE{
+      -webkit-border-radius:.2em;
+      -moz-border-radius:.2em;
+      border-radius:.2em;
+      background-color:#d33682
+  }
+  .CANCELLED{
+      -webkit-border-radius:.2em;
+      -moz-border-radius:.2em;
+      border-radius:.2em;
+      background-color:#859900
+  }
+  
+</style>
+</head>
+<body>
+<nav>
+  <a href="http://hryanjones.com/kyakarun/build/"><img src="http://hryanjones.com/kyakarun/build/favicon.png"/>KyaKarun</a>
+  <a href="https://www.duolingo.com/"><img src="https://d35aaqx5ub95lt.cloudfront.net/favicon.ico"/> duolingo</a>
+  <a href="https://fast.com"><img src="https://fast.com/assets/favicons/favicon-16x16.png"/> fast</a>
+  <a href="https://codepen.io/hryanjones/pen/PXOxQv">✏️</a>
+</nav>
+
+<script>
+// SCRIPT TO GET NOTES FROM KEEP
+
+/*
+elementTexts = Array.from(document.querySelectorAll('[aria-label="Note"]'))
+.map(el => el.innerText)
+.filter(txt => txt);
+
+tooLongTexts = elementTexts.filter(txt => /…/.test(txt));
+goodTexts = elementTexts.filter(txt => !/…/.test(txt));
+
+copy(
+    goodTexts
+    .map(txt => 
+        txt
+        .replace(/\s*#[a-z]+/gi, '')
+        .replace(/^\n/gm, '')
+    )
+    .join('\n----\n')
+    +
+    '\n\n ---- BELOW ARE TOO LONG (manually copy-paste) ----\n\n'
+    + tooLongTexts.join('\n\n')
+);
+*/
+
+
+// Seed random - https://github.com/davidbau/seedrandom/blob/released/package.json
+
+!function(a,b){var l,c=eval("this"),d=256,g="random",h=b.pow(d,6),i=b.pow(2,52),j=2*i,k=d-1;function m(r,t,e){var u=[],f=q(function n(r,t){var e,o=[],i=typeof r;if(t&&"object"==i)for(e in r)try{o.push(n(r[e],t-1))}catch(n){}return o.length?o:"string"==i?r:r+"\0"}((t=1==t?{entropy:!0}:t||{}).entropy?[r,s(a)]:null==r?function(){try{var n;return l&&(n=l.randomBytes)?n=n(d):(n=new Uint8Array(d),(c.crypto||c.msCrypto).getRandomValues(n)),s(n)}catch(n){var r=c.navigator,t=r&&r.plugins;return[+new Date,c,t,c.screen,s(a)]}}():r,3),u),p=new n(u),m=function(){for(var n=p.g(6),r=h,t=0;n<i;)n=(n+t)*d,r*=d,t=p.g(1);for(;j<=n;)n/=2,r/=2,t>>>=1;return(n+t)/r};return m.int32=function(){return 0|p.g(4)},m.quick=function(){return p.g(4)/4294967296},m.double=m,q(s(p.S),a),(t.pass||e||function(n,r,t,e){return e&&(e.S&&o(e,p),n.state=function(){return o(p,{})}),t?(b[g]=n,r):n})(m,f,"global"in t?t.global:this==b,t.state)}function n(n){var r,t=n.length,u=this,e=0,o=u.i=u.j=0,i=u.S=[];for(t||(n=[t++]);e<d;)i[e]=e++;for(e=0;e<d;e++)i[e]=i[o=k&o+n[e%t]+(r=i[e])],i[o]=r;(u.g=function(n){for(var r,t=0,e=u.i,o=u.j,i=u.S;n--;)r=i[e=k&e+1],t=t*d+i[k&(i[e]=i[o=k&o+r])+(i[o]=r)];return u.i=e,u.j=o,t})(d)}function o(n,r){return r.i=n.i,r.j=n.j,r.S=n.S.slice(),r}function q(n,r){for(var t,e=n+"",o=0;o<e.length;)r[k&o]=k&(t^=19*r[k&o])+e.charCodeAt(o++);return s(r)}function s(n){return String.fromCharCode.apply(0,n)}if(b["seed"+g]=m,q(b.random(),a),"object"==typeof module&&module.exports){module.exports=m;try{l=require("crypto")}catch(n){}}else"function"==typeof define&&define.amd&&define(function(){return m})}([],Math);
+
+
+
+
+
+Math.seedrandom(getTimeRoundedToHour()); // ensure consistent quote picked within an hour
+
+main();
+
+function main() {
+  const randomRecord = getRandomRecord();
+  document.body.appendChild(
+    createElementFromRecord(randomRecord)
+  );
+}
+
+function getTimeRoundedToHour() {
+  const now = new Date();
+  return now.toISOString().replace(/:[^:]*$/, '');
+}
+
+function getRandomRecord() {
+  const records = parseTemplate(getTemplate());
+  const choiceIndex = getRandomNumberUpTo(records.length);
+  return records[choiceIndex];
+}
+  
+function getRandomNumberUpTo(max) {
+  return Math.round(Math.random()*max);
+}
+
+function parseTemplate(template) {
+  return template
+  .split('----')
+  .map(record => 
+       record.replace(/^\n/, '') // remove empty lines
+  )
+  .map(parseRawRecord)
+}
+
+function parseRawRecord(record) {
+  const authorPrefixRegex = /^-\s*/;
+  const urlRegex = /^https?:\/\/.+/;
+  const lines = record.split('\n');
+  let author, source, url;
+  let i;
+  for (i = lines.length; i > 0; i--) {
+    const line = lines[i];
+    if (authorPrefixRegex.test(line)) {
+      author = line.replace(authorPrefixRegex, '');
+      break;
+    }
+    if (urlRegex.test(line)) {
+      url = line;
+    } else {
+      source = line;
+    }
+  }
+  
+  const body = author ? lines.slice(0, i).join('\n') : record;
+
+  return {body, source, author, url};
+}
+
+function createElementFromRecord(record) {
+  const container = document.createElement('h5');
+  addElementToContainer('motd-body', record.body, 'pre');
+
+  if (record.author) {
+    addElementToContainer('motd-author', record.author);
+  }
+  if (record.source && !record.url) {
+    addElementToContainer('motd-source', record.source);
+  }
+  if (record.url) {
+    const url = createElementWithClassAndText('motd-link', record.source || record.url, 'a');
+    url.href = record.url;
+    container.appendChild(url);
+  }
+
+  return container;
+  
+  function addElementToContainer(className, text, elementType) {
+    container.appendChild(
+        createElementWithClassAndText(className, text, elementType)
+      );
+  }
+}
+
+function createElementWithClassAndText(className, text, elementType='div') {
+  const element = document.createElement(elementType);
+  element.classList.add(className);
+  element.textContent = text;
+  return element;
+}
+
+function getTemplate() {
+  return `Worse, the advent of WWW browsers for the Internet disastrously turned users into simple consumers, because the browsers do not permit any kind of balanced authoring for Internet content. That this was allowed to happen is almost beyond belief and has been a terrible setback.
+- Alan Kay
+http://www.squeakland.org/resources/articles/article.jsp?id=1001
+----
+"Politics is an extension of war by other means."
+- How To Actually Change Your Mind
+----
+"As a result of his experiments he concluded that imitation was a real evil that had to be broken before real rhetoric teaching could begin. This imitation seemed to be an external compulsion. Little children didn't have it. It seemed to come later on, possibly as a result of school itself."
+- Robert Pirsig
+Zen and the Art of Motorcycle Maintenance
+----
+"when we lose the stories we have believed about ourselves, we are losing more than stories, we are losing ourselves."
+- Lauren Groff
+Arcadia
+----
+"But his job, as he understands it, is to help his students see: to make them pay attention, slow down and appreciate what they’re doing. This is something they can use in life."
+-Lauren Groff
+Arcadia
+----
+"In many ways, the idea that we can reuse components without having to change them (or that we can account for all the variances) has caused us more harm than good."
+-Chris Granger
+Coding is Not the New Literacy
+http://www.chris-granger.com/2015/01/26/coding-is-not-the-new-literacy/
+----
+"It would accordingly be far more accurate to view modern history as the process of formulating a deal between science and one particular religion – namely, humanism. Modern society believes in humanist dogmas, and uses science not in order to question these dogmas, but rather in order to implement them."
+- Yuval Noah Harari
+Homo Deus: A Brief History of Tomorrow
+----
+"The greatest scientific discovery was the discovery of ignorance. Once humans realised how little they knew about the world, they suddenly had a very good reason to seek new knowledge, which opened up the scientific road to progress."
+- Yuval Noah Harari
+Homo Deus: A Brief History of Tomorrow
+----
+This is the best reason to learn history: not in order to predict the future, but to free yourself of the past and imagine alternative destinies. Of course this is not total freedom - we cannot avoid being shaped by the past. But some freedom is better than none.
+- Yuval Noah Harari
+Homo Deus
+----
+We use Java, every new idea gets a new class. What happens?  You get an explosion of code. More code equals more bugs
+- Rich Hickey
+The Value of Values
+https://www.youtube.com/watch?v=-6BsiVyC1kM
+----
+Because if I think I have an answer and the answer is small. That's one of most telling attributes that it's probably good.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+Don't stay stuck. Switch.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+Work on more than one thing. NOT inside one day.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+I know everybody has to ship and everything else and in that case a lot of what I'm saying doesn't apply. [...] I consider it a huge opportunity when I get an extended amount of time to think about a problem. Because I know I'll come up with a better solution.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+Using your waking time to assign tasks to your background mind. That really is the point of the hammock and all this listening and working you're going to do while you're awake.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+Computers are bad, bad sources of distraction. [...] Something else, besides what I'm trying to think about. You desperately need to get away from the computer if you are trying to focus.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+It's really easy to get excited about the good parts of what you do, but you should be looking for trade-offs. The chances of there being no tradeoffs in any solution are slim.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+It's hard to talk about other people's stuff not being awesome. So just, mainly focus on your own stuff.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+Where do you think there's more leverage? I don't care what [methodology] X is. Pick any X you want. Would you rather be good at it or at the general skill of solving problems?
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+Avoiding problems [...] isn't the same as solving them.
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+Analysis and design is about two things:
+1. Identifying some some problem we're trying to solve and
+2. assessing our proposed solutions in terms of whether or not it solves that problem
+-Rich Hickey
+Hammock Driven Development
+https://www.youtube.com/watch?v=f84n5oFoZBc
+----
+Derivative Companies, companies that copy an existing idea with very few new insights don't excite people and don't compel the teams to work hard enough to be successful.
+  
+- Sam Altman
+How to Start a Startup, 1
+http://startupclass.samaltman.com/
+----
+4. Users can't remember anything
+- Joel Spolsky
+Designing for People Who Have Better Things To Do With Their Lives, Part Three
+http://www.joelonsoftware.com/uibook/chapters/fog0000000064.html
+----
+3. Users can't control the mouse very well.
+http://www.joelonsoftware.com/uibook/chapters/fog0000000063.html
+- Joel Spolsky
+Designing for People Who Have Better Things To Do With Their Lives, Part Two
+----
+We have been trying to solve the wrong problem. In the United States, racism is primarily a white problem.
+- Joseph Barndt
+Understanding and Dismantling Racism
+----
+"A user interface is well-designed when the program behaves exactly how the user thought it would."
+- Joel Spolsky
+Controlling Your Environment Makes you Happy
+http://www.joelonsoftware.com/uibook/chapters/fog0000000057.html
+----
+"A good rule of thumb for curriculum design is to aim at being idea based, not media based."
+- Alan Kay
+Powerful Ideas Need Love Too!
+http://worrydream.com/refs/Kay%20-%20Powerful%20Ideas%20Need%20Love%20Too.html
+----
+"A great Spatial Interface meets our expectations of a physical model. Designed for human beings, it supports a mind, living in the dimensions of space and time."
+- Pasquale D’Silva
+Spatial Interfaces
+https://medium.com/elepath-exports/spatial-interfaces-886bccc5d1e9
+----
+"It was my exasperated acknowledgement that looking for good software to count on has been a losing battle. Written by people with either no time or no money, most software gets shipped the moment it works well enough to let someone go home and see their family."
+- Quinn Norton
+Everything Is Broken
+https://medium.com/message/everything-is-broken-81e5f33a24e1
+
+----
+Building a site on a browser, which is essentially designed for PCs  is a more limited experience than building an app on a phone which can (with permission) know much more about the user. Their location, their friend list, credit card, etc.
+https://www.ben-evans.com/benedictevans/2015/5/14/mobile-first
+----
+"Programming is only meaningful when put into the context of problems we actually have, otherwise we're showing people the moral equivalent of calculus - "what's the point of this crap?""
+- Chris Granger
+Coding is Not the New Literacy
+http://www.chris-granger.com/2015/01/26/coding-is-not-the-new-literacy/
+----
+"In many ways, the idea that we can reuse components without having to change them (or that we can account for all the variances) has caused us more harm than good."
+-Chris Granger
+Coding is Not the New Literacy
+http://www.chris-granger.com/2015/01/26/coding-is-not-the-new-literacy/
+----
+"Writing Python isn't the fundamental skill we need to teach people. Modeling systems is."
+-Chris Granger
+Coding is Not the New Literacy
+http://www.chris-granger.com/2015/01/26/coding-is-not-the-new-literacy/
+----
+"Our screen sharing, on the other hand, is a bolted-on hack that doesn't alter the single-user design of our present computers. Our computers are fundamentally designed with a single-user assumption through-and-through, and simply mirroring a display remotely doesn't magically transform them into collaborative environments."
+- Bret Victor
+http://worrydream.com/Engelbart/
+----
+First, on the good teams, members spoke in roughly the same proportion, a phenomenon the researchers referred to as ‘‘equality in distribution of conversational turn-taking.’’ 
+- James Graham
+What Google Learned From Its Quest to Build the Perfect Team
+https://mobile.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html?_r=1&referer=
+----
+Racism is race prejudice plus the misuse of power by systems and institutions.
+- Joseph Barndt
+Understanding and Dismantling Racism
+----
+A phone is for consuming, not creating. (they're too small)
+-me
+(via Journal)
+----
+Well, a saying I made up at PARC was, “Simple things should be simple, complex things should be possible.” They’ve got simple things being simple and they have complex things being impossible, so that’s wrong.
+-Alan Kay
+Interview
+https://www.fastcompany.com/40435064/what-alan-kay-thinks-about-the-iphone-and-technology-now
+----
+Zooming out: we want students to think of math itself as a well-connected system. If we give them representations and manipulatives which suggest a jumble of dissociated ideas, that may come to be how they perceive math itself.
+- Scott Farrar, May-Li Khoe, Andy Matuschak
+Numbers At Play
+https://www.khanacademy.org/research/reports/cantor
+----
+"Noticing these relationships, we quickly realize that being right is rarely the most important thing to care about. And as we notice this, the rigidity of rightness slowly gives way to a more nuanced understanding of the texture of our relationships."
+- Kyle Eschenroeder.
+Caring and Reality (via Peter Abrahamsen)
+https://www.ribbonfarm.com/2017/02/14/caring-and-reality/
+----
+"This difference in caring is the difference between playing a finite or infinite game: Parenting done well is not a game you play to win, it’s a game you play to keep playing."
+- Kyle Eschenroeder.
+Caring and Reality (via Peter Abrahamsen)
+https://www.ribbonfarm.com/2017/02/14/caring-and-reality/
+----
+"We want to get at the underlying issue: the way we interact with an unknowable reality. Our default is to find something we can measure and let that steer the ship. It’s not a new default, it’s one we’ve used forever."
+- Kyle Eschenroeder.
+Caring and Reality (via Peter Abrahamsen)
+https://www.ribbonfarm.com/2017/02/14/caring-and-reality/
+----
+"The more minutiae we measure, the less respect we have for taste or experience.  [...] Decision makers are being confused by confident measurements of the wrong metrics."
+- Kyle Eschenroeder.
+Caring and Reality (via Peter Abrahamsen)
+https://www.ribbonfarm.com/2017/02/14/caring-and-reality/
+----
+No, my friend, in all the world there is only one thing consistent and worth possessing, viz, an emancipated spirit with imaginative, creative force, and a cheerful temperament. One can have truffles or do without them. All that sort of thing is a matter of luck; it does not signify anything.
+- Alexander Kuprin
+The Duel
+----
+"Hours of practice worksheets at Kumon might make a child great at arithmetic, but what does it do to their curiosity? To their desire to learn independently as an adult?"
+- Andy Matuschak
+Exalting data, missing meaning
+http://blog.andymatuschak.org/post/159340765257/exalting-data-missing-meaning
+----
+Who was king in Italy the time of Galileo?
+[The idea that technology & science are what is changing the world in spite of whatever current political regime is in power.]
+- Steven Levy
+The iPhone is Bigger Than Donald Trump
+https://bit.ly/2k53jHk
+----
+"Because it's a groovy thing to do"
+- Alan Watts
+The Real Purpose of Doing Anything
+https://youtu.be/QPh4sC_Oy0U
+----
+"But in this dark world where he now dwelt, ugly things and surprising things and once in a long while a tiny wondrous thing spilled out at him constantly; he could count on nothing."
+- Philip K Dick
+A Scanner Darkly
+----
+The image of children using the computer as a writing instrument is a particularly good example of my general thesis that what is good for professionals is good for children.
+- Samuel Papert
+Mindstorms
+----
+I am convinced that what shows up as intellectual weakness very often grows [...] out of intellectual strengths.
+- Samuel Papert
+Mindstorms
+----
+The computer is the Proteus of machines. Its essence is its universality, its power to simulate. Because it can take on a thousand forms and can serve a thousand functions, it can appeal to a thousand tastes.
+- Samuel Papert
+Mindstorms
+----
+"See, all my procedures are mind-sized bites." [...] It is possible to build a large intellectual system without ever making a step that cannot be comprehended. And building with a hierarchical structure makes it possible to grasp the system as a whole [...].
+- Samuel Papert
+Mindstorms
+----
+But the interesting cases are those where the conflict remains obstinately in place however much we ponder the problem. These are the cases where we are tempted to conclude that "intuition cannot be trusted." In these situations we need to improve our intuition, to debug it, but the pressure on us is to abandon intuition and rely on equations instead.
+- Samuel Papert
+Mind Storms
+----
+Discovery cannot be a setup; invention cannot be scheduled.
+- Samuel Papert
+Mindstorms
+----
+Lying makes a problem part of the future; truth makes a problem part of the past.
+-Rick Pitino
+----
+"For all of us, the computer is a land of pure imagination, where we can let our ideas take form without physical constraint."
+- Justin Falcone
+The Origin of HyperCard in the Breakdown of the Bicycle for the Mind
+https://medium.com/@modernserf/the-origin-of-hypercard-in-the-breakdown-of-the-bicycle-for-the-mind-8d0f3287e561#.iqp0psb5l
+----
+"an application that does something really great that people really want to do can be pathetically unusable, and it will still be a hit. And an application can be the easiest thing in the world to use, but if it doesn't do anything anybody wants, it will flop."
+- Joel Spolsky
+- It's Not Just Usability
+http://www.joelonsoftware.com/articles/NotJustUsability.html
+----
+1. "Users Don't Read the Manual."
+  "Users do just-in-time manual reading, on a strictly need-to-know basis."
+2. "In fact, users don't read anything."
+- Joel Spolsky
+Designing for People Who Have Better Things To Do With Their Lives
+http://www.joelonsoftware.com/uibook/chapters/fog0000000062.html
+----
+"If any part of a program is messy or complicated, the programmer should attempt to modularize it and to generalize the parts. He or she should expect to use higher-order functions and lazy evaluation as the tools for doing this."
+- John Hughes
+Why Functional Programming Matters
+https://docs.google.com/viewer?url=http://worrydream.com/refs/Hughes-WhyFunctionalProgrammingMatters.pdf
+----
+"Confusion largely results from not following feelings or ideas to their depth."
+- Alan Watts
+https://www.youtube.com/watch?v=efvmPF9UxJ4&list=WL&index=2
+----
+"Your emotions don't seem to care about the magnitude of the event, only the quality."
+- Joel Spolsky
+Controlling Your Environment Makes you Happy
+http://www.joelonsoftware.com/uibook/chapters/fog0000000057.html
+----
+"When you make things look, feel, and most importantly, behave like things in the real world, users are more likely to figure out how to use the program, and the app will be easier to use."
+- Joel Spolsky
+The Big Picture
+http://www.joelonsoftware.com/items/2007/01/21.html
+----
+Nothing in life is as important as you think it is when you are thinking about it.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+Others share my feeling, which is that I feel pity for my suffering self but not more than I would feel for a stranger in pain. Odd as it may seem, I am my remembering self, and the experiencing self, who does my living, is like a stranger to me.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+In intuitive evaluation of entire lives as well as brief episodes, peaks and ends matter but duration does not.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+Caring for people often takes the form of concern for the quality of their stories, not for their feelings.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+What we learn from the past is to maximize the qualities of our future memories, not necessarily of our future experience. This is the tyranny of the remembering self.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+The premortem has two main advantages: it overcomes the groupthink that affects many teams once a decision appears to have been made, and it unleashes the imagination of knowledgeable individuals in a much-needed direction.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+The answer comes from the two basic conditions for acquiring a skill:
+* an environment that is sufficiently regular to be predictable
+* an opportunity to learn these regularities through prolonged practice 
+When both these conditions are satisfied, intuitions are likely to be skilled.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+Implementing interview procedures in the spirit of Meehl and Dawes requires relatively little effort but substantial discipline.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+The idea that the future is unpredictable is undermined every day by the ease with which the past is explained.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+Start with an estimate of average GPA. Determine the GPA that matches your impression of the evidence. Estimate the correlation between your evidence and GPA. If the correlation is .30, move 30% of the distance from the average to the matching GPA.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+You will occasionally do more than your share, but it is useful to know that you are likely to have that feeling even when each member of the team feels the same way.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+The measure of success for System 1 is the coherence of the story it manages to create. The amount and quality of the data on which the story is based are largely irrelevant. When information is scarce, which is a common occurrence, System 1 operates as a system for jumping to conclusions.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+These findings add to the growing evidence that good mood, intuition, creativity, gullibility, and increased reliance on System 1 form a cluster. At the other pole, sadness, vigilance, suspicion, an analytic approach, and increased effort also go together.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+"A reliable way to make people believe in falsehoods is frequent repetition, because familiarity is not easily distinguished from truth."
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+Like most North Americans of his generation, Hal tends to know way less about why he feels certain ways about the objects and pursuits he’s devoted to than he does about the objects and pursuits themselves.
+- David Foster Wallace
+Infinite Jest
+----
+"In fact, what really seems to be the case is that children are willing to go to any lengths to learn very difficult things and endure almost an endless succession of "failures" in the process if they have a sense that the activity is an integral part of their culture."
+- Alan Kay
+Powerful Ideas Need Love Too!
+----
+I have found that unrequited dreams are at the core of every gridlocked conflict. In other words, the endless argument symbolizes some profound difference between you that needs to be addressed before you can put the problem in its place.
+- John Gottman
+The Seven Principles for Making Marriage Work
+----
+I think the advice-giver meant to say, "Never quit something with great long-term potential just because you can't deal with the stress of the moment." Now *that's* good advice.
+- Seth Godin
+The Dip
+----
+When the pain gets so bad that you're ready to quit, you've set yourself up as someone with nothing to lose. And someone with nothing to lose has quite a bit of power. You can go for broke. Challenge authority. Attempt unattempted alternatives. Lean into a problem; lean so far that you might just lean right through it.
+- Seth Godin
+The Dip
+----
+Yes, you should (you must) quit a product or a feature or a design--you need to do it regularly if you're going to grow and have the resources to invest in the right businesses. But now, you mustn't quit a market or a strategy or a niche. The businesses we think of as overnight successes weren't. We just didn't notice them until they were well baked.
+- Seth Godin
+The Dip
+----
+Sometimes when she told stories about the past her eyes would get teary from all the memories she had, but they weren’t tears. She wasn’t crying. They were just the memories, leaking out.
+- Ruth Ozeki
+A Tale for the Time Being
+----
+We refer to a way of life in an integrated domain where hunches, cut-and-try, intangibles, and the human "feel for a situation" usefully co-exist with powerful concepts, streamlined terminology and notation, sophisticated methods, and high-powered electronic aids.
+- Douglas Englebart
+Augmenting Human Intellect
+http://www.dougengelbart.org/pubs/augment-3906.html
+----
+"But worship isn't useful to anyone. Not him not you."
+- Bret Victor
+A few words on Doug Englebart
+----
+Everything in your life turns into an item on a list.  Something to accomplish.  You get to see how your life looks flattened out.  The shortest distance between two points is a timeline, a schedule, a map of your time, the itinerary for the rest of your life.  *Nothing shows you the straight line from here to death like a list.*
+- Chuck Palahuniuk
+Survivor
+----
+They were both men whom childhood had abandoned without a trace. Men without curiosity. Without doubt. Both in their own way truly, terrifyingly adult. They looked out at the world and never wondered how it worked, because they knew. They worked it. They were mechanics who serviced different parts of the same machine.
+- Arundhati Roy
+The God of Small Things
+----
+"The lesson to be learned from this is that it is often undesirable to go for the right thing first. It is better to get half of the right thing available so that it spreads like a virus. Once people are hooked on it, take the time to improve it to 90% of the right thing."
+- Richard Gabriel
+The Rise of "Worse is Better"
+http://www.jwz.org/doc/worse-is-better.html
+----
+"Every feeling I ever knew was up in that sky. Twinkling joyous sunlight; airy, giggling cloud wisps; blinding columns of sun. Orbs of gold, pink, flesh, utterly cheesy in their luminosity. Gigantic puffy clouds, welcoming, forgiving, repeating infinitely across the horizon as if between mirrors; and slices of rain, pounding wet misery in the distance now, but soon on us, and in another part of the sky, a black stain, rainless. The sky, it came in patches, it came in layers, it came swirled together, and always on the move, churning, sometimes whizzing by."
+
+- Maria Semple
+Where'd You Go, Bernadette"
+----
+To say it again, children start off loving to learn, and most can learn anything the culture throws at them. But they are best at learning ideas that seem to be an integral part of the surrounding culture. Having a parent or teacher that encourages them to study math and science is not even close to having one that lives math and science (or seems to). 
+- Alan Kay
+Powerful Ideals Need Love Too
+http://worrydream.com/refs/Kay%20-%20Powerful%20Ideas%20Need%20Love%20Too.html
+----
+"Technologies--such as books, musical instruments, pen and paper, bats and balls--can help, but they are clearly not enough to get kids over the critical hurdles all by themselves. On the other hand, literacy, music, art, dance, and sports can all flourish with little or no supporting technologies at all--supporting adults are all that are needed."
+- Alan Kay
+Powerful Ideas Need Love Too!
+http://worrydream.com/refs/Kay%20-%20Powerful%20Ideas%20Need%20Love%20Too.html
+----
+"Where C tried to make it easier to do computer things, Smalltalk tried to make it easier to do human things."
+- Paul Ford
+What is Code
+https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code/
+----
+Second, the good teams all had high ‘‘average social sensitivity’’ — a fancy way of saying they were skilled at intuiting how others felt based on their tone of voice, their expressions and other nonverbal cues.
+- James Graham
+What Google Learned From Its Quest to Build the Perfect Team
+https://mobile.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html?_r=1&referer=
+----
+"Caring puts us in the posture of playing an infinite game rather than a finite one. This means favoring “improvisation over fixed rules, internal sensibilities over imposed morals, and playfulness over seriousness.”
+There’s no one mental setup that works forever or even for a full day. We’re not working towards a perfect balance."
+- Kyle Eschenroeder.
+Caring and Reality
+https://www.ribbonfarm.com/2017/02/14/caring-and-reality/
+----
+"If you try to design something with human meaning by steering toward maximum impact on business outcomes, you’re very likely to end up with little human meaning… which in turn will likely harm whatever business outcomes you’re measuring in the long term."
+- Andy Matuschak
+Exalting data, missing meaning
+http://blog.andymatuschak.org/post/159340765257/exalting-data-missing-meaning
+----
+"Since we do not know how the job market would look in 2030 or 2040, already today we have no idea what to teach our kids. Most of what they currently learn at school will probably be irrelevant by the time they are forty. Traditionally, life has been divided into two main parts: a period of learning followed by a period of working. Very soon this traditional model will become utterly obsolete, and the only way for humans to stay in the game will be to keep learning throughout their lives, and to reinvent themselves repeatedly. Many if not most humans may be unable to do so."
+
+- Yuval Noah Harari
+Homo Deus: A Brief History of Tomorrow
+----
+Then the programmers shuffle back to their standing desks and complain until the product is shipped. Or else they just quit, because Lord knows there are jobs out there. For programmers, particularly the young ones, there are jobs everywhere.
+Managers and old coders have fewer options. It’s often better to just keep working and shipping, even if the code starts to look ugly, even if there are nominally better solutions, even as the technical debt accrues around you, because in a few years everything will change. 
+Or the entire industry will spasm and everything you’ve done will need to be thrown away and rebuilt along new lines anyway. (From desktop to Web, from Web to mobile, from mobile to … quantum? Who knows. But there’s always something.)
+Somehow it keeps working out. The industry is always promising to eat itself, to come up with a paradigm so perfect that we can all stop wasting our time and enter a world of pure digital thought. It never happens.
+- Paul Ford
+What is Code?
+https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code/
+----
+"The thing is, all those boxes can be manipulated. They’re all objects. It’s almost too powerful: The boundaries that are clear in most languages—between data and code, between files and executables, between the operating system and applications, between closed and open software—all of those borders are fuzzed by design. Smalltalk is a vision of the computer as its own, native medium. The whole system can be modified, by anyone. The dominant version is called Squeak (logo: cute mouse), and a modernized version is called Pharo (logo: lighthouse). Both are free and easy to download."
+
+- Paul Ford
+
+What is Code
+https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code/
+----
+"Excel, by contrast, constrains us to the single material that it was intentionally designed to work with. Through that constraint we gain a tool with a very intuitive and powerful interface for working with grids. The problem of course is that Excel is terrible for doing anything else, but that doesn't mean we should try to generalize a chef's knife into a hammer. Instead, we should use the right tools for the job and look for a glue that allows us to bring different materials together."
+
+-Chris Granger
+Coding is Not the New Literacy
+
+http://www.chris-granger.com/2015/01/26/coding-is-not-the-new-literacy/
+----
+As Ian F. Haney-Lopez described in his book, White By Law: In its first words on the subject of citizenship, Congress in 1790 restricted naturalization to "white persons." Though the requirements for naturalization changed frequently thereafter, this racial prerequisite site to citizenship endured for over a century and a half, remaining in force until 1952. From the earliest years of this country until just a generation ago, being a "white person" was a condition for acquiring citizenship.?
+- Joseph Barndt
+Understanding and Dismantling Racism
+----
+Do you know how to do an undo on an iPhone? Let me ask you that question. I’ll just test you out a little. Suppose you do something on the iPhone and you don’t like it, how do you undo it?
+FC: Unless you’re within an application, then … I don’t know.
+AK: So, in theory, you’re supposed to shake the iPhone and that means undo. Did you ever, did anybody ever tell you that? It’s not on the website. It turns out almost no app responds to a shake. And there’s no other provision. In fact, you can’t even find out how to use the iPhone on the iPhone. You ever notice that?
+- Alan Kay
+The Father of Mobile Computing is Not Impressed
+https://www.fastcompany.com/40435064/what-alan-kay-thinks-about-the-iphone-and-technology-now
+----
+[quoted in source]: "The news may present itself as the authoritative portraitist of reality. It may claim to have an answer to the impossible question of what has really been going on, but it has no overarching ability to transcribe reality. It merely selectively fashions reality through choices it makes about which stories to cast its spotlight on and which ones to leave out.
+Herein rests an enormous and largely uncomprehended power: the power to assemble the picture that citizens end up having of one another; the power to dictate what our idea of ‘other people’ will be like; the power to invent a nation in our imaginations.
+…The news we’re given about the nation is not the nation.” – Alain de Botton, The News"
+- Kyle Eschenroeder.
+Caring and Reality (via Peter Abrahamsen)
+https://www.ribbonfarm.com/2017/02/14/caring-and-reality/
+----
+The future isn’t grasped at, but grown into.
+Our tendency to be irrationally rational is uprooted and we may find ourselves behaving rationally irrational.
+This difference in caring is the difference between playing a finite or infinite game: Parenting done well is not a game you play to win, it’s a game you play to keep playing.
+- Kyle Eschenroeder.
+Caring and Reality (via Peter Abrahamsen)
+https://www.ribbonfarm.com/2017/02/14/caring-and-reality/
+----
+In many schools today, the phrase "computer-aided instruction" means making the computer teach the child. One might say the *computer is being used to program* the child. In my vision, *the child programs the computer* and, in doing so, both acquires a sense of mastery over a piece of the most modern and powerful technology and establishes an intimate contact with some of the deepest ideas from science, from mathematics, and from the art of intellectual model building.
+- Samuel Papert
+Mindstorms
+----
+I remind myself of the social nature of the question by remembering that samba school was not designed by researchers, funded by grants, nor implemented by government action. It was not made. It happened. This must be true of any new successful forms of associations for learning that might emerge out of the mathetic computer culture. Powerful new social forms must have their roots in the culture, not be the creatures of bureaucrats.
+- Samuel Papert
+Mindstorms
+----
+(summary, not a quote) Juggling broken down into specific component skills and then built upon can be learned many times faster than the "try until you succeed" method. And while learning you have to "debug" your actions, e.g. "the eye-following bug". 
+"We can learn more, and more quickly, by taking conscious control of the learning process, articulating and analyzing our behavior."
+- Samuel Papert
+Mindstorms
+----
+And I see a worrying trend — as the balance of computer users shifts from nerdy hobbyists to “regular people”, we’ve focused on making software as “appliance-like” as possible, at the expense of user empowerment. Extensibility, if available at all, is a “pro” feature.
+- Justin Falcone
+The Origin of HyperCard in the Breakdown of the Bicycle for the Mind
+https://medium.com/@modernserf/the-origin-of-hypercard-in-the-breakdown-of-the-bicycle-for-the-mind-8d0f3287e561#.iqp0psb5l
+----
+If we are concerned that the next generation of programmers are going to learn to code via frameworks, then we should see it as our duty to provide them with frameworks that they can grow with as they move from little bits of scriptng glue to writing business logic to modifying the core. And we should see it as our duty to design frameworks that they can learn from, that demonstrate ideal coding practices and design patterns.
+- Justin Falcone
+The Origin of HyperCard in the Breakdown of the Bicycle for the Mind
+https://medium.com/@modernserf/the-origin-of-hypercard-in-the-breakdown-of-the-bicycle-for-the-mind-8d0f3287e561#.iqp0psb5l
+----
+As Eric Giannella writes in his essay "Morality and the Idea of Progress in Silicon Valley," it can become a way of excusing yourself from considering the consequences of your actions:
+"Critiques of recent scandals in Silicon Valley rightly place the blame on a culture that supports amorality, thoughtlessness, and ignorance rather than ill intent. But the problem runs much deeper, because Silicon Valley’s amorality problem arises from the implicit and explicit narrative of progress companies use for marketing and that people use to find meaning in their work. By accepting this narrative of progress uncritically, imagining that technological change equals historic human betterment, many in Silicon Valley excuse themselves from moral reflection. Put simply, the progress narrative short-circuits moral reflection on the consequences of new technologies."
+- Buzz Andersen
+Magical Thinking & Thought Terminating Cliches
+http://tinyletter.com/buzzandersen/letters/magical-thinking-thought-terminating-cliches
+----
+"Couples move in together not just because it’s economically prudent. They understand, consciously or instinctively, that sustained proximity is the best route to the soul of someone; that unscripted gestures at unexpected junctures yield sweeter rewards than scripted ones on date night; that the “I love you” that counts most isn’t whispered with great ceremony on a hilltop in Tuscany. No, it slips out casually, spontaneously, in the produce section or over the dishes, amid the drudgery and detritus of their routines.
+ That’s also when the truest confessions are made, when hurt is at its rawest and tenderness at its purest."
+- Frank Bruni
+The Myth of Quality Time
+http://www.nytimes.com/2015/09/06/opinion/sunday/frank-bruni-the-myth-of-quality-time.html?_r=0
+----
+"It took me another fifteen years to realize that the principle of Fire and Motion is how you get things done in life."
+"there is only one strategy: Fire and Motion. You move towards the enemy while firing your weapon. The firing forces him to keep his head down so he can’t fire at you. (That’s what the soldiers mean when they shout “cover me.” It means, “fire at our enemy so he has to duck and can’t fire at me while I run across this street, here.” It works.)  The motion allows you to conquer territory and get closer to your enemy, where your shots are much more likely to hit their target."
+- Joel Spolsky
+----
+By WYSIATI, you are likely to exaggerate the long-term benefits of the car, but you are not likely to make the same mistake for a social gathering or for inherently attention-demanding activities such as playing tennis or learning to play the cello. The focusing illusion creates a bias in favor of goods and experiences that are initially exciting, even if they will eventually lose their appeal.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+Obsessive concerns (the bus in Jerusalem), vivid images (the roses), concrete representations (1 of 1,000), and explicit reminders (as in choice from description) all contribute to overweighting. And when there is no overweighting, there will be neglect. When it comes to rare probabilities, our mind is not designed to get things quite right. For the residents of a planet that may be exposed to events no one has yet experienced, this is not good news.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+A simple rule can help: before an issue is discussed, all members of the committee should be asked to write a very brief summary of their position. This procedure makes good use of the value of the diversity of knowledge and opinion in the group. The standard practice of open discussion gives too much weight to the opinions of those who speak early and assertively, causing others to line up behind them.
+- Daniel Kanheman
+Thinking Fast & Slow
+----
+In one of the exercises, the children used a joystick to track a cartoon cat and move it to a grassy area while avoiding a muddy area. The grassy areas gradually shrank and the muddy area expanded, requiring progressively more precise control. The testers found that training attention not only improved executive control; scores on nonverbal tests of intelligence also improved and the improvement was maintained for several months.
+- Daniel Kahneman
+Thinking Fast and Slow
+----
+Software let us escape the tyranny of the machine, yet we keep using it to build more prisons for our data and functionality!
+When we are shown something of use or interest to us, some piece of functionality or data, we begin thinking up possible variations and combinations that also interest us or seem useful.
+The problem is, I don't want a machine, I want a toolkit, and Google keeps trying to sell me machines. 
+- Paul Chiusano
+The future of software, the end of apps, and why UX designers should care about type theory
+http://pchiusano.blogspot.com/2013/05/the-future-of-software-end-of-apps-and.html?m=1
+----
+They are unusable in the same way that the UNIX command line is unusable for the vast majority of people. There have been many proposals for how the general public can make more powerful use of computers, but nobody is suggesting we should teach everyone to use the command line. The good proposals are the opposite of that -- design better interfaces, more accessible applications, higher-level abstractions. Represent things visually and tangibly.
+
+And so it should be with math. Mathematics, as currently practiced, is a command line. We need a better interface.
+- Bret Victor
+Kill Math
+http://worrydream.com/KillMath/
+----
+Our human body appears and disappears moment by moment, without cease, and this ceaseless arising and passing away is what we experience as time and being. They are not separate. They are one thing, and in even a fraction of a second, we have the opportunity to choose, and to turn the course of our action either toward the attainment of truth or away from it.
+- Ruth Ozeki
+A Tale for the Time Being
+----
+I sometimes think about resonant transactions as a metaphor for getting something out of a piece of writing. Before the material can resonate, before energy can be exchanged between the author and reader, the reader must already have available a mode of vibration at the author's frequency. (This doesn't mean that the reader is already thinking the author's thought; it means the reader is capable of thinking it.)
+- Bret Victor
+Links 2013
+http://worrydream.com/Links2013/`;
+}
+</script>
+</body>
+</html>
