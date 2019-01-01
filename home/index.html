@@ -4,6 +4,15 @@
   <style>
   /* Mine (hryanjones) */
 
+html {
+  font-size: 18px;
+}
+@media (max-width: 900px) {
+  html {
+    font-size: 48px !important;
+  }
+}
+
 .motd-author, .motd-source, .motd-link {
     font-style: italic;
     margin-left: 1em;
@@ -14,6 +23,8 @@
   }
   
   nav {
+    height: 2em;
+    font-size: 1.4em;
     position: absolute;
     top: 0;
     left: 0;
@@ -26,14 +37,18 @@
   }
   nav img {
     background-color: white;
-    padding: 0.3em;
+    margin: 0.3em;
     border-radius: 50%;
     margin-right: 0.3em;
-    height:1em;
+    height: 1.8em;
+    border: 0.1em solid white;
   }
   nav a {
     display: flex;
     align-items: center;
+  }
+  h5 {
+    margin-top: 3em;
   }
   
   
@@ -55,8 +70,6 @@
   }
   html{
       font-family:sans-serif;
-      -webkit-text-size-adjust:100%;
-      -ms-text-size-adjust:100%
   }
   body{
       margin:0
