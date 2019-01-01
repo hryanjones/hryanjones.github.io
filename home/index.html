@@ -5,12 +5,7 @@
   /* Mine (hryanjones) */
 
 html {
-  font-size: 18px;
-}
-@media (max-width: 900px) {
-  html {
-    font-size: 48px !important;
-  }
+  font-size: 36px;
 }
 
 .motd-author, .motd-source, .motd-link {
@@ -19,7 +14,7 @@ html {
   }
   
   .motd-source, .motd-link {
-    font-size: 80%;
+    font-size: 0.8em;
   }
   
   nav {
@@ -48,7 +43,7 @@ html {
     align-items: center;
   }
   h5 {
-    margin-top: 3em;
+    margin-top: 5em;
   }
   
   
@@ -356,7 +351,7 @@ function main() {
 
 function getTimeRoundedToHour() {
   const now = new Date();
-  return now.toISOString().replace(/:[^:]*$/, '');
+  return now.toISOString().replace(/:.*$/, '');
 }
 
 function getRandomRecord() {
