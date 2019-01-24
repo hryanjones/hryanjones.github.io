@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.chosen-list {
+    font-size: 2em;
+    padding-inline-start: 0px;
+    list-style: none;
+    border-bottom: 1px solid;
+}
+ol.options {
+    list-style: circle;
+    padding-inline-start: 20px;
+}
+ol:before{
+    content: attr(aria-label);
+    font-style: italic;
+    margin: -20px;
+    opacity: 0.3; 
+}
+</style>
+</head>
+<body>
+<div id="container"></div>
+    
+<script>
+    const ALWAYS_EMPTY_SET = new Set();
+    main();
+
+    function main() {
+        const {options, chosenList} = chooseFromOptions({options: getOptions()});
+        render({options, chosenList});
+    }
+
+    function getOptions() {
+        const queryString = window.location.search;
+        const urlParameters = new URLSearchParams(queryString);
+        const options = new Set();
+        urlParameters.forEach((emptyValue, option) => {
+            options.add(option);
+        });
+        return options;
+    }
+
+    function chooseFromOptions({options, chosenList}) {
+        // convert sets to arrays to avoid input mutation
+        options = [...options]
+            .filter(option => !chosenList || !chosenList.has(option));
+        chosenList = chosenList && [...chosenList] || [];
+
+        const choiceIndex = getRandomIntegerUpTo(options.length - 1);
+        const newChosenOption = [...options][choiceIndex];
+        chosenList.push(newChosenOption);
+        options = options.filter(option => option !== newChosenOption);
+        return {
+            options: new Set(options),
+            chosenList: new Set(chosenList),
+        };
+    }
+
+    function getRandomIntegerUpTo(max) {
+        const randomNumber = Math.random(); // 0 to 1
+        const randomNumberScaled = randomNumber * max;
+        return Math.round(randomNumberScaled);
+    }
+
+    function render({options, chosenList}) {
+        const fragment = document.createDocumentFragment();
+        fragment.append(renderChosenList(chosenList));
+        fragment.append(renderOtherOptionsList(options));
+
+        const container = document.getElementById('container');
+        container.append(fragment); // FIXME need a replace later on to avoid multiple sets of list being added
+    }
+
+    function renderChosenList(chosenList) {
+        return renderList({
+            list: chosenList,
+            className: 'chosen-list',
+            // title: "Chosen:"
+        });
+    }
+
+    function renderOtherOptionsList(options) {
+        return renderList({
+            list: options,
+            className: 'options',
+            title: '(unchosen options)'
+        });
+    }
+
+    function renderList({list, className, title}) {
+        const listElement = document.createElement('ol');
+        title && listElement.setAttribute('aria-label', title);
+        className && listElement.classList.add(className);
+        list.forEach(item => {
+            listElement.append(
+                renderItem(item)
+            );
+        });
+        return listElement;
+    }
+
+    function renderItem(text) {
+        const item = document.createElement('li');
+        item.textContent = text;
+        return item;
+    }
+
+</script>
+</body>
+</html>
