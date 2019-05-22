@@ -2,35 +2,41 @@
 <html>
   <head>
     <!-- CSS -->
-    <link id="theme-css" rel="stylesheet" type="text/css" href="/assets/css/themes/dark.css"></link>
-    <link id="base-css" rel="stylesheet" type="text/css" href="/assets/css/hryanjones.css"></link>
     <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.1.custom.css" />
+    <link id="base-css" rel="stylesheet" type="text/css" href="/assets/css/hryanjones.css"></link>
 
     <title>H. Ryan Jones</title>
   </head>
 
   <body>
-    <table class="title">
-      <tr>
-        <td class="title"><h1>H. Ryan Jones</h1></td>
-        <td class="title"><input type="button" id="change-to-light" value="Light Theme"></input></td>
-        <td class="title"><input type="button" id="change-to-dark" value="Dark Theme"></input></td>
-        <td class="title"><input type="button" id="change-to-blAwh" value="Black/White"</input></td>
-      </tr>
-    </table>
-    <div id="tabs">
-      <ul>
+    <header>
+      <h1><img src="/assets/ryan-profile-pic.min.jpeg" alt="photo of Ryan" /> <a href="/">H. Ryan Jones</a></h1>
+    </header>
+      <div id="tabs">
+        <ul>
         <li><a href="#home">Home</a></li>
-        <li><a id="wiki-feeback" href="/wiki-feedback/">Wiki Parser</a>
         <li><a id="resume" href="/resume/">Resume</a></li>
-        <li><a id="jobs" href="/html/jobs_etc.html">Jobs & Stuff</a></li>
-        <li><a id="calendar" href="/html/calendar.html">Calendar</a></li>
-        <li><a id="projects" href="/science/">Small Projects</a></li>
+        <li><a id="projects" href="/science/">Projects</a></li>
       </ul>
       <div id="home">
-        <p>Hi,</p>
-        <p>I'm a Web Developer in Seattle. You may want to check out the above tabs or my most recent fun project:</p>
-        <a href="/adas/"><h2>Web Versions of Adalogical &AElig;nigma's</h2></a>
+        <p>
+          I'm a web developer in Seattle, and I work for <a href="https://aws.amazon.com/quicksight/">AWS QuickSight</a> (a tool to hook up a database and create charts and graphs). Beyond programming in the browser, I enjoy logic puzzles (like <a href="http://www.pavelspuzzles.com/aenigmas/">&AElig;nigma's</a>), board games, and mountain biking.
+        </p>
+
+        <h3>Some Select Side Projects</h3>
+        <p>
+          <ul>
+            <li><strong><a href="http://hryanjones.com/guess-my-word">Guess My Word</a></strong>: A daily word guessing game</li>
+            <li><a href="/adas/">&AElig;nigma's</a>: Solve some logic puzzles in your browser</li>
+            <li><a href="/kyakarun/build/">Kya Karun</a>: A small web tool to randomly pick what to do</li>
+          </ul>
+        </p>
+        
+        <h3>Get in touch</h3>
+        <p>
+          <li><a href="https://twitter.com/hryanjones">Tweeter</a></li>
+          <li><a href="https://www.linkedin.com/in/h-ryan-jones-61132218/">LinkedIn</a></li>
+        </p>
       </div>
     </div>
 
@@ -47,28 +53,6 @@
 
       });
     </script>
-    <script type="text/javascript">
-        // theme changer
-        $("document").ready(function() {
-
-          $("#change-to-light").click(function(event) {
-            $("link#theme-css").attr({href :"/assets/css/themes/light.css"});
-            event.preventDefault();
-          });
-
-          $("#change-to-dark").click(function(event) {
-            $("link#theme-css").attr({href :"/assets/css/themes/dark.css"});
-            event.preventDefault();
-          });
-
-          $("#change-to-blAwh").click(function(event) {
-            $("link#theme-css").attr({href :"/assets/css/themes/bANDw.css"});
-            event.preventDefault();
-          });
-
-        });
-    </script>
-
     <script src="/assets/js/googleAnalytics.js"></script>
 </body>
 </html>

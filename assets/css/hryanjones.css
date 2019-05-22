@@ -1,13 +1,43 @@
+body {
+	margin: 0px;
+}
 body, div#preview > div, div#tabs > div.ui-tabs-panel {
   font-family: Sans;
 }
-body {
-  padding: 20 100;
+
+header {
+	background-image: url("/assets/starry-sky.png");
+	background-position: top;
+	background-size: cover;
 }
 
+header h1 {
+	display: flex;
+	align-items: center;
+	margin: 0;
+	padding: 20px;
+	padding-bottom: 70px;
+}
+
+header img {
+	height: 1.3em;
+	margin-right: 10px;
+	border-radius: 50%;
+}
+
+header a,
+header a:link,
+header a:visited {
+	color: white;
+}
+
+#tabs {
+	position: relative;
+	top: -50px;
+}
 div#tabs > div.ui-tabs-panel
 {
-	padding: 20 20;
+	padding: 20;
 }
 
 table.title {
@@ -31,4 +61,66 @@ td {
 
 xmp {
 	font-family: courier;
+}
+
+body,
+div#preview > div,
+div#tabs > div.ui-tabs-panel, 
+.ui-state-default a,
+.ui-state-default a:link,
+.ui-state-default a:visited {
+	color: black;
+}
+.ui-state-default a:focus {
+	outline: none;
+}
+.smaller {
+	font-size: 80%;
+}
+
+/* jQuery UI colors */
+
+.ui-widget-content, .ui-tabs-nav {
+	border: none;
+}
+.ui-tabs-nav {
+	border-radius: 0;
+}
+
+.ui-state-default,
+.ui-state-hover,
+.ui-state-active,
+.ui-state-error {
+	border: 1px solid black;
+	color: black;
+	background: lightgray;
+}
+
+.ui-state-active,
+.ui-state-hover {
+	background: white;
+}
+
+.ui-tabs .ui-tabs-nav li{
+	border-bottom: 1px solid black;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+	border-bottom: 1px solid white;
+}
+
+.ui-state-hover a,
+.ui-state-hover a:hover,
+.ui-state-hover a:link,
+.ui-state-hover a:visited {
+	color: darkblue;
+	cursor: pointer;
+}
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+.ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited
+{
+	color: black;
 }
