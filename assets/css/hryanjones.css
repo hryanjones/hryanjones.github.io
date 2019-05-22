@@ -6,6 +6,7 @@ body, div#preview > div, div#tabs > div.ui-tabs-panel {
 }
 
 header {
+	background-color: black;
 	background-image: url("/assets/starry-sky.png");
 	background-position: top;
 	background-size: cover;
