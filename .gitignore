@@ -5,3 +5,5 @@ science/babel/babel.js
 
 # self-signed server keys for testing locally
 webminder/server.*
+
+.vscode

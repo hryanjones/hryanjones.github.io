@@ -91,25 +91,24 @@
           var this_data = json_data[i];
           temp = {};
           var legend_index = (json_data.length - i).toString();
-          temp['label'] = '<nobr>' + legend_index + '. ' + this_data['title'] + '</nobr>';
-          temp['data'] = [];
-          temp['bars'] = {
+          temp.label = '<nobr>' + legend_index + '. ' + this_data.title + '</nobr>';
+          temp.data = [];
+          temp.bars = {
             show: true,
             horizontal: true,
             align: 'center',
             lineWidth: 2,
-            //fill: true,
             fillColor: {
               colors: [ { opacity: 1 }, { opacity: 0.4 } ]
             },
           };
 
-          for (var p in this_data['periods']) {
-            var this_period = this_data['periods'][p];
-            temp['data'].push([
-              this_period['start'],
+          for (var p in this_data.periods) {
+            var this_period = this_data.periods[p];
+            temp.data.push([
+              this_period.start,
               howMuchOffset(json_data, i, p),
-              this_period['end']
+              this_period.end
             ]);
             //temp['data'] = [[this_period['start']*1000,this_period['end']*1000]];
             //$('body').prepend( howMuchOffset(graph_data, i, p) );
@@ -155,7 +154,7 @@
             noColumns: graph_data.length,
             container: '#legend',
             margin: 30,
-            sorted: true,//'reverse'
+            sorted: 'reverse'
           }
         };
         $.plot("#placeholder", graph_data, options);
