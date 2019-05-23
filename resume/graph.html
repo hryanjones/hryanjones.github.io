@@ -76,7 +76,11 @@
         for (var i in json_data) { // specific jobs
           for (var p in json_data[i]['periods']) { // periods within a job
             for (var t in json_data[i]['periods'][p]) {
-              json_data[i]['periods'][p][t] = new Date(json_data[i]['periods'][p][t]);
+              const humanTimeString = json_data[i]['periods'][p][t];
+              
+              json_data[i]['periods'][p][t] = humanTimeString
+                && new Date(json_data[i]['periods'][p][t])
+                || new Date(); // default to now if now time string given
             }
           }
         }

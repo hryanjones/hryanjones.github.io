@@ -5,13 +5,13 @@
 
 ===Skills Summary===
 
-Web Developer knowledgeable in Angular, javascript, ruby (+others), and [http://aws.amazon.com AWS]. Also able to teach, support, and relate to others.
+Web Developer knowledgeable in javascript, React, CSS (Sass), and [http://aws.amazon.com AWS]. Passionate about visualization, user experience, and building powerful tools that don't get in a user's way.
 -------------------------
 
-===Experience Summary Graph (2016 -> 2002) ===
-<iframe id="experience-graph" src="https://hryanjones.com/resume/graph.html"></iframe>
+===Experience Summary Graph (2019 -> 2002) ===
+<iframe id="experience-graph" src="/resume/graph.html"></iframe>
 
-[http://hryanjones.com/resume/experience.json Data (JSON)]
+[/resume/experience.json Data (JSON)]
 -------------------------
 
 ===Skills===

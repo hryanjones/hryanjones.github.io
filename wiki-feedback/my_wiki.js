@@ -319,7 +319,7 @@ wiki.process_normal = function(wikitext) {
 	
 	
 	// URL
-	var protocols = ["http","https","ftp","news"];//,"mailto"];
+	var protocols = ["http","https","ftp","news",];//,"mailto"];
 	
 	for (var i=0;i<protocols.length;i++)
 	{
@@ -336,27 +336,21 @@ wiki.process_normal = function(wikitext) {
 			
 		}
 	}
-	
-  var mailto_regex = new RegExp("\\[mailto:([^\\]]*)\\]",'g');
-  wikitext = wikitext.replace(mailto_regex, '<a href="mailto:$1">$1</a>');
 
-  var mailto_hint_regex = new RegExp("(\\[mailto:[^\\]]*)",'g');
-  wikitext = wikitext.replace(mailto_hint_regex, '<span style="color:red">$1</span><span style="color:gray">]</span>');
-
-
-	for (var i=0;i<protocols.length;i++)
-	{
-		var index = wikitext.indexOf("["+protocols[i]+"://");
+	// also process relative links
+	var relativeLinkPrefixes = ['/', './', '../', 'mailto:'];
+	for (var i = 0; i < relativeLinkPrefixes.length; i++) {
+		var index = wikitext.indexOf("[" + relativeLinkPrefixes[i]);
 		var end_index = wikitext.indexOf("]", index + 1);
 		while (index > -1 && end_index > -1) {
-		
-			wikitext = wikitext.substring(0,index) 
-						+ wiki.process_url(wikitext.substring(index+1,end_index)) 
-						+ wikitext.substring(end_index+1);
-		
-			index = wikitext.indexOf("["+protocols[i]+"://", end_index+1);
+
+			wikitext = wikitext.substring(0, index)
+				+ wiki.process_url(wikitext.substring(index + 1, end_index))
+				+ wikitext.substring(end_index + 1);
+
+			index = wikitext.indexOf("[" + relativeLinkPrefixes[i], end_index + 1);
 			end_index = wikitext.indexOf("]", index + 1);
-			
+
 		}
 	}
 	

@@ -24,7 +24,6 @@
       $(document).ready( function() {
         $.get( '/resume/hryanjones.txt', function(data) {
           $('div#resume-html').html( wiki.process(data) );
-          //$('a:contains("Graph")').load('/resume/graph.html');
         });
       });
     </script>
