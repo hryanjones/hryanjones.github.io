@@ -4,62 +4,93 @@
 <style>
 body {
     font-family: Arial, Helvetica, sans-serif;
+    background-color: #EEE;
 }
-
+#container {
+    display: flex;
+}
+.list-container {
+    margin: 10px;
+    padding: 10px;
+    background-color: white;
+}
 .chosen-list {
+    margin-top: 0px;
     font-size: 2em;
     padding-inline-start: 0px;
     list-style: none;
     border-bottom: 1px solid;
 }
-ol.options {
+ol.unchosen-list {
     list-style: circle;
     padding-inline-start: 20px;
 }
-ol:before{
+ol.unchosen-list:before {
     content: attr(aria-label);
     font-style: italic;
     margin: -20px;
-    opacity: 0.3; 
+    opacity: 0.3;
 }
 </style>
 </head>
 <body>
-<div id="container"></div>
-    
+<div id="container">
+
+    <!-- <h3>Unchosen options</h3>
+    <textarea id="options"></textarea> -->
+</div>
+
 <script>
     const ALWAYS_EMPTY_SET = new Set();
     main();
 
     function main() {
-        const {options, chosenList} = chooseFromOptions({options: getOptions()});
-        render({options, chosenList});
-    }
-
-    function getOptions() {
-        const queryString = window.location.search;
-        const urlParameters = new URLSearchParams(queryString);
-        const options = new Set();
-        urlParameters.forEach((emptyValue, option) => {
-            options.add(option);
+        getListStrings().forEach(listString => {
+            const {numberToChoose, options} = getOptions(listString);
+            console.log('numberToChoose', numberToChoose)
+            const chosenIndexes = chooseFromOptions({numberToChoose, options});
+            render({options, chosenIndexes});
         });
-        return options;
     }
 
-    function chooseFromOptions({options, chosenList}) {
-        // convert sets to arrays to avoid input mutation
-        options = [...options]
-            .filter(option => !chosenList || !chosenList.has(option));
-        chosenList = chosenList && [...chosenList] || [];
+    function getListStrings() {
+        const rawHashString = window.location.hash.replace(/^#/, '');
+        return rawHashString.split(';');
+    }
 
-        const choiceIndex = getRandomIntegerUpTo(options.length - 1);
-        const newChosenOption = [...options][choiceIndex];
-        chosenList.push(newChosenOption);
-        options = options.filter(option => option !== newChosenOption);
+    function getOptions(listString) {
+        const [fullMatch, number, options] =  listString.match(/^([0-9]from:)?(.*)/);
         return {
-            options: new Set(options),
-            chosenList: new Set(chosenList),
+            numberToChoose: parseInt(number),
+            options: decodeURIComponent(options).split(','),
         };
+    }
+
+    function chooseFromOptions({options, numberToChoose, chosenIndexes, unchosenIndexesObject}) {
+        if (!Number.isInteger(numberToChoose)) {
+            numberToChoose = 1;
+        }
+        chosenIndexes = chosenIndexes || new Set();
+        unchosenIndexesObject = unchosenIndexesObject || createIndexesObject(options);
+        const unchosenIndexes = Object.keys(unchosenIndexesObject);
+
+        const newIndexOfIndex = getRandomIntegerUpTo(unchosenIndexes.length - 1);
+        const choiceIndex = parseInt(unchosenIndexes[newIndexOfIndex]);
+        delete unchosenIndexesObject[choiceIndex];
+        chosenIndexes.add(choiceIndex);
+        numberToChoose -= 1;
+        if (numberToChoose) {
+            return chooseFromOptions({options, numberToChoose, chosenIndexes, unchosenIndexesObject});
+        }
+        return chosenIndexes;
+    }
+
+    function createIndexesObject(options) {
+        const indexesObject = {};
+        options.forEach((o, index) => {
+            indexesObject[index] = '';
+        });
+        return indexesObject;
     }
 
     function getRandomIntegerUpTo(max) {
@@ -68,13 +99,20 @@ ol:before{
         return Math.round(randomNumberScaled);
     }
 
-    function render({options, chosenList}) {
-        const fragment = document.createDocumentFragment();
-        fragment.append(renderChosenList(chosenList));
-        fragment.append(renderOtherOptionsList(options));
+    function render({options, chosenIndexes}) {
+        const listContainer = document.createElement('div');
+        listContainer.classList.add('list-container')
+        const chosen = [];
+        const unchosen = [];
+        options.forEach((option, index) => {
+            const list = chosenIndexes.has(index) ? chosen : unchosen;
+            list.push(option);
+        });
+        listContainer.append(renderChosenList(chosen));
+        listContainer.append(renderOtherOptionsList(unchosen));
 
         const container = document.getElementById('container');
-        container.append(fragment); // FIXME need a replace later on to avoid multiple sets of list being added
+        container.prepend(listContainer); // FIXME need a replace later on to avoid multiple sets of list being added
     }
 
     function renderChosenList(chosenList) {
@@ -86,9 +124,12 @@ ol:before{
     }
 
     function renderOtherOptionsList(options) {
+        // const optionsTextArea = document.querySelector('#options');
+        // optionsTextArea.value = options.join('\n');
+        // optionsTextArea.rows = options.length;
         return renderList({
             list: options,
-            className: 'options',
+            className: 'unchosen-list',
             title: '(unchosen options)'
         });
     }
