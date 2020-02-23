@@ -67,7 +67,7 @@ ol.unchosen-list:before {
     }
 
     function chooseFromOptions({options, numberToChoose, chosenIndexes, unchosenIndexesObject}) {
-        if (!Number.isInteger(numberToChoose)) {
+        if (!Number.isInteger(numberToChoose) || numberToChoose < 1) {
             numberToChoose = 1;
         }
         chosenIndexes = chosenIndexes || new Set();
@@ -79,7 +79,7 @@ ol.unchosen-list:before {
         delete unchosenIndexesObject[choiceIndex];
         chosenIndexes.add(choiceIndex);
         numberToChoose -= 1;
-        if (numberToChoose) {
+        if (numberToChoose > 0 && unchosenIndexes.length > 1) {
             return chooseFromOptions({options, numberToChoose, chosenIndexes, unchosenIndexesObject});
         }
         return chosenIndexes;
@@ -112,7 +112,7 @@ ol.unchosen-list:before {
         listContainer.append(renderOtherOptionsList(unchosen));
 
         const container = document.getElementById('container');
-        container.prepend(listContainer); // FIXME need a replace later on to avoid multiple sets of list being added
+        container.append(listContainer); // FIXME need a replace later on to avoid multiple sets of list being added
     }
 
     function renderChosenList(chosenList) {
