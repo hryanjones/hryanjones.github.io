@@ -356,7 +356,7 @@ function getTimeRoundedToHour() {
 
 function getRandomRecord() {
   const records = parseTemplate(getTemplate());
-  const choiceIndex = getRandomNumberUpTo(records.length);
+  const choiceIndex = getRandomNumberUpTo(records.length - 1);
   return records[choiceIndex];
 }
   
