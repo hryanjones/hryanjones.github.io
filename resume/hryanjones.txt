@@ -1,6 +1,6 @@
 =H.Ryan Jones=
 [mailto:hryanjones@gmail.com] — (206)-432-7560 — Seattle, WA — 
-[http://hryanjones.com/resume download HTML version] — [http://hryanjones.com/resume/hryanjones.txt plain text version]
+[http://hryanjones.com/resume download HTML version] — [https://hryanjones.com/resume/hryanjones.txt plain text version]
 -------------------------
 
 ===Summary===
@@ -15,9 +15,9 @@ Web Developer knowledgeable in javascript, React, CSS (Sass), and [http://aws.am
 -------------------------
 
 ===Experience Summary Graph (present -> 2002) ===
-<iframe id="experience-graph" src="http://hryanjones.com/resume/graph.html"></iframe>
+<iframe id="experience-graph" src="https://hryanjones.com/resume/graph.html"></iframe>
 
-[http://hryanjones.com/resume/experience.json Data (JSON)]
+[https://hryanjones.com/resume/experience.json Data (JSON)]
 -------------------------
 
 ===Professional Experience===
@@ -43,7 +43,7 @@ Web Developer knowledgeable in javascript, React, CSS (Sass), and [http://aws.am
 
 ===Education===
 
-[http://hryanjones.com/resume/H.RyanJones_UnofficialTranscript_UW.htm Unofficial Transcript]
+[https://hryanjones.com/resume/H.RyanJones_UnofficialTranscript_UW.htm Unofficial Transcript]
 
 * '''2002-2006:''' BS Cum Laude with College Honors in Physics at [http://www.washington.edu/ UW]
 * GPA: 3.85
