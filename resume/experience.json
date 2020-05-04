@@ -1,6 +1,6 @@
 [
   {
-    "title": "Amazon Web Developer",
+    "title": "Web Dev II",
     "type": "job",
     "periods": [
       {
@@ -50,6 +50,7 @@
     ]
   },
   {
+    "archiveOldExperience": true,
     "title": "Private Tutor",
     "type": "job",
     "periods": [
@@ -60,6 +61,7 @@
     ]
   },
   {
+    "archiveOldExperience": true,
     "title": "Data Analyst",
     "type": "job",
     "periods": [
@@ -70,6 +72,7 @@
     ]
   },
   {
+    "archiveOldExperience": true,
     "title": "Physics TA",
     "type": "job",
     "periods": [
@@ -80,6 +83,7 @@
     ]
   },
   {
+    "archiveOldExperience": true,
     "title": "Math/Physics Tutor",
     "type": "job",
     "periods": [
@@ -90,6 +94,7 @@
     ]
   },
   {
+    "archiveOldExperience": true,
     "title": "Factory Worker",
     "type": "job",
     "periods": [
@@ -104,6 +109,7 @@
     ]
   },
   {
+    "archiveOldExperience": true,
     "title": "UW Physics",
     "type": "education",
     "periods": [
