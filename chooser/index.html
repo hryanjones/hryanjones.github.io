@@ -18,6 +18,7 @@ header {
     background-color: black;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 5px;
 }
 header h1 {
@@ -39,6 +40,9 @@ header button:after {
 }
 .is-editing header button:after {
     content: 'Done';
+}
+header a:any-link {
+    color: lightskyblue;
 }
 button {
     cursor: pointer;
@@ -108,8 +112,11 @@ textarea {
 </head>
 <body>
 <header>
-    <h1>Random Chooser</h1>
-    <button id="toggle-edit" onclick="toggleEdit();"></button>
+    <h1>
+        Random Chooser
+        <button id="toggle-edit" onclick="toggleEdit();"></button>
+    </h1>
+    <a href="https://twitter.com/intent/tweet?text=%40hryanjones%2C%20RE%20Random%20Chooser%3A&url=">?</a>
 </header>
 <div id="hash-updated" class="hidden">
     ℹ the web address has been updated. Refresh to make a different random choice, or bookmark it to choose again later.
