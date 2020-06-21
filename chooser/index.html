@@ -2,28 +2,72 @@
 <html lang="en">
 <head>
 <style>
-body {
+body, input, textarea {
     font-family: Arial, Helvetica, sans-serif;
+}
+body {
     background-color: #EEE;
+    margin: 0px;
+    padding-top: 31px;
+}
+header {
+    position: absolute;
+    right: 0;
+    top: 0;
+    left: 0;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+header h1 {
+    color: white;
+    font-size: 1.2em;
+    margin: 0;
+}
+header button {
+    margin-left: 10px;
+    height: 20px;
+    border-radius: 2px;
+}
+header button:after {
+    content: 'edit'
+}
+.is-editing header button {
+    background-color: blue;
+    color: white;
+}
+.is-editing header button:after {
+    content: 'Done';
+}
+button {
+    cursor: pointer;
 }
 #container {
     display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
 }
 .list-container {
+    display: flex;
+    flex-direction: column;
     margin: 10px;
     padding: 10px;
     background-color: white;
+
+    /* so "unchosen options" is all on one line */
+    min-width: 140px;
 }
 .chosen-list {
     margin-top: 0px;
     font-size: 2em;
     padding-inline-start: 0px;
     list-style: none;
-    border-bottom: 1px solid;
 }
 ol.unchosen-list {
     list-style: circle;
     padding-inline-start: 20px;
+    margin: 0px;
 }
 ol.unchosen-list:before {
     content: attr(aria-label);
@@ -31,38 +75,111 @@ ol.unchosen-list:before {
     margin: -20px;
     opacity: 0.3;
 }
+
+/* EDITING */
+
+input[type="number"] {
+    width: 35px;
+    text-align: right;
+}
+label {
+    margin-bottom: 15px;
+}
+textarea {
+    min-width: 275px;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+}
+#hash-updated {
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: lightyellow;
+}
+.is-editing #hash-updated {
+    display: none;
+}
+.hidden {
+    display: none !important;
+}
 </style>
 </head>
 <body>
-<div id="container">
-
-    <!-- <h3>Unchosen options</h3>
-    <textarea id="options"></textarea> -->
-</div>
+<header>
+    <h1>Random Chooser</h1>
+    <button id="toggle-edit" onclick="toggleEdit();"></button>
+</header>
+<div id="hash-updated" class="hidden">
+    ℹ the web address has been updated. Refresh to make a different random choice, or bookmark it to choose again later.
+    <button onclick="toggleHashUpdatedMessage(false)">X</button></div>
+<div id="container"></div>
 
 <script>
     const ALWAYS_EMPTY_SET = new Set();
+    const state = {
+        optionsLists: [], // list structure {numberToChoose, options}
+    };
+
+    const hashUpdatedMessage = document.getElementById('hash-updated');
+    const containerElement = document.getElementById('container');
+
+    const CONTAINER = {
+        clear: () => {containerElement.textContent = '';},
+        append: (child) => {containerElement.append(child);},
+    };
+
+    const numberInputTag = 'input';
+    const optionsTag = 'textarea';
+
+    const KEYCODE_FOR_RETURN = 13;
+    const KEYCODE_FOR_BACKSPACE = 8;
+    const KEYCODE_FOR_DELETE = 46;
+    const KEYS_AFFECTING_NEWLINES = [
+        KEYCODE_FOR_BACKSPACE,
+        KEYCODE_FOR_DELETE,
+        KEYCODE_FOR_RETURN,
+    ];
+
     main();
 
     function main() {
-        getListStrings().forEach(listString => {
-            const {numberToChoose, options} = getOptions(listString);
-            console.log('numberToChoose', numberToChoose)
+        setIsEditing(false);
+        const optionsLists = getOptionsLists();
+        state.optionsLists = optionsLists;
+        if (optionsLists.length === 0) {
+            optionsLists.push({numberToChoose: 1, options: []});
+            toggleEdit();
+            return;
+        }
+
+        optionsLists.forEach(({numberToChoose, options}) => {
             const chosenIndexes = chooseFromOptions({numberToChoose, options});
             render({options, chosenIndexes});
         });
     }
 
-    function getListStrings() {
+    function getOptionsLists() {
         const rawHashString = window.location.hash.replace(/^#/, '');
-        return rawHashString.split(';');
+        return rawHashString
+            .split(';')
+            .map(getOptions)
+            .filter(removeEmptyLists);
+
+        function removeEmptyLists(list) {
+            return list.options.length > 0;
+        }
     }
 
     function getOptions(listString) {
-        const [fullMatch, number, options] =  listString.match(/^([0-9]from:)?(.*)/);
+        let [fullMatch, number, options] =  listString.match(/^([0-9]from:)?(.*)/);
+        number = parseInt(number);
         return {
-            numberToChoose: parseInt(number),
-            options: decodeURIComponent(options).split(','),
+            numberToChoose: Number.isFinite(number) ? number : 1,
+            options: decodeURIComponent(options)
+                .split(',')
+                .filter(s => s), // remove empty strings
         };
     }
 
@@ -100,7 +217,7 @@ ol.unchosen-list:before {
     }
 
     function render({options, chosenIndexes}) {
-        const listContainer = document.createElement('div');
+        const listContainer = el('div');
         listContainer.classList.add('list-container')
         const chosen = [];
         const unchosen = [];
@@ -111,8 +228,7 @@ ol.unchosen-list:before {
         listContainer.append(renderChosenList(chosen));
         listContainer.append(renderOtherOptionsList(unchosen));
 
-        const container = document.getElementById('container');
-        container.append(listContainer); // FIXME need a replace later on to avoid multiple sets of list being added
+        CONTAINER.append(listContainer);
     }
 
     function renderChosenList(chosenList) {
@@ -124,9 +240,6 @@ ol.unchosen-list:before {
     }
 
     function renderOtherOptionsList(options) {
-        // const optionsTextArea = document.querySelector('#options');
-        // optionsTextArea.value = options.join('\n');
-        // optionsTextArea.rows = options.length;
         return renderList({
             list: options,
             className: 'unchosen-list',
@@ -135,7 +248,7 @@ ol.unchosen-list:before {
     }
 
     function renderList({list, className, title}) {
-        const listElement = document.createElement('ol');
+        const listElement = el('ol');
         title && listElement.setAttribute('aria-label', title);
         className && listElement.classList.add(className);
         list.forEach(item => {
@@ -147,9 +260,137 @@ ol.unchosen-list:before {
     }
 
     function renderItem(text) {
-        const item = document.createElement('li');
+        const item = el('li');
         item.textContent = text;
         return item;
+    }
+
+    // EDITING
+
+    /*
+    TODO
+    3. allow textareas to auto size (fixed width font would make this easier)
+    */
+    function isEditing() {
+        return document.body.classList.contains('is-editing');
+    }
+
+    function toggleEdit() {
+        if (isEditing()) {
+            updateHashWithFormData();
+            toggleHashUpdatedMessage(true);
+            CONTAINER.clear();
+            main();
+        } else {
+            CONTAINER.clear();
+            renderForms();
+        }
+    }
+
+    function setIsEditing(isEditing) {
+        state.isEditing = isEditing;
+        const addOrRemove = isEditing ? 'add' : 'remove';
+        document.body.classList[addOrRemove]('is-editing');
+    }
+
+    function renderForms() {
+        setIsEditing(true);
+        state.optionsLists.forEach(renderForm);
+    }
+
+    function renderForm({options, numberToChoose}) {
+        const form = el('form');
+        form.classList.add('list-container');
+
+        form.append(renderNumberInputLine(numberToChoose));
+        form.append(renderOptionsInput(options));
+
+        CONTAINER.append(form);
+    }
+
+    function renderNumberInputLine(numberToChoose = 1) {
+        const numberLabel = el('label');
+        numberLabel.textContent = '# to choose: ';
+        const numberInput = el(numberInputTag);
+        numberInput.setAttribute('type', 'number');
+        numberInput.setAttribute('min', 1);
+        numberInput.value = numberToChoose || 1;
+        numberLabel.append(numberInput);
+        return numberLabel;
+    }
+
+    function renderOptionsInput(options = []) {
+        const textarea = el('textarea');
+        textarea.setAttribute('placeholder', 'enter options, one per line');
+        textarea.setAttribute('rows', 3);
+        textarea.value = options.join('\n');
+        verticallyAutoscaleTextArea({target: textarea});
+        textarea.onpaste = onPaste;
+        textarea.onkeydown = optionsKeyDown;
+        textarea.onkeyup = optionsKeyUp;
+        return textarea;
+    }
+
+    function el(tag) {
+        return document.createElement(tag);
+    }
+
+    function updateHashWithFormData() {
+        window.location.hash = Array.from(document.getElementsByTagName('form'))
+            .map(getListOptionsFromForm)
+            .join(';');
+
+        function getListOptionsFromForm(form) {
+            const numberInput = form.getElementsByTagName(numberInputTag)[0];
+            const numberToChoose = parseInt(numberInput.value) || 1;
+            const options = form.getElementsByTagName(optionsTag)[0]
+                .value
+                .split('\n')
+                .filter(val => val.trimEnd()) // remove whitespace strings and whitespace on the right
+                .map(encodeURIComponent);
+
+            return `${numberToChoose}from:${options.join(',')}`;
+        }
+    }
+
+    function toggleHashUpdatedMessage(show) {
+        if (typeof show !== 'boolean') {
+            show = hashUpdatedMessage.classList.has('hidden');
+        }
+
+        if (show) {
+            hashUpdatedMessage.classList.remove('hidden');
+        } else {
+            hashUpdatedMessage.classList.add('hidden');
+        }
+    }
+
+    function optionsKeyDown(e) {
+        if (e.keyCode === KEYCODE_FOR_RETURN) {
+            // optimistically increase the rows to avoid scroll bar
+            e.target.setAttribute('rows', 1 + e.target.rows);
+        }
+    }
+
+    function optionsKeyUp(e) {
+        console.log(e.keyCode);
+        if (KEYS_AFFECTING_NEWLINES.includes(e.keyCode)) {
+            verticallyAutoscaleTextArea(e);
+        }
+    }
+
+    function onPaste(e) {
+        setTimeout(() => {
+            verticallyAutoscaleTextArea(e)
+        });
+    }
+
+    function verticallyAutoscaleTextArea(e) {
+        const textarea = e.target;
+        const newlinesMatch = textarea.value.match(/\n/g)
+        const numberOfLines = newlinesMatch && newlinesMatch.length || 1;
+        const numberOfLinesToSet = (Math.max(numberOfLines + 1, 3));
+        textarea.setAttribute('rows', numberOfLinesToSet);
     }
 
 </script>
