@@ -181,14 +181,16 @@ textarea {
     }
 
     function getOptions(listString) {
-        let [fullMatch, number, options] =  listString.match(/^([0-9]from:)?(.*)/);
+        let [fullMatch, number, options] =  listString.match(/^([0-9]+from:)?(.*)/);
         number = parseInt(number);
-        return {
+        const list = {
             numberToChoose: Number.isFinite(number) ? number : 1,
             options: decodeURIComponent(options)
                 .split(',')
                 .filter(s => s), // remove empty strings
         };
+        fixNumberToChoose(list);
+        return list;
     }
 
     function chooseFromOptions({options, numberToChoose, chosenIndexes, unchosenIndexesObject}) {
@@ -257,6 +259,9 @@ textarea {
 
     function renderList({list, className, title}) {
         const listElement = el('ol');
+        if (list.length === 0) {
+            return listElement;
+        }
         title && listElement.setAttribute('aria-label', title);
         className && listElement.classList.add(className);
         list.forEach(item => {
@@ -271,6 +276,19 @@ textarea {
         const item = el('li');
         item.textContent = text;
         return item;
+    }
+
+    function fixNumberToChoose(list) {
+        let {numberToChoose, options} = list;
+        const numberOfOptions = options.length;
+        numberToChoose = parseInt(numberToChoose);
+        numberToChoose = Number.isInteger(numberToChoose) ? numberToChoose : 1;
+        numberToChoose = clamp(numberToChoose, 1, numberOfOptions);
+        list.numberToChoose = numberToChoose;
+    }
+
+    function clamp(num, min, max) {
+        return Math.min(Math.max(num, min), max);
     }
 
     // EDITING
@@ -350,14 +368,16 @@ textarea {
 
         function getListOptionsFromForm(form) {
             const numberInput = form.getElementsByTagName(numberInputTag)[0];
-            const numberToChoose = parseInt(numberInput.value) || 1;
-            const options = form.getElementsByTagName(optionsTag)[0]
-                .value
-                .split('\n')
-                .filter(val => val.trimEnd()) // remove whitespace strings and whitespace on the right
-                .map(encodeURIComponent);
-
-            return `${numberToChoose}from:${options.join(',')}`;
+            const list = {
+                numberToChoose: numberInput.value,
+                options: form.getElementsByTagName(optionsTag)[0]
+                    .value
+                    .split('\n')
+                    .filter(val => val.trimEnd()) // remove whitespace strings and whitespace on the right
+                    .map(encodeURIComponent)
+            };
+            fixNumberToChoose(list);
+            return `${list.numberToChoose}from:${list.options.join(',')}`;
         }
     }
 
@@ -374,14 +394,14 @@ textarea {
     }
 
     function optionsKeyDown(e) {
-        if (e.keyCode === KEYCODE_FOR_RETURN) {
+        const textarea = e.target;
+        if (e.keyCode === KEYCODE_FOR_RETURN && textarea.rows >= 3) {
             // optimistically increase the rows to avoid scroll bar
-            e.target.setAttribute('rows', 1 + e.target.rows);
+            textarea.setAttribute('rows', 1 + textarea.rows);
         }
     }
 
     function optionsKeyUp(e) {
-        console.log(e.keyCode);
         if (KEYS_AFFECTING_NEWLINES.includes(e.keyCode)) {
             verticallyAutoscaleTextArea(e);
         }
