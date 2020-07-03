@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+<meta charset="UTF-8">
   <style>
   /* Mine (hryanjones) */
 
@@ -8,19 +9,42 @@ html {
   font-size: 36px;
 }
 
+pre {
+    width: 100%;
+}
+
+#kyakarun {
+    width: 100%;
+    border: none;
+
+    position:absolute;
+    top:-135px;
+    width:100%;
+    height:800px;
+}
+
+#outerdiv
+{
+width:100%;
+height:260px;
+overflow:hidden;
+position:relative;
+}
+
 .motd-author, .motd-source, .motd-link {
     font-style: italic;
     margin-left: 1em;
   }
-  
+
   .motd-source, .motd-link {
     font-size: 0.8em;
   }
-  
+
+
   nav {
     height: 2em;
     font-size: 1.4em;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -43,31 +67,25 @@ html {
     align-items: center;
   }
   h5 {
-    margin-top: 5em;
+    margin-top: 1em;
   }
-  
-  
-  
+
+
+
   /* BELOW modified from http://thomasf.github.io/solarized-css/ */
-  
-  article,aside,details,figcaption,figure,footer,header,hgroup,section,summary{
-      display:block
-  }
-  audio,canvas,video{
-      display:inline-block
-  }
-  audio:not([controls]){
-      display:none;
-      height:0
-  }
+
   [hidden]{
       display:none
   }
   html{
       font-family:sans-serif;
+      background-color:#fdf6e3;
+      color:#657b83;
+      margin:1em
   }
   body{
-      margin:0
+      margin:0;
+      padding-top: 3em;
   }
   a:focus{
       outline:thin dotted
@@ -78,121 +96,23 @@ html {
   h1{
       font-size:2em;
   }
-  abbr[title]{
-      border-bottom:1px dotted
-  }
   b,strong{
       font-weight:bold
   }
-  dfn{
-      font-style:italic
-  }
-  mark{
-      background:#ff0;
-      color:#000
-  }
-  code,kbd,pre,samp{
-      font-family:monospace,serif;
-      font-size:1em
-  }
   pre{
+      font-family: sans-serif;
       white-space:pre-wrap;
       word-wrap:break-word
-  }
-  q{
-      quotes:"\201C" "\201D" "\2018" "\2019"
   }
   small{
       font-size:80%
   }
-  sub,sup{
-      font-size:75%;
-      line-height:0;
-      position:relative;
-      vertical-align:baseline
-  }
-  sup{
-      top:-0.5em
-  }
-  sub{
-      bottom:-0.25em
-  }
   img{
       border:0
-  }
-  svg:not(:root){
-      overflow:hidden
-  }
-  figure{
-      margin:0
-  }
-  fieldset{
-      border:1px solid #c0c0c0;
-      margin:0 2px;
-      padding:.35em .625em .75em
-  }
-  legend{
-      border:0;
-      padding:0
-  }
-  button,input,select,textarea{
-      font-family:inherit;
-      font-size:100%;
-      margin:0
-  }
-  button,input{
-      line-height:normal
-  }
-  button,html input[type="button"],input[type="reset"],input[type="submit"]{
-      -webkit-appearance:button;
-      cursor:pointer
-  }
-  button[disabled],input[disabled]{
-      cursor:default
-  }
-  input[type="checkbox"],input[type="radio"]{
-      box-sizing:border-box;
-      padding:0
-  }
-  input[type="search"]{
-      -webkit-appearance:textfield;
-      -moz-box-sizing:content-box;
-      -webkit-box-sizing:content-box;
-      box-sizing:content-box
-  }
-  input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{
-      -webkit-appearance:none
-  }
-  button::-moz-focus-inner,input::-moz-focus-inner{
-      border:0;
-      padding:0
-  }
-  textarea{
-      overflow:auto;
-      vertical-align:top
-  }
-  table{
-      border-collapse:collapse;
-      border-spacing:0
-  }
-  html{
-      font-family:sans-serif
-  }
-  pre,code{
-      font-family:sans-serif
   }
   h1,h2,h3,h4,h5,h6{
       font-family:sans-serif;
       font-weight:500;
-  }
-  html{
-      background-color:#fdf6e3;
-      color:#657b83;
-      margin:1em
-  }
-  body{
-      margin:0 auto;
-  
   }
   a{
       color:#b58900
@@ -208,9 +128,6 @@ html {
   }
   h2,h3,h4,h5,h6{
       color:#859900
-  }
-  pre code{
-      background-color:#fdf6e3
   }
   h1{
       font-size:2.8em
@@ -230,79 +147,18 @@ html {
   h6{
       font-size:1.15em
   }
-  .tag{
-      background-color:#eee8d5;
-      color:#d33682;
-      padding:0 .2em
-  }
-  .todo,.next,.done{
-      color:#fdf6e3;
-      background-color:#dc322f;
-      padding:0 .2em
-  }
-  .tag{
-      -webkit-border-radius:.35em;
-      -moz-border-radius:.35em;
-      border-radius:.35em
-  }
-  .TODO{
-      -webkit-border-radius:.2em;
-      -moz-border-radius:.2em;
-      border-radius:.2em;
-      background-color:#2aa198
-  }
-  .NEXT{
-      -webkit-border-radius:.2em;
-      -moz-border-radius:.2em;
-      border-radius:.2em;
-      background-color:#268bd2
-  }
-  .ACTIVE{
-      -webkit-border-radius:.2em;
-      -moz-border-radius:.2em;
-      border-radius:.2em;
-      background-color:#268bd2
-  }
-  .DONE{
-      -webkit-border-radius:.2em;
-      -moz-border-radius:.2em;
-      border-radius:.2em;
-      background-color:#859900
-  }
-  .WAITING{
-      -webkit-border-radius:.2em;
-      -moz-border-radius:.2em;
-      border-radius:.2em;
-      background-color:#cb4b16
-  }
-  .HOLD{
-      -webkit-border-radius:.2em;
-      -moz-border-radius:.2em;
-      border-radius:.2em;
-      background-color:#d33682
-  }
-  .NOTE{
-      -webkit-border-radius:.2em;
-      -moz-border-radius:.2em;
-      border-radius:.2em;
-      background-color:#d33682
-  }
-  .CANCELLED{
-      -webkit-border-radius:.2em;
-      -moz-border-radius:.2em;
-      border-radius:.2em;
-      background-color:#859900
-  }
-  
+
 </style>
 </head>
 <body>
 <nav>
   <a href="https://hryanjones.com/kyakarun/build/"><img src="https://hryanjones.com/kyakarun/build/favicon.png"/>KyaKarun</a>
-  <a href="https://www.duolingo.com/"><img src="https://d35aaqx5ub95lt.cloudfront.net/favicon.ico"/> duolingo</a>
-  <a href="https://fast.com"><img src="https://fast.com/assets/favicons/favicon-16x16.png"/> fast</a>
   <a href="https://codepen.io/hryanjones/pen/PXOxQv">✏️</a>
 </nav>
+
+<div id='outerdiv'>
+    <iframe id="kyakarun" src="http://hryanjones.com/kyakarun/build/"></iframe>
+</div>
 
 <script>
 // SCRIPT TO GET NOTES FROM KEEP
@@ -317,7 +173,7 @@ goodTexts = elementTexts.filter(txt => !/…/.test(txt));
 
 copy(
     goodTexts
-    .map(txt => 
+    .map(txt =>
         txt
         .replace(/\s*#[a-z]+/gi, '')
         .replace(/^\n/gm, '')
@@ -359,7 +215,7 @@ function getRandomRecord() {
   const choiceIndex = getRandomNumberUpTo(records.length - 1);
   return records[choiceIndex];
 }
-  
+
 function getRandomNumberUpTo(max) {
   return Math.round(Math.random()*max);
 }
@@ -367,7 +223,7 @@ function getRandomNumberUpTo(max) {
 function parseTemplate(template) {
   return template
   .split('----')
-  .map(record => 
+  .map(record =>
        record.replace(/^\n/, '') // remove empty lines
   )
   .map(parseRawRecord)
@@ -391,7 +247,7 @@ function parseRawRecord(record) {
       source = line;
     }
   }
-  
+
   const body = author ? lines.slice(0, i).join('\n') : record;
 
   return {body, source, author, url};
@@ -414,7 +270,7 @@ function createElementFromRecord(record) {
   }
 
   return container;
-  
+
   function addElementToContainer(className, text, elementType) {
     container.appendChild(
         createElementWithClassAndText(className, text, elementType)
@@ -529,7 +385,7 @@ Hammock Driven Development
 https://www.youtube.com/watch?v=f84n5oFoZBc
 ----
 Derivative Companies, companies that copy an existing idea with very few new insights don't excite people and don't compel the teams to work hard enough to be successful.
-  
+
 - Sam Altman
 How to Start a Startup, 1
 http://startupclass.samaltman.com/
@@ -747,7 +603,7 @@ Thinking Fast and Slow
 ----
 The answer comes from the two basic conditions for acquiring a skill:
 * an environment that is sufficiently regular to be predictable
-* an opportunity to learn these regularities through prolonged practice 
+* an opportunity to learn these regularities through prolonged practice
 When both these conditions are satisfied, intuitions are likely to be skilled.
 - Daniel Kahneman
 Thinking Fast and Slow
@@ -835,7 +691,7 @@ http://www.jwz.org/doc/worse-is-better.html
 - Maria Semple
 Where'd You Go, Bernadette"
 ----
-To say it again, children start off loving to learn, and most can learn anything the culture throws at them. But they are best at learning ideas that seem to be an integral part of the surrounding culture. Having a parent or teacher that encourages them to study math and science is not even close to having one that lives math and science (or seems to). 
+To say it again, children start off loving to learn, and most can learn anything the culture throws at them. But they are best at learning ideas that seem to be an integral part of the surrounding culture. Having a parent or teacher that encourages them to study math and science is not even close to having one that lives math and science (or seems to).
 - Alan Kay
 Powerful Ideals Need Love Too
 http://worrydream.com/refs/Kay%20-%20Powerful%20Ideas%20Need%20Love%20Too.html
@@ -872,7 +728,7 @@ http://blog.andymatuschak.org/post/159340765257/exalting-data-missing-meaning
 Homo Deus: A Brief History of Tomorrow
 ----
 Then the programmers shuffle back to their standing desks and complain until the product is shipped. Or else they just quit, because Lord knows there are jobs out there. For programmers, particularly the young ones, there are jobs everywhere.
-Managers and old coders have fewer options. It’s often better to just keep working and shipping, even if the code starts to look ugly, even if there are nominally better solutions, even as the technical debt accrues around you, because in a few years everything will change. 
+Managers and old coders have fewer options. It’s often better to just keep working and shipping, even if the code starts to look ugly, even if there are nominally better solutions, even as the technical debt accrues around you, because in a few years everything will change.
 Or the entire industry will spasm and everything you’ve done will need to be thrown away and rebuilt along new lines anyway. (From desktop to Web, from Web to mobile, from mobile to … quantum? Who knows. But there’s always something.)
 Somehow it keeps working out. The industry is always promising to eat itself, to come up with a paradigm so perfect that we can all stop wasting our time and enter a world of pure digital thought. It never happens.
 - Paul Ford
@@ -926,7 +782,7 @@ I remind myself of the social nature of the question by remembering that samba s
 - Samuel Papert
 Mindstorms
 ----
-(summary, not a quote) Juggling broken down into specific component skills and then built upon can be learned many times faster than the "try until you succeed" method. And while learning you have to "debug" your actions, e.g. "the eye-following bug". 
+(summary, not a quote) Juggling broken down into specific component skills and then built upon can be learned many times faster than the "try until you succeed" method. And while learning you have to "debug" your actions, e.g. "the eye-following bug".
 "We can learn more, and more quickly, by taking conscious control of the learning process, articulating and analyzing our behavior."
 - Samuel Papert
 Mindstorms
@@ -975,7 +831,7 @@ Thinking Fast and Slow
 ----
 Software let us escape the tyranny of the machine, yet we keep using it to build more prisons for our data and functionality!
 When we are shown something of use or interest to us, some piece of functionality or data, we begin thinking up possible variations and combinations that also interest us or seem useful.
-The problem is, I don't want a machine, I want a toolkit, and Google keeps trying to sell me machines. 
+The problem is, I don't want a machine, I want a toolkit, and Google keeps trying to sell me machines.
 - Paul Chiusano
 The future of software, the end of apps, and why UX designers should care about type theory
 http://pchiusano.blogspot.com/2013/05/the-future-of-software-end-of-apps-and.html?m=1
@@ -1025,15 +881,15 @@ How to Actually Change Your Mind
 ----
 What is true is already so.
 
-Owning up to it doesn't make it worse. 
+Owning up to it doesn't make it worse.
 
-Not being open about it doesn't make it go away. 
+Not being open about it doesn't make it go away.
 
-And because it's true, it is what is there to be interacted with. 
+And because it's true, it is what is there to be interacted with.
 
-Anything untrue isn't there to be lived. 
+Anything untrue isn't there to be lived.
 
-People can stand what is true, for they are already enduring it. 
+People can stand what is true, for they are already enduring it.
 —Eugene Gendlin
 via Eliezer Yudkowsky in How to Actually Change Your Mind
 ----
@@ -1087,7 +943,7 @@ That's why the wise soul
 does without doing,
 teaches without talking.
 
-The things of this world 
+The things of this world
 exist, they are;
 you can't refuse them.
 
@@ -1334,7 +1190,11 @@ Tao Te Ching
 ----
 Keep your Circle of Concern ≈ Circle of Influence"
 - via Nicky Case
-https://twitter.com/ncasenmare/status/1181957581423681536?s=19`;
+https://twitter.com/ncasenmare/status/1181957581423681536?s=19
+----
+Nonfiction conveys knowledge, fiction conveys experience. Medical science can extrapolate what would happen to a human unprotected in a vacuum. Fiction can make you live through it.
+- Eliezer Yudkowsky
+Rationality: From AI to Zombies`;
 }
 </script>
 
