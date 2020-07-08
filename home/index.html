@@ -2,34 +2,29 @@
 <html lang="en">
   <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+
   <style>
   /* Mine (hryanjones) */
 
-html {
-  font-size: 36px;
-}
 
 pre {
     width: 100%;
 }
 
-#kyakarun {
+iframe {
     width: 100%;
     border: none;
-
-    position:absolute;
-    top:-135px;
-    width:100%;
-    height:800px;
 }
+
+#mymarkdoc {
+  height: 2000px;
+}
+
+#kyakarun {position:absolute;top: -64px;height: 400px;;}
 
 #outerdiv
-{
-width:100%;
-height:260px;
-overflow:auto;
-position:relative;
-}
+{width:100%;height: 140px;overflow:auto;position:relative;}
 
 .motd-author, .motd-source, .motd-link {
     font-style: italic;
@@ -156,9 +151,13 @@ position:relative;
   <a href="https://github.com/hryanjones/hryanjones.github.io/edit/master/home/index.html">✏️</a>
 </nav>
 
-<div id='outerdiv'>
+<div id="outerdiv">
     <iframe id="kyakarun" src="https://hryanjones.com/kyakarun/build/"></iframe>
 </div>
+
+<div id="quote-container"></div>
+
+<iframe id="mymarkdoc" src="https://hryanjones.com/mymarkdoc/"></iframe>
 
 <script>
 // SCRIPT TO GET NOTES FROM KEEP
@@ -200,7 +199,7 @@ main();
 
 function main() {
   const randomRecord = getRandomRecord();
-  document.body.appendChild(
+  document.getElementById('quote-container').appendChild(
     createElementFromRecord(randomRecord)
   );
 }
