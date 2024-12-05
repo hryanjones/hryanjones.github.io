@@ -1,73 +1,80 @@
-
 <html>
-  <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.1.custom.css" />
-    <link id="base-css" rel="stylesheet" type="text/css" href="/assets/css/hryanjones.css"></link>
+<head>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.1.custom.css" />
+  <link id="base-css" rel="stylesheet" type="text/css" href="/assets/css/hryanjones.css">
+  </link>
 
 
-    <title>H. Ryan Jones</title>
-  </head>
+  <title>H. Ryan Jones</title>
+</head>
 
-  <body>
-    <header>
-      <h1><img src="/assets/ryan-profile-pic.min.jpeg" alt="photo of Ryan" /> <a href="/">H. Ryan Jones</a></h1>
-    </header>
-      <div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-        <li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active"><a href="#home">Home</a></li>
-        <li class="ui-state-default ui-corner-top"><a id="resume" href="/resume/">Resume</a></li>
-        <li class="ui-state-default ui-corner-top"><a id="projects" href="/science/">Projects</a></li>
+<body>
+  <header>
+    <h1><img src="/assets/ryan-profile-pic.min.jpeg" alt="photo of Ryan" /> <a href="/">H. Ryan Jones</a></h1>
+  </header>
+  <div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+      <li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active"><a href="#home">Home</a></li>
+      <li class="ui-state-default ui-corner-top"><a id="resume" href="/resume/">Resume</a></li>
+      <li class="ui-state-default ui-corner-top"><a id="projects" href="/science/">Projects</a></li>
+    </ul>
+    <div id="home" class="ui-tabs-panel">
+      <p>
+        I'm a frontend engineer in Seattle. I work at Amazon on the internal tools around <a
+          href="https://en.wikipedia.org/wiki/Code_review">code review</a>. Beyond programming in the browser, I enjoy
+        logic puzzles (like <a href="http://www.pavelspuzzles.com/aenigmas/">&AElig;nigma's</a>), board games, and
+        playing with my 2 kiddos.
+      </p>
+
+      <h3>Select Side Projects</h3>
+      <p>
+      <ul>
+        <li><strong><a href="http://hryanjones.com/guess-my-word">🤔 Guess My Word</a></strong>: A daily word guessing
+          game</li>
+        <li><a href="/emoji-picker">😂 Emoji Picker</a></li>
+        <li><a href="/adas">🧩 &AElig;nigma's</a>: Solve some logic puzzles in your browser</li>
+        <li><a href="/chooser">🎲 Random Chooser</a>: A simple site to choose one or more from a list of options</li>
+        <li><a href="/kyakarun/build/">❓ Kya Karun</a>: A small web tool to randomly pick what to do</li>
       </ul>
-      <div id="home" class="ui-tabs-panel">
-        <p>
-          I'm a web developer in Seattle, and I work at Amazon on the internal tools around <a href="https://en.wikipedia.org/wiki/Code_review">code review</a>. Beyond programming in the browser, I enjoy logic puzzles (like <a href="http://www.pavelspuzzles.com/aenigmas/">&AElig;nigma's</a>), board games, and going to the park with my 2-year-old daughter.
-        </p>
+      </p>
 
-        <h3>Select Side Projects</h3>
-        <p>
-          <ul>
-            <li><strong><a href="http://hryanjones.com/guess-my-word">🤔 Guess My Word</a></strong>: A daily word guessing game</li>
-            <li><a href="/emoji-picker">😂 Emoji Picker</a></li>
-            <li><a href="/adas">🧩 &AElig;nigma's</a>: Solve some logic puzzles in your browser</li>
-            <li><a href="/chooser">🎲 Random Chooser</a>: A simple site to choose one or more from a list of options</li>
-            <li><a href="/kyakarun/build/">❓ Kya Karun</a>: A small web tool to randomly pick what to do</li>
-          </ul>
-        </p>
-
-        <h3>Get in touch</h3>
-        <p>
-          <li><a href="https://twitter.com/hryanjones">🐦 Twitter</a></li>
-          <li><a href="https://github.com/hryanjones">🐙 Github</a></li>
-          <li><a href="https://www.linkedin.com/in/h-ryan-jones-61132218/">💼 LinkedIn</a></li>
-        </p>
-      </div>
+      <h3>Get in touch</h3>
+      <p>
+        <li><a href="https://twitter.com/hryanjones">🐦 Twitter</a></li>
+        <li><a href="https://github.com/hryanjones">🐙 Github</a></li>
+        <li><a href="https://www.linkedin.com/in/h-ryan-jones-61132218/">💼 LinkedIn</a></li>
+      </p>
     </div>
+  </div>
 
-    <!-- Javascript -->
-    <script src="https://code.jquery.com/jquery-1.9.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $( "#tabs" ).tabs();
+  <!-- Javascript -->
+  <script src="https://code.jquery.com/jquery-1.9.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("#tabs").tabs();
 
-        // select the right tab if the location hash is there
-        var tabId = window.location.hash;
-        $(tabId).click();
+      // select the right tab if the location hash is there
+      var tabId = window.location.hash;
+      $(tabId).click();
 
-      });
-    </script>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2NMMNJSZJ6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    });
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2NMMNJSZJ6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'G-2NMMNJSZJ6');
-</script>
+    gtag('config', 'G-2NMMNJSZJ6');
+  </script>
 </body>
+
 </html>

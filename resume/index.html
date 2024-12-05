@@ -1,40 +1,154 @@
 <!--DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
 <html>
-  <head>
-    <title>H. Ryan Jones -- Resume</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <!-- EXTERNAL JS DEPENDENCIES -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<head>
+  <title>H. Ryan Jones -- Resume</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <style type="text/css">
+    html,
+    body,
+    * {
+      font-family: sans-serif;
+    }
 
-    <!-- INTERNAL JS DEPENDENCIES -->
-    <script type="text/javascript" src="/wiki-feedback/my_wiki.js"></script>
-    <!--<script type="text/javascript" src="/js/echoDebug.js"></script>-->
+    th {
+      /* override default to center table titles */
+      text-align: left;
+    }
 
-    <style type="text/css">
-      iframe#experience-graph {
-        width: 900;
-        height: 125px;
-        background: white;
-        border: none;
-      }
-      html, body, * {
-        font-family: sans-serif;
-      }
-    </style>
+    td:nth-child(5) {
+      /* experience years should be right aligned */
+      text-align: right;
+    }
 
+    h1 {
+      /* remove extra space on top of the doc*/
+      margin-top: 0px;
+    }
+  </style>
+</head>
 
-    <script type="text/javascript">
-      $(document).ready( function() {
-        $.get( '/resume/hryanjones.txt', function(data) {
-          $('div#resume-html').html( wiki.process(data) );
-        });
-      });
-    </script>
-  </head>
-  <body>
-    <div id="resume-html"></div>
+<body>
+  <div id="resume-html">
+    <h1>H. Ryan Jones</h1>
+    <p><a href="mailto:hryanjones@gmail.com">hryanjones@gmail.com</a> — (206)-432-7560 — Seattle, WA — <a
+        href="https://www.linkedin.com/in/h-ryan-jones-61132218/">LinkedIn</a> — <a
+        href="https://github.com/hryanjones">github</a></p>
+    <hr>
+    <h3>Summary</h3>
+    <p>Focused frontend engineer with experience building fast, user-friendly, data-driven web applications using
+      Typescript, Javascript, React, and CSS. Some backend experience with API servers in Ruby (Rails), Java, and NodeJS
+      as well as CLIs. Passionate about listening to customers to iterate on user experience and flow, as well as
+      learning, visualization, and generally empowering users to get stuff done.</p>
+    <h3>Top Skills</h3>
+    <ul>
+      <li><strong>OS &amp; coding</strong>: Typescript, JavaScript, Ruby, git, Linux (esp. Ubuntu), NodeJS, some Python,
+        some Java</li>
+      <li><strong>Web focused</strong>: React, HTML/DOM, CSS/Sass (including flex), Vite, microfrontends, web security,
+        accessibility, Rails, Jest, UX design, some Vue, some webpack</li>
+      <li><strong>Other</strong>: product ownership iteration and support, process improvement, data analysis (Excel,
+        AWS QuickSight), teaching/tutoring</li>
+    </ul>
+    <h3>Experience Summary (2007-2024)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Years</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Amazon</td>
+          <td>Frontend Engineer II</td>
+          <td>Sep 2014</td>
+          <td>Jan 2025</td>
+          <td>10.3</td>
+          <td>□□□□□□□□□□□□□□□□□□□□□</td>
+        </tr>
+        <tr>
+          <td>Amazon</td>
+          <td>Technical Support Engineer</td>
+          <td>Sep 2014</td>
+          <td>Mar 2011</td>
+          <td>3.5</td>
+          <td>□□□□□□□</td>
+        </tr>
+        <tr>
+          <td>(various)</td>
+          <td>Tutor and office temp</td>
+          <td>Jan 2010</td>
+          <td>Mar 2011</td>
+          <td>1.2</td>
+          <td>□□</td>
+        </tr>
+        <tr>
+          <td>Peace Corps</td>
+          <td>Education Volunteer, Uganda</td>
+          <td>May 2007</td>
+          <td>Aug 2009</td>
+          <td>2.2</td>
+          <td>□□□□</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Professional Experience</h3>
+    <ol>
+      <li><strong>Frontend Engineer II</strong> — <em>Amazon Web Services</em> (3 roles) (Seattle, WA)
+        <ol>
+          <li><em>Codex</em> (internal): 5 years of feature work, maintenance, and oncall/offcall support for Amazon's
+            internal code review and code browsing sites. Added new features including UX design, prototyping,
+            implementation, and iteration based on customer feedback (e.g. new code review dashboard, multi dry run
+            build, artifact browser). Many fixes to customer to experience issues in the existing products, where many
+            of these were self-initiated (e.g. email reduction, a11y colors, filtering comments, code inter-diff
+            correctness). Additionally, helped shutdown a legacy service, but ensuring to preserve legacy web links
+            using careful redirection (Devcentral). Lastly, oversaw much of the team's product backlog and helped steer
+            product direction.</li>
+          <li><em>QuickSight</em>: ~4 years of design and implementation of features for QuickSight, Amazon's BI
+            analytics product. This included KPI and geospatial charts, and an anomaly exploration page. Additionally
+            lead multi-team effort to upgrade from React 13 to 16 and drove fixing of many customer experience issues.
+          </li>
+          <li><em>Meetings</em> (internal): ~1.5 years of design, implementation, and customer-centric support of Amazon
+            Meetings, an internal tool built on AngularJS to facilitate easily searching for a meeting time and
+            appropriate conference room for Amazon employees.</li>
+        </ol>
+      </li>
+      <li><strong>Technical Support Engineer</strong> — <em>Amazon Web Services</em> (Seattle, WA): ~2 years of
+        providing deep technical support for a wide array of services (compute, storage, DNS, content delivery, load
+        balancing, coding) for a range of customer backgrounds. This transitioned into ~1 year of development on
+        internally used web-based tools, dashboards, and scripts.</li>
+      <li><strong>Tutor and office temp</strong> — <em>(various)</em> (Seattle, WA)</li>
+      <li><strong>Education Volunteer</strong> — <em>US Peace Corps</em> (Uganda, Africa): 1 year of supporting
+        elementary school student teachers with classroom observation and weekend classes. 1.5 years of teaching basic
+        computers skills to teachers and students and helping fund, source, install, and build a curriculum around a
+        school computer lab.</li>
+    </ol>
+    <p>(references available on request)</p>
+    <h3>Other</h3>
+    <ul>
+      <li>(Significant Side Project) <a href="https://hryanjones.com/guess-my-word"><strong>Guess My Word</strong></a>:
+        A daily word guessing puzzle with <em>~1.5K users per day</em>. The main game is frontend-only in Vue.js and a
+        Node server supports the backend for the leader board.</li>
+      <li>(Volunteering) <strong>Tutoring</strong>: (2018-2023) One-on-one tutoring of elementary through high school
+        students in Columbia City Neighborhood.</li>
+      <li><strong>Other interests</strong>: Visual Logic Puzzles, Biking, Board games, Mountain biking, Climbing</li>
+    </ul>
+    <h3>Education</h3>
+    <ul>
+      <li>2002-2006: BS Cum Laude with College Honors in <strong>Physics at University of Washington</strong> GPA: 3.85
+      </li>
+    </ul>
+    <hr>
+    <p><em>last updated 5th Dec 2024</em> | resume versions: <a
+        href="https://hryanjones.com/resume/hryanjones.pdf">PDF</a>, <a href="http://hryanjones.com/resume">HTML</a>, <a
+        href="https://hryanjones.com/resume/hryanjones.md">plain-text</a></p>
+  </div>
 
-    <script src="/assets/js/googleAnalytics.js"></script>
-  </body>
+  <script src="/assets/js/googleAnalytics.js"></script>
+</body>
+
 </html>
