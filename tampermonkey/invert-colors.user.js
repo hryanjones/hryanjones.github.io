@@ -2,7 +2,7 @@
 // @name         Invert Colors on All Sites
 // @description  Inverts colors on all sites to achieve a "dark" theme everywhere, and re-inverts most images you'd expect. Major downside is reversal of colors.
 // @namespace    https://hryanjones.com
-// @version      0.1
+// @version      0.2
 // @author       hryanjones@gmail.com
 // @match        *://*/*
 // @downloadURL  https://hryanjones.com/tampermonkey/invert-colors.user.js
@@ -32,7 +32,6 @@ div[src],
 .fbStarGrid,
 .fbPhotosGrid,
 [aria-label*="photo"],
-[src*="badgephotos.amazon.com"], /* specific to amazon internal badge photos */
 .emoji /* Specific to hryanjones.com/emoji-picker */
 {
   filter: invert(1);
@@ -41,7 +40,9 @@ div[src],
 img[role="button"],
 [role="button"] > img,
 img[role="menu"],
-button img
+button img,
+[style*="background-image: url(\'http"] video, /*fixes video imbeds on google photos*/
+[style*='background-image: url(\"http'] video
 {
   filter: invert(0);
 };
