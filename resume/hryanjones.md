@@ -5,12 +5,12 @@
 
 ### Summary
 
-Focused frontend engineer with experience building fast, user-friendly, data-driven web applications using Typescript, Javascript, React, and CSS. Some backend experience with API servers in Ruby (Rails), Java, and NodeJS as well as CLIs. Passionate about listening to customers to iterate on user experience and flow, as well as learning, visualization, and generally empowering users to get stuff done.
+Customer-focused frontend engineer with experience building fast, user-friendly, data-driven web applications using Typescript, Javascript, React, and CSS. Experienced with CLIs and API servers in Ruby (Rails), and some Java, and NodeJS. Passionate about listening to customers to iterate on user experience and flow. Interested in visualization, learning, and generally empowering users to get stuff done.
 
 ### Top Skills
 
-- **OS & coding**: Typescript, JavaScript, Ruby, git, Linux (esp. Ubuntu), NodeJS, some Python, some Java
-- **Web focused**: React, HTML/DOM, CSS/Sass (including flex), Vite, microfrontends, web security, accessibility, Rails, Jest, UX design, some Vue, some webpack
+- **OS & coding**: Typescript, JavaScript, Ruby, Linux, git, NodeJS, some Python, some Java
+- **Web focused**: React, HTML/DOM, CSS/Sass, Fetch, Vite, microfrontends, Rails, Vitest, Jest, UX design, some websecurity, some accessibility, some Vue, some webpack
 - **Other**: product ownership iteration and support, process improvement, data analysis (Excel, AWS QuickSight), teaching/tutoring
 
 ### Experience Summary (2007-2024)
@@ -45,7 +45,7 @@ Focused frontend engineer with experience building fast, user-friendly, data-dri
 - 2002-2006: BS Cum Laude with College Honors in **Physics at University of Washington** GPA: 3.85
 -------------------------
 
-_last updated 6th Dec 2024_ | resume versions: [PDF][PDF], [HTML][HTML], [plain-text][plaintext]
+_last updated 17th Apr 2025_ | resume versions: [PDF][PDF], [HTML][HTML], [plain-text][plaintext]
 
 [email]: mailto:hryanjones@gmail.com
 [linkedin]: https://www.linkedin.com/in/h-ryan-jones-61132218/
