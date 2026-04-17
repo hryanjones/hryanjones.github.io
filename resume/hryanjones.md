@@ -5,7 +5,7 @@
 
 ### Summary
 
-Customer-focused frontend engineer with experience building fast, user-friendly, data-driven web applications using Typescript, Javascript, React, and CSS. Experienced with CLIs and API servers in Ruby (Rails), and some Java, and NodeJS. Passionate about listening to customers to iterate on user experience and flow. Interested in visualization, learning, and empowering users to get stuff done.
+Customer-focused frontend engineer with experience building fast, user-friendly, data-driven web applications using Typescript, Javascript, React, and CSS. Experienced with CLIs and backend servers employing Ruby (Rails), NodeJS, and some Java. Passionate about listening to customers to iterate on user experience and flow. Interested in visualization, learning, and empowering users to get stuff done.
 
 ### Top Skills
 
@@ -17,7 +17,7 @@ Customer-focused frontend engineer with experience building fast, user-friendly,
 
 |Company    |Role                       |Start   |End     |Years|                     |
 |-----------|---------------------------|--------|--------|-----|---------------------|
-|(freelance)|Freelance/personal projects|Jan 2025|        |0.5  |□                    |
+|(freelance)|Freelance/personal projects|Jan 2025|        |1    |□□                   |
 |Amazon     |Frontend Engineer II       |Sep 2014|Jan 2025|10.3 |□□□□□□□□□□□□□□□□□□□□□|
 |Amazon     |Technical Support Engineer |Mar 2011|Sep 2014|3.5  |□□□□□□□              |
 |(various)  |Tutor and office temp      |Jan 2010|Mar 2011|1.2  |□□                   |
@@ -26,7 +26,7 @@ Customer-focused frontend engineer with experience building fast, user-friendly,
 ### Professional Experience
 
 1. **Frontend Engineer II** — _Amazon Web Services_ (3 roles) (Seattle, WA)
-   1. _Codex_ (internal): Improved, fixed, and supported Amazon's internal code review and code browsing sites for 5 years. Delivered new features including UX design, prototyping, implementation, and iteration based on customer feedback (e.g. new code review dashboard, multi dry run build, artifact browser). Resolved many customer experience issues by self-initiating fixes such as unwanted email reduction, a11y colors, introducing comment filtering, and correcting code inter-diff. Additionally, sunsetted a legacy service, while preserving web links (Devcentral). Helped shape team priorities by managing the product backlog and contributing to product direction.
+   1. _Codex_ (internal): Improved, fixed, and supported Amazon's internal code review and code browsing sites for 5 years. Delivered new features including UX design, prototyping, implementation, and iteration based on customer feedback (e.g. new code review dashboard, multi dry run build, artifact browser). Resolved many customer experience issues by self-initiating fixes such as unwanted email reduction, a11y colors, introducing comment filtering, and correcting code inter-diff. Additionally, sunsetted a legacy service, while preserving web links (DevCentral). Helped shape team priorities by managing the product backlog and contributing to product direction.
    2. _QuickSight_: Implemented features for QuickSight, Amazon's BI analytics product for ~4 years. This included KPI and geospatial charts, and an anomaly exploration page. Also led a multi-team effort to upgrade from React 13 to 16 and drove fixing of many customer experience issues.
    3. _Meetings_ (internal): Designed, implemented, and supported a new internal website, Amazon Meetings for ~1.5 years. The site filled a gap in searching for meeting times with appropriate conference rooms.
 2. **Technical Support Engineer** — _Amazon Web Services_ (Seattle, WA): Provided deep technical support for a wide array of services (compute, storage, DNS, content delivery, load balancing, coding) for a range of customer backgrounds for ~2 years. This transitioned into ~1 year of development on internally used web-based tools, dashboards, and scripts.
@@ -46,7 +46,7 @@ Customer-focused frontend engineer with experience building fast, user-friendly,
 - 2002-2006: BS cum laude with College Honors in **Physics at University of Washington** GPA: 3.85 / 4.0
 -------------------------
 
-_last updated 29th July 2025_ | resume versions: [PDF][PDF], [HTML][HTML], [plain-text][plaintext]
+_last updated April 17th 2026_ | resume versions: [PDF][PDF], [HTML][HTML], [plain-text][plaintext]
 
 [email]: mailto:hryanjones@gmail.com
 [linkedin]: https://www.linkedin.com/in/HRyanJones
