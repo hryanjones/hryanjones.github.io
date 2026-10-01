@@ -15,14 +15,14 @@ Customer-focused frontend engineer with experience building fast, user-friendly,
 
 ### Experience Summary (2007-2026)
 
-|Company    |Role                          |Start   |End     |Years|                     |
-|-----------|------------------------------|--------|--------|-----|---------------------|
-|Epoch AI   |Website Development Contractor|May 2026|        |0.4  |□                    |
-|(freelance)|Freelance/personal projects   |Jan 2025|May 2026|1.3  |□□□                  |
-|Amazon     |Frontend Engineer II          |Sep 2014|Jan 2025|10.3 |□□□□□□□□□□□□□□□□□□□□□|
-|Amazon     |Technical Support Engineer    |Mar 2011|Sep 2014|3.5  |□□□□□□□              |
-|(various)  |Tutor and office temp         |Jan 2010|Mar 2011|1.2  |□□                   |
-|Peace Corps|Education Volunteer, Uganda   |May 2007|Aug 2009|2.2  |□□□□                 |
+|Company    |Role                       |Start   |End     |Years|                     |
+|-----------|---------------------------|--------|--------|-----|---------------------|
+|Epoch AI   |Web. Dev. Contractor       |May 2026|        |0.4  |□                    |
+|(freelance)|Freelance/personal projects|Jan 2025|May 2026|1.3  |□□□                  |
+|Amazon     |Frontend Engineer II       |Sep 2014|Jan 2025|10.3 |□□□□□□□□□□□□□□□□□□□□□|
+|Amazon     |Technical Support Engineer |Mar 2011|Sep 2014|3.5  |□□□□□□□              |
+|(various)  |Tutor and office temp      |Jan 2010|Mar 2011|1.2  |□□                   |
+|Peace Corps|Education Volunteer, Uganda|May 2007|Aug 2009|2.2  |□□□□                 |
 
 ### Professional Experience
 
